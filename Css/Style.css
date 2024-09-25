@@ -65,3 +65,19 @@ h1 {
         #button:hover {
             background-color:#AD49E1
         }
+        .box {
+            height: 400px;
+            width: 400px; ;
+            border: 5px solid black;
+            margin: 20px auto;
+        }
+        .box1, .box2 {
+            height: 150px;
+            width: 150px;
+        }
+        .box1 {
+            background-color: aqua;
+        }
+        .box2 {
+            background-color: #45015a;
+        }

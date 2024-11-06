@@ -1,18 +1,183 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>cart shop icon</title>
+    <title>آلة حاسبة متقدمة</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background: linear-gradient(to right, #2980b9, #6dd5fa, #ffffff);
+        }
+
+        .calculator {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.2);
+            padding: 30px;
+            width: 320px;
+        }
+
+        .display {
+            width: 100%;
+            height: 50px;
+            background-color: #f0f0f0;
+            border-radius: 8px;
+            text-align: right;
+            padding: 10px;
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 15px;
+            box-shadow: inset 0px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+
+        .button {
+            background-color: #3498db;
+            color: white;
+            font-size: 18px;
+            padding: 15px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .button:hover {
+            background-color: #2980b9;
+        }
+
+        .button.operation {
+            background-color: #e67e22;
+        }
+
+        .button.operation:hover {
+            background-color: #d35400;
+        }
+
+        .button.clear {
+            background-color: #e74c3c;
+        }
+
+        .button.clear:hover {
+            background-color: #c0392b;
+        }
+    </style>
 </head>
 <body>
-<div class="cart-container" style="position: relative; display: inline-block;">
-    <div class="cart-counter" style="position: absolute; top: -10px; right: -10px; background-color: red; color: white; border-radius: 50%; padding: 2px 6px; font-size: 12px;">0</div>
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: currentColor;">
-        <path d="M21.822 7.431A1 1 0 0 0 21 7H7.333L6.179 4.23A1.994 1.994 0 0 0 4.333 3H2v2h2.333l4.744 11.385A1 1 0 0 0 10 17h8c.417 0 .79-.259.937-.648l3-8a1 1 0 0 0-.115-.921z"/>
-        <circle cx="10.5" cy="19.5" r="1.5"/>
-        <circle cx="17.5" cy="19.5" r="1.5"/>
-    </svg>
-</div>
+
+    <div class="calculator">
+        <div id="display" class="display">0</div>
+        <div class="buttons">
+            <!-- الأرقام -->
+            <button class="button" onclick="appendNumber('7')">7</button>
+            <button class="button" onclick="appendNumber('8')">8</button>
+            <button class="button" onclick="appendNumber('9')">9</button>
+            <button class="button operation" onclick="chooseOperation('/')">÷</button>
+            
+            <button class="button" onclick="appendNumber('4')">4</button>
+            <button class="button" onclick="appendNumber('5')">5</button>
+            <button class="button" onclick="appendNumber('6')">6</button>
+            <button class="button operation" onclick="chooseOperation('*')">×</button>
+            
+            <button class="button" onclick="appendNumber('1')">1</button>
+            <button class="button" onclick="appendNumber('2')">2</button>
+            <button class="button" onclick="appendNumber('3')">3</button>
+            <button class="button operation" onclick="chooseOperation('-')">−</button>
+            
+            <button class="button" onclick="appendNumber('0')">0</button>
+            <button class="button" onclick="appendNumber('.')">.</button>
+            <button class="button clear" onclick="clearDisplay()">C</button>
+            <button class="button operation" onclick="chooseOperation('+')">+</button>
+
+            <!-- العمليات المتقدمة -->
+            <button class="button operation" onclick="chooseOperation('sqrt')">√</button>
+            <button class="button operation" onclick="chooseOperation('pow')">x²</button>
+            <button class="button operation" onclick="chooseOperation('log')">log</button>
+            <button class="button operation" onclick="calculate()">=</button>
+        </div>
+    </div>
+
+    <script>
+        let display = document.getElementById("display");
+        let currentOperand = '';
+        let previousOperand = '';
+        let operation = undefined;
+
+        function appendNumber(number) {
+            if (display.innerText === "0" || currentOperand === "") {
+                display.innerText = number;
+            } else {
+                display.innerText += number;
+            }
+            currentOperand += number;
+        }
+
+        function chooseOperation(op) {
+            if (currentOperand === "") return;
+            if (previousOperand !== "") {
+                calculate();
+            }
+            operation = op;
+            previousOperand = currentOperand;
+            currentOperand = "";
+            display.innerText = previousOperand + " " + op;
+        }
+
+        function calculate() {
+            let result;
+            const prev = parseFloat(previousOperand);
+            const current = parseFloat(currentOperand);
+
+            switch (operation) {
+                case '+':
+                    result = prev + current;
+                    break;
+                case '-':
+                    result = prev - current;
+                    break;
+                case '*':
+                    result = prev * current;
+                    break;
+                case '/':
+                    result = prev / current;
+                    break;
+                case 'sqrt':
+                    result = Math.sqrt(prev);
+                    break;
+                case 'pow':
+                    result = Math.pow(prev, 2);
+                    break;
+                case 'log':
+                    result = Math.log10(prev);
+                    break;
+                default:
+                    return;
+            }
+
+            display.innerText = result;
+            currentOperand = result;
+            previousOperand = '';
+            operation = undefined;
+        }
+
+        function clearDisplay() {
+            display.innerText = "0";
+            currentOperand = '';
+            previousOperand = '';
+            operation = undefined;
+        }
+    </script>
+
 </body>
 </html>

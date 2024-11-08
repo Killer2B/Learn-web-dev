@@ -5,8 +5,8 @@ Live Privew
 * [Open](https://killer2b.github.io/Learn-web-dev/)
   
 ###
-Live Privew
+Online Use
 ============
 ####  Phone Number Generator PAGE
-* [Use](https://killer2b.github.io/Learn-web-dev/)
+* [Use](https://www.numberg.rf.gd/)
   

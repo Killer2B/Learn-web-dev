@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>توليد أرقام هاتف</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 0;
+            padding: 20px;
+        }
+        h2 {
+            color: #0073e6;
+        }
+        form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 100%;
+            text-align: right;
+        }
+        label {
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        input, button {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #0073e6;
+            color: #fff;
+            font-weight: bold;
+            cursor: pointer;
+            border: none;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #005bb5;
+        }
+        #resultList {
+            list-style-type: none;
+            padding: 0;
+            margin-top: 15px;
+            max-width: 400px;
+            width: 100%;
+        }
+        li {
+            background-color: #e9f5ff;
+            padding: 10px;
+            border: 1px solid #0073e6;
+            border-radius: 5px;
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h2>توليد أرقام هاتف بتغيير الأرقام الأخيرة</h2>
+    
+    <form id="generateForm">
+        <label for="baseNumber">الرقم الأساسي:</label>
+        <input type="text" id="baseNumber" required pattern="\d{11}" title="الرجاء إدخال رقم هاتف مكون من 11 رقماً"><br><br>
+        
+        <label for="changes">عدد الأرقام المطلوب تغييرها:</label>
+        <input type="number" id="changes" required min="1" max="11"><br><br>
+        
+        <label for="outputCount">عدد الأرقام الناتجة المطلوبة:</label>
+        <input type="number" id="outputCount" required min="1"><br><br>
+        
+        <button type="submit">توليد الأرقام</button>
+    </form>
+
+    <h3>الأرقام الناتجة:</h3>
+    <ul id="resultList"></ul>
+    
+    <button id="downloadCsv" style="display:none;">تنزيل الأرقام كملف CSV</button>
+
+    <script>
+        function generatePhoneNumbers(baseNumber, changes, outputCount) {
+            const generatedNumbers = [];
+            
+            for (let i = 0; i < outputCount; i++) {
+                let newNumber = baseNumber.slice(0, -changes);
+                
+                for (let j = 0; j < changes; j++) {
+                    newNumber += Math.floor(Math.random() * 10);
+                }
+                
+                generatedNumbers.push(newNumber);
+            }
+            
+            return generatedNumbers;
+        }
+
+        function downloadCSV(numbers) {
+            let csvContent = "data:text/csv;charset=utf-8,Name,Phone Number\n";
+            
+            numbers.forEach((number, index) => {
+                const name = `Contact ${index + 1}`;
+                csvContent += `${name},${number}\n`;
+            });
+            
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", "generated_contacts.csv");
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        document.getElementById('generateForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const baseNumber = document.getElementById('baseNumber').value;
+            const changes = parseInt(document.getElementById('changes').value);
+            const outputCount = parseInt(document.getElementById('outputCount').value);
+            
+            const resultList = document.getElementById('resultList');
+            resultList.innerHTML = '';
+
+            const generatedNumbers = generatePhoneNumbers(baseNumber, changes, outputCount);
+
+            generatedNumbers.forEach(number => {
+                const listItem = document.createElement('li');
+                listItem.textContent = number;
+                resultList.appendChild(listItem);
+            });
+
+            document.getElementById('downloadCsv').style.display = 'block';
+            document.getElementById('downloadCsv').onclick = () => downloadCSV(generatedNumbers);
+        });
+    </script>
+</body>
+</html>

@@ -31,7 +31,7 @@
             font-weight: bold;
             margin-top: 10px;
         }
-        input, button {
+        input, button, select {
             width: 100%;
             padding: 10px;
             margin-top: 5px;
@@ -67,18 +67,21 @@
     </style>
 </head>
 <body>
-    <h2>توليد أرقام هاتف بتغيير الأرقام الأخيرة</h2>
+    <h2>توليد أرقام هاتف بدون تكرار</h2>
     
     <form id="generateForm">
         <label for="baseNumber">الرقم الأساسي:</label>
         <input type="text" id="baseNumber" required pattern="\d{11}" title="الرجاء إدخال رقم هاتف مكون من 11 رقماً"><br><br>
         
-        <label for="changes">عدد الأرقام المطلوب تغييرها:</label>
-        <input type="number" id="changes" required min="1" max="11"><br><br>
-        
         <label for="outputCount">عدد الأرقام الناتجة المطلوبة:</label>
         <input type="number" id="outputCount" required min="1"><br><br>
         
+        <label for="direction">اتجاه التغيير:</label>
+        <select id="direction" required>
+            <option value="up">تصاعديًا</option>
+            <option value="down">تنازليًا</option>
+        </select><br><br>
+
         <button type="submit">توليد الأرقام</button>
     </form>
 
@@ -88,20 +91,51 @@
     <button id="downloadCsv" style="display:none;">تنزيل الأرقام كملف CSV</button>
 
     <script>
-        function generatePhoneNumbers(baseNumber, changes, outputCount) {
-            const generatedNumbers = [];
+        function generatePhoneNumbers(baseNumber, outputCount, direction) {
+            const generatedNumbers = new Set();
+            const maxUniqueNumbers = 100000; // تقريبًا، لتجنب تكرار الأرقام
             
+            let currentNumberArray = baseNumber.split('').map(Number);
+            let currentPosition = 10; // نبدأ بتغيير الرقم الأخير
+
             for (let i = 0; i < outputCount; i++) {
-                let newNumber = baseNumber.slice(0, -changes);
-                
-                for (let j = 0; j < changes; j++) {
-                    newNumber += Math.floor(Math.random() * 10);
+                if (generatedNumbers.size >= maxUniqueNumbers) {
+                    alert("العدد المطلوب كبير جدًا، وقد يؤدي إلى تكرار الأرقام. الرجاء تقليل العدد المطلوب.");
+                    break;
                 }
                 
-                generatedNumbers.push(newNumber);
+                // نسخ الرقم الحالي وتحويله إلى نص لإضافته للمجموعة دون تكرار
+                const newNumber = currentNumberArray.join('');
+                
+                if (generatedNumbers.has(newNumber)) {
+                    alert("تم الوصول إلى أقصى حد من الأرقام بدون تكرار.");
+                    break;
+                }
+                
+                generatedNumbers.add(newNumber);
+
+                // تحديث الرقم في الاتجاه المطلوب
+                if (direction === "up") {
+                    currentNumberArray[currentPosition]++;
+                    while (currentNumberArray[currentPosition] > 9 && currentPosition > 3) {
+                        currentNumberArray[currentPosition] = 0;
+                        currentPosition--;
+                        currentNumberArray[currentPosition]++;
+                    }
+                } else {
+                    currentNumberArray[currentPosition]--;
+                    while (currentNumberArray[currentPosition] < 0 && currentPosition > 3) {
+                        currentNumberArray[currentPosition] = 9;
+                        currentPosition--;
+                        currentNumberArray[currentPosition]--;
+                    }
+                }
+
+                // إعادة تعيين الموضع إلى الرقم الأخير بعد التحديث
+                currentPosition = 10;
             }
-            
-            return generatedNumbers;
+
+            return Array.from(generatedNumbers);
         }
 
         function downloadCSV(numbers) {
@@ -125,13 +159,13 @@
             event.preventDefault();
 
             const baseNumber = document.getElementById('baseNumber').value;
-            const changes = parseInt(document.getElementById('changes').value);
             const outputCount = parseInt(document.getElementById('outputCount').value);
+            const direction = document.getElementById('direction').value;
             
             const resultList = document.getElementById('resultList');
             resultList.innerHTML = '';
 
-            const generatedNumbers = generatePhoneNumbers(baseNumber, changes, outputCount);
+            const generatedNumbers = generatePhoneNumbers(baseNumber, outputCount, direction);
 
             generatedNumbers.forEach(number => {
                 const listItem = document.createElement('li');
@@ -139,7 +173,7 @@
                 resultList.appendChild(listItem);
             });
 
-            document.getElementById('downloadCsv').style.display = 'block';
+            document.getElementById('downloadCsv').style.display = generatedNumbers.length ? 'block' : 'none';
             document.getElementById('downloadCsv').onclick = () => downloadCSV(generatedNumbers);
         });
     </script>

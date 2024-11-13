@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تحميل الفيديو</title>
+</head>
+<body>
+    <h1>تحميل الفيديو</h1>
+    <input type="text" id="videoUrl" placeholder="أدخل رابط الفيديو">
+    <button onclick="downloadVideo()">تحميل</button>
+
+    <script>
+        function downloadVideo() {
+            const videoUrl = document.getElementById('videoUrl').value;
+            if (videoUrl) {
+                const link = document.createElement('a');
+                link.href = videoUrl;
+                link.download = 'video.mp4';  // يمكنك تغيير اسم الملف هنا
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            } else {
+                alert('يرجى إدخال رابط الفيديو!');
+            }
+        }
+    </script>
+</body>
+</html>

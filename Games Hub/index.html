@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Games Hub</title>
+  <style>
+    /* General Styles */
+    body {
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f4f4f9;
+      color: #333;
+    }
+    header {
+      background: #333;
+      color: white;
+      padding: 20px;
+      text-align: center;
+      font-size: 2em;
+    }
+    .container {
+      display: flex;
+      justify-content: space-evenly;
+      flex-wrap: wrap;
+      margin: 20px;
+    }
+    .game {
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      margin: 20px;
+      width: 300px;
+      padding: 20px;
+      text-align: center;
+    }
+    h2 {
+      margin-bottom: 20px;
+    }
+    /* Tic-Tac-Toe Styles */
+    #board {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 5px;
+    }
+    #board button {
+      width: 80px;
+      height: 80px;
+      font-size: 36px;
+      background-color: #f4f4f4;
+      border: 2px solid #ddd;
+      cursor: pointer;
+    }
+    #board button:focus {
+      outline: none;
+    }
+    /* Click Speed Styles */
+    #click-speed button {
+      padding: 10px 20px;
+      font-size: 18px;
+      cursor: pointer;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      margin-top: 20px;
+    }
+    /* Catch the Ball Styles */
+    .catch-ball {
+      position: relative;
+      width: 100%;
+      height: 200px;
+      background: lightblue;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .ball {
+      position: absolute;
+      width: 30px;
+      height: 30px;
+      background-color: red;
+      border-radius: 50%;
+    }
+    .catcher {
+      position: absolute;
+      bottom: 10px;
+      width: 60px;
+      height: 20px;
+      background-color: black;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .container {
+        flex-direction: column;
+        align-items: center;
+      }
+      .game {
+        width: 90%;
+      }
+    }
+  </style>
+</head>
+<body>
+<header>Games Hub</header>
+<div class="container">
+  <!-- Game 1: Tic-Tac-Toe -->
+  <div class="game" id="tic-tac-toe">
+    <h2>Tic-Tac-Toe</h2>
+    <div id="board">
+      <button onclick="play(this)"></button>
+      <button onclick="play(this)"></button>
+      <button onclick="play(this)"></button>
+      <button onclick="play(this)"></button>
+      <button onclick="play(this)"></button>
+      <button onclick="play(this)"></button>
+      <button onclick="play(this)"></button>
+      <button onclick="play(this)"></button>
+      <button onclick="play(this)"></button>
+    </div>
+    <button onclick="resetBoard()">Reset</button>
+    <p id="winner"></p>
+  </div>
+
+  <!-- Game 2: Click Speed -->
+  <div class="game" id="click-speed">
+    <h2>Click Speed</h2>
+    <p>Click as fast as you can within 5 seconds!</p>
+    <button id="click-button" onclick="countClicks()">Click me!</button>
+    <p>Clicks: <span id="click-count">0</span></p>
+    <button onclick="startGame()">Start Game</button>
+  </div>
+
+  <!-- Game 3: Catch the Ball -->
+  <div class="game" id="catch-ball">
+    <h2>Catch the Ball</h2>
+    <div class="catch-ball" id="catch-area">
+      <div class="ball" id="ball"></div>
+      <div class="catcher" id="catcher"></div>
+    </div>
+    <p id="catch-score">Score: 0</p>
+    <button onclick="startCatchGame()">Start Game</button>
+  </div>
+</div>
+
+<script>
+  // Tic-Tac-Toe Logic
+  let currentPlayer = "X";
+  const play = (cell) => {
+    if (cell.innerText === "") {
+      cell.innerText = currentPlayer;
+      currentPlayer = currentPlayer === "X" ? "O" : "X";
+      checkWinner();
+    }
+  };
+
+  const checkWinner = () => {
+    const board = Array.from(document.querySelectorAll("#board button")).map(
+      (cell) => cell.innerText
+    );
+    const winningPatterns = [
+      [0, 1, 2], [3, 4, 5], [6, 7, 8], // rows
+      [0, 3, 6], [1, 4, 7], [2, 5, 8], // columns
+      [0, 4, 8], [2, 4, 6], // diagonals
+    ];
+    for (let pattern of winningPatterns) {
+      if (
+        board[pattern[0]] &&
+        board[pattern[0]] === board[pattern[1]] &&
+        board[pattern[1]] === board[pattern[2]]
+      ) {
+        document.getElementById("winner").innerText = `${board[pattern[0]]} Wins!`;
+        return;
+      }
+    }
+  };
+
+  const resetBoard = () => {
+    document.querySelectorAll("#board button").forEach((cell) => {
+      cell.innerText = "";
+    });
+    document.getElementById("winner").innerText = "";
+  };
+
+  // Click Speed Logic
+  let clicks = 0;
+  let timer;
+
+  const countClicks = () => {
+    clicks++;
+    document.getElementById("click-count").innerText = clicks;
+  };
+
+  const startGame = () => {
+    clicks = 0;
+    document.getElementById("click-count").innerText = 0;
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      alert(`You clicked ${clicks} times!`);
+    }, 5000);
+  };
+
+  // Catch the Ball Logic
+  let score = 0;
+  const ball = document.getElementById("ball");
+  const catcher = document.getElementById("catcher");
+  const catchArea = document.getElementById("catch-area");
+  let ballInterval;
+  let speed = 1;
+
+  const moveBall = () => {
+    let ballLeft = Math.random() * (catchArea.offsetWidth - ball.offsetWidth);
+    ball.style.left = `${ballLeft}px`;
+    ball.style.top = "0px";
+    ballInterval = setInterval(() => {
+      const ballRect = ball.getBoundingClientRect();
+      const catcherRect = catcher.getBoundingClientRect();
+      if (
+        ballRect.bottom >= catcherRect.top &&
+        ballRect.left >= catcherRect.left &&
+        ballRect.right <= catcherRect.right
+      ) {
+        score++;
+        document.getElementById("catch-score").innerText = `Score: ${score}`;
+        ball.style.top = "0px";
+        ball.style.left = `${Math.random() * (catchArea.offsetWidth - ball.offsetWidth)}px`;
+      } else if (ballRect.bottom >= catchArea.offsetHeight) {
+        clearInterval(ballInterval);
+        alert("Game Over!");
+      } else {
+        ball.style.top = ball.offsetTop + speed + "px";
+      }
+    }, 50);
+  };
+
+  const startCatchGame = () => {
+    score = 0;
+    speed = 1;
+    document.getElementById("catch-score").innerText = `Score: ${score}`;
+    moveBall();
+  };
+
+  window.addEventListener("keydown", (e) => {
+    if (e.key === "ArrowLeft" && catcher.offsetLeft > 0) {
+      catcher.style.left = catcher.offsetLeft - 20 + "px";
+    } else if (e.key === "ArrowRight" && catcher.offsetLeft < catchArea.offsetWidth - catcher.offsetWidth) {
+      catcher.style.left = catcher.offsetLeft + 20 + "px";
+    }
+  });
+</script>
+</body>
+</html>

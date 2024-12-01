@@ -1,0 +1,2015 @@
+<html><head><base href="." />
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>This Movie Does Not Exist</title>
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+}
+
+body {
+    background: #000;
+    color: #fff;
+}
+
+.header {
+    background: #121212;
+    padding: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.imdb-logo {
+    width: auto;
+    min-width: 54px; /* Reduced from 64px */
+    height: 32px; /* Reduced from 40px */
+    object-fit: contain;
+    cursor: pointer;
+    background: #f5c518;
+    padding: 6px 10px; /* Reduced from 8px 12px */
+    border-radius: 6px; /* Reduced from 8px */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.imdb-logo span {
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif; 
+    color: black; 
+    font-size: 20px; /* Reduced from 24px */
+}
+
+.hero {
+    display: flex;
+    padding: 2rem;
+    gap: 2rem;
+    background: linear-gradient(to bottom, #1a1a1a, #000);
+}
+
+.poster {
+    width: 300px;
+    height: 450px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: transform 0.3s ease;
+    flex-shrink: 0;
+    background: #2c2c2c;
+}
+
+.poster img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.info {
+    flex: 1;
+}
+
+.title {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+.rating {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.star {
+    fill: #f5c518;
+    width: 24px;
+}
+
+.meta {
+    color: #aaa;
+    margin-bottom: 1rem;
+}
+
+.plot {
+    line-height: 1.6;
+    margin-bottom: 2rem;
+}
+
+.cast-section {
+    background: #1a1a1a;
+    border-radius: 8px;
+    padding: 1.5rem;
+}
+
+.section-title {
+    color: #f5c518;
+    margin-bottom: 1rem;
+}
+
+.cast-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.cast-card {
+    background: #2c2c2c;
+    padding: 1rem;
+    border-radius: 8px;
+}
+
+.loading {
+    background: linear-gradient(to right, #1a1a1a 4%, #222 25%, #1a1a1a 36%);
+    background-size: 1000px 100%;
+    animation: shimmer 2s infinite linear;
+}
+
+.rating-count {
+    color: #aaa;
+    font-size: 0.9rem;
+}
+
+.buttons {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.btn {
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.btn-primary {
+    background: #f5c518;
+    color: #000;
+}
+
+.btn-secondary {
+    background: #2c2c2c;
+    color: #fff;
+    height: 100%;
+    margin: 0;
+    white-space: nowrap;
+    transition: background-color 0.2s ease; 
+}
+
+.btn-secondary:hover {
+    background: #3c3c3c;
+}
+
+.random-btn {
+    padding: 0.5rem 1rem;
+    background: #2c2c2c;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background 0.2s;
+}
+
+.random-btn:hover {
+    background: #3c3c3c;
+}
+
+.search-container {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.content-type-dropdown {
+    padding: 0.5rem;
+    border-radius: 4px;
+    border: none;
+    background: #2c2c2c;
+    color: #fff;
+    font-weight: 500;
+    cursor: pointer;
+    margin-right: 0.5rem;
+    transition: background-color 0.2s;
+}
+
+.content-type-dropdown:hover {
+    background: #3c3c3c;
+}
+
+.content-type-dropdown:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(245, 197, 24, 0.4);
+}
+
+.loading-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.9);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.loading-spinner {
+    width: 50px;
+    height: 50px;
+    border: 4px solid #f5c518;
+    border-top: 4px solid transparent;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+.loading-text {
+    color: #f5c518;
+    margin-top: 1rem;
+    font-size: 1.2rem;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.reviews-section {
+    padding: 2rem;
+    margin-bottom: 4rem;
+    background: #1a1a1a;
+    border-radius: 8px;
+    margin: 2rem;
+}
+
+.reviews-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.review-card {
+    background: #2c2c2c;
+    padding: 1rem;  
+    border-radius: 8px;
+    margin-bottom: 0.75rem; 
+}
+
+.review-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem; 
+    margin-bottom: 0.75rem; 
+}
+
+.user-avatar {
+    width: 32px; 
+    height: 32px; 
+    border-radius: 50%;
+    background: #3c3c3c;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    color: #f5c518;
+}
+
+.review-meta {
+    flex: 1;
+}
+
+.review-username {
+    font-weight: bold;
+    margin-bottom: 0.25rem;
+    color: #f5c518;
+}
+
+.review-date {
+    color: #aaa;
+    font-size: 0.9rem;
+}
+
+.review-rating {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+    color: #f5c518;
+}
+
+.review-title {
+    font-size: 1.1rem; 
+    font-weight: bold;
+    margin-bottom: 0.25rem; 
+    color: #fff;
+}
+
+.review-content {
+    line-height: 1.4; 
+    color: #ddd;
+}
+
+.review-actions {
+    margin-top: 0.75rem; 
+    display: flex;
+    gap: 0.75rem; 
+}
+
+.review-action-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem; 
+    background: #3c3c3c;
+    border: none;
+    border-radius: 4px;
+    padding: 0.4rem 0.75rem; 
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.1s;
+}
+
+.review-action-btn:hover {
+    transform: scale(1.05);
+}
+
+.review-action-btn.active {
+    background: #f5c518;
+    color: #000;
+}
+
+.review-action-btn:active {
+    transform: scale(0.95);
+}
+
+.review-action-count {
+    font-weight: bold;
+}
+
+#reviewFormContainer input,
+#reviewFormContainer textarea,
+#reviewFormContainer select {
+    background: #3c3c3c;
+    border: none;
+    color: #fff;
+}
+
+#reviewFormContainer input:focus,
+#reviewFormContainer textarea:focus,
+#reviewFormContainer select:focus {
+    outline: 1px solid #f5c518;
+}
+
+#reviewFormContainer label {
+    color: #ddd;
+}
+
+.user-menu {
+    position: relative;
+    margin-left: auto; 
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+}
+
+.user-menu:hover {
+    background-color: #2c2c2c;
+}
+
+.user-menu-profile {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.user-menu-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: #3c3c3c;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    color: #f5c518;
+    overflow: hidden;  
+}
+
+.user-menu-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;  
+}
+
+.user-menu-dropdown {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background: #2c2c2c;
+    border-radius: 4px;
+    padding: 0.5rem;
+    min-width: 200px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    display: none;
+    z-index: 1000;
+}
+
+.user-menu-dropdown.active {
+    display: block;
+}
+
+.user-menu-item {
+    padding: 0.75rem 1rem;
+    color: #fff;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+}
+
+.user-menu-item:hover {
+    background-color: #3c3c3c;
+}
+
+.watchlist-container {
+    padding: 2rem;
+}
+
+.watchlist-item {
+    display: flex;
+    gap: 1rem;
+    padding: 1rem;
+    background: #1a1a1a;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    transition: transform 0.2s;
+}
+
+.watchlist-item:hover {
+    transform: translateX(5px);
+}
+
+.watchlist-poster {
+    width: 100px;
+    height: 150px;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.watchlist-poster svg {
+    width: 100%;
+    height: 100%;
+}
+
+.watchlist-info {
+    flex: 1;
+}
+
+.watchlist-title {
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+}
+
+.watchlist-meta {
+    color: #aaa;
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+}
+
+.watchlist-remove-btn {
+    padding: 0.5rem;
+    background: #2c2c2c;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background 0.2s;
+}
+
+.watchlist-remove-btn:hover {
+    background: #3c3c3c;
+}
+
+.delete-review-btn {
+    background: #ff4444;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: background 0.2s;
+    margin-left: auto;
+}
+
+.delete-review-btn:hover {
+    background: #cc0000;
+}
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal {
+    background: #2c2c2c;
+    padding: 2rem;
+    border-radius: 8px;
+    max-width: 400px;
+    width: 90%;
+}
+
+.modal-title {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+    color: #fff;
+}
+
+.modal-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+    margin-top: 1.5rem;
+}
+
+.modal-btn {
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.modal-btn-delete {
+    background: #ff4444;
+    color: white;
+}
+
+.modal-btn-cancel {
+    background: #3c3c3c;
+    color: white;
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: -1000px 0;
+    }
+    100% {
+        background-position: 1000px 0;
+    }
+}
+
+.poster.loading {
+    background: linear-gradient(to right, #1a1a1a 4%, #222 25%, #1a1a1a 36%) !important;
+    background-size: 1000px 100% !important;
+}
+
+.content-layout {
+    display: flex;
+    gap: 2rem;
+    padding: 2rem;
+    background: linear-gradient(to bottom, #1a1a1a, #000);
+}
+
+.main-content {
+    flex: 1;
+}
+
+.side-content {
+    width: 300px;
+    flex-shrink: 0;
+}
+
+.review-replies {
+    margin-left: 3rem;
+    margin-top: 1rem;
+    border-left: 2px solid #3c3c3c;
+    padding-left: 1rem;
+}
+
+.reply-card {
+    background: #252525;
+    padding: 1rem;
+    border-radius: 6px;
+    margin-bottom: 0.75rem;
+}
+
+.reply-form {
+    margin-top: 1rem;
+    display: none;
+}
+
+.reply-textarea {
+    width: 100%;
+    min-height: 80px;
+    background: #3c3c3c;
+    border: none;
+    border-radius: 4px;
+    padding: 0.5rem;
+    color: #fff;
+    margin-bottom: 0.5rem;
+}
+
+.reply-textarea:focus {
+    outline: 1px solid #f5c518;
+}
+
+.reply-button-container {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.advanced-search-modal {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #2c2c2c;
+    padding: 1.5rem; /* Reduced from 2rem */
+    border-radius: 8px;
+    width: 90%;
+    max-width: 500px; /* Reduced from 600px */
+    z-index: 1001;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+}
+
+.advanced-search-form {
+    display: grid;
+    gap: 0.75rem; /* Reduced from 1rem */
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem; /* Reduced from 0.5rem */
+}
+
+.genre-checkboxes {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); /* Reduced column width */
+    gap: 0.25rem; /* Reduced from 0.5rem */
+    max-height: 150px; /* Reduced from 200px */
+    padding: 0.25rem; /* Reduced from 0.5rem */
+}
+
+.genre-checkbox {
+    font-size: 0.9rem; /* Added smaller font size */
+    gap: 0.25rem; /* Reduced from 0.5rem */
+}
+
+/* Make inputs and selects more compact */
+.form-group input,
+.form-group select {
+    padding: 0.35rem; /* Reduced from 0.5rem */
+    font-size: 0.9rem; /* Added smaller font size */
+}
+
+/* Make the title smaller and less bottom margin */
+.advanced-search-modal h2 {
+    margin-bottom: 1rem; /* Reduced from 1.5rem */
+    font-size: 1.2rem; /* Reduced from default size */
+}
+
+/* Make buttons more compact */
+.advanced-search-buttons {
+    margin-top: 0.75rem; /* Reduced from 1rem */
+    gap: 0.75rem; /* Reduced from 1rem */
+}
+
+/* Update the year range inputs to be more compact */
+.form-group input[name="yearFrom"],
+.form-group input[name="yearTo"] {
+    width: 100px; /* Set specific width */
+}
+</style>
+</head>
+<body>
+    <header class="header">
+        <div class="imdb-logo" onclick="returnToStartScreen()">
+            <span style="font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif; color: black; font-size: 20px;">TMDNE</span>
+        </div>
+        <div class="search-container">
+            <select id="contentTypeSelect" class="content-type-dropdown">
+                <option value="movie">Movies</option>
+                <option value="tv">TV Shows</option>
+            </select>
+            <input type="text" id="movieSearch" placeholder="Search TMDNE" style="padding: 0.5rem; border-radius: 4px; border: none; width: 300px;">
+            <button class="btn btn-secondary" id="searchButton">🔍 Search</button>
+            <button class="btn btn-secondary" id="advancedSearchButton">🔍 Advanced Search</button>
+            <button class="random-btn" id="randomButton">🎲 Random</button>
+        </div>
+        <div class="user-menu">
+            <div class="user-menu-profile">
+                <div class="user-menu-avatar" id="userAvatar"></div>
+                <span id="username">@Anonymous</span>
+            </div>
+            <div class="user-menu-dropdown">
+                <a href="#" class="user-menu-item" id="watchlistMenuItem">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M19 3H5c-1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-9 14l-5-5 1.4-1.4 3.6 3.6 7.6-7.6L19 8l-9 9z"/>
+                    </svg>
+                    My Watchlist
+                </a>
+                <a href="#" class="user-menu-item" id="reviewsMenuItem">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-7 12h-2v-2h2v2zm0-4h-2V6h2v4z"/>
+                    </svg>
+                    My Reviews
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main id="mainContent">
+        <div style="text-align: center; padding: 4rem; color: #aaa;">
+            <h2>Welcome to TMDNE</h2>
+            <p>Use the search bar or random button to discover movies</p>
+        </div>
+    </main>
+
+    <div class="modal-backdrop" id="advancedSearchBackdrop"></div>
+    <div class="advanced-search-modal" id="advancedSearchModal">
+        <h2 style="color: #f5c518; margin-bottom: 1rem;">Advanced Search</h2>
+        <form class="advanced-search-form" id="advancedSearchForm">
+            <div class="form-group">
+                <label>Content Type</label>
+                <select name="contentType" id="advancedContentType">
+                    <option value="movie">Movies</option>
+                    <option value="tv">TV Shows</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Title</label>
+                <input type="text" name="title" placeholder="Enter title keywords">
+            </div>
+            <div class="form-group">
+                <label>Year Range</label>
+                <div style="display: flex; gap: 0.5rem; align-items: center;">
+                    <input type="number" name="yearFrom" placeholder="From" min="1900" max="2024" style="width: 100px;">
+                    <span style="color: #aaa;">-</span>
+                    <input type="number" name="yearTo" placeholder="To" min="1900" max="2024" style="width: 100px;">
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Studio</label>
+                <input type="text" name="studio" placeholder="Enter studio name">
+            </div>
+            <div class="form-group">
+                <label>Minimum Rating</label>
+                <select name="rating">
+                    <option value="">Any Rating</option>
+                    <option value="9">9+ ⭐</option>
+                    <option value="8">8+ ⭐</option>
+                    <option value="7">7+ ⭐</option>
+                    <option value="6">6+ ⭐</option>
+                    <option value="5">5+ ⭐</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Age Rating</label>
+                <select name="ageRating">
+                    <option value="">Any Rating</option>
+                    <option value="G">G</option>
+                    <option value="PG">PG</option>
+                    <option value="PG-13">PG-13</option>
+                    <option value="R">R</option>
+                    <option value="NC-17">NC-17</option>
+                    <option value="TV-Y">TV-Y</option>
+                    <option value="TV-Y7">TV-Y7</option>
+                    <option value="TV-G">TV-G</option>
+                    <option value="TV-PG">TV-PG</option>
+                    <option value="TV-14">TV-14</option>
+                    <option value="TV-MA">TV-MA</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Genres</label>
+                <div class="genre-checkboxes">
+                    <div class="genre-checkbox">
+                        <input type="checkbox" name="genres" value="Action"> Action
+                    </div>
+                    <div class="genre-checkbox">
+                        <input type="checkbox" name="genres" value="Adventure"> Adventure
+                    </div>
+                    <div class="genre-checkbox">
+                        <input type="checkbox" name="genres" value="Animation"> Animation
+                    </div>
+                    <div class="genre-checkbox">
+                        <input type="checkbox" name="genres" value="Anime"> Anime
+                    </div>
+                    <div class="genre-checkbox">
+                        <input type="checkbox" name="genres" value="Comedy"> Comedy
+                    </div>
+                    <div class="genre-checkbox">
+                        <input type="checkbox" name="genres" value="Crime"> Crime
+                    </div>
+                    <div class="genre-checkbox">
+                        <input type="checkbox" name="genres" value="Drama"> Drama
+                    </div>
+                    <div class="genre-checkbox">
+                        <input type="checkbox" name="genres" value="Fantasy"> Fantasy
+                    </div>
+                    <div class="genre-checkbox">
+                        <input type="checkbox" name="genres" value="Horror"> Horror
+                    </div>
+                    <div class="genre-checkbox">
+                        <input type="checkbox" name="genres" value="Mystery"> Mystery
+                    </div>
+                    <div class="genre-checkbox">
+                        <input type="checkbox" name="genres" value="Romance"> Romance
+                    </div>
+                    <div class="genre-checkbox">
+                        <input type="checkbox" name="genres" value="Sci-Fi"> Sci-Fi
+                    </div>
+                    <div class="genre-checkbox">
+                        <input type="checkbox" name="genres" value="Thriller"> Thriller
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Actors (separate multiple names with commas)</label>
+                <input type="text" name="actor" placeholder="Enter actor names, e.g. Tom Hanks, Brad Pitt">
+            </div>
+            <div class="advanced-search-buttons">
+                <button type="button" class="btn btn-secondary" id="cancelAdvancedSearch">Cancel</button>
+                <button type="submit" class="btn btn-primary">Search</button>
+            </div>
+        </form>
+    </div>
+
+<script>
+let currentMovieData = null;
+
+// Initialize watchlist from localStorage at the start of the script
+let watchlist = JSON.parse(localStorage.getItem('watchlist') || '[]');
+
+async function generateReviews(movieData) {
+    try {
+        const response = await fetch('/api/ai_completion', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+            },
+            body: JSON.stringify({
+                prompt: `Generate 3-5 realistic user reviews for the ${movieData.title} (${movieData.year}). The reviews should match the movie's genre, plot, and overall rating of ${movieData.rating}.
+
+                <typescript-interface>
+                interface ReviewData {
+                    reviews: Array<{
+                        username: string;
+                        rating: number;
+                        date: string;
+                        title: string;
+                        content: string;
+                    }>;
+                }
+                </typescript-interface>
+                
+                <example>
+                {
+                    "reviews": [
+                        {
+                            "username": "MovieBuff42",
+                            "rating": 8,
+                            "date": "March 15, 2024",
+                            "title": "A Masterpiece of Modern Cinema",
+                            "content": "Was completely blown away by the cinematography and storytelling. The director's vision really shines through in every scene."
+                        }
+                    ]
+                }
+                </example>`,
+                data: movieData
+            }),
+        });
+        
+        return await response.json();
+    } catch (error) {
+        console.error('Error generating reviews:', error);
+        return {
+            reviews: [
+                {
+                    username: "CinemaFan123",
+                    rating: Math.round(movieData.rating),
+                    date: "March 20, 2024",
+                    title: "Impressive Entertainment",
+                    content: "A solid addition to the genre that delivers exactly what it promises. The performances were convincing and the story kept me engaged throughout."
+                }
+            ]
+        };
+    }
+}
+
+function addToWatchlist(movie) {
+    // Prevent duplicates
+    if (!watchlist.some(m => m.title === movie.title)) {
+        watchlist.push(movie);
+        localStorage.setItem('watchlist', JSON.stringify(watchlist));
+    }
+}
+
+function removeFromWatchlist(movieTitle) {
+    watchlist = watchlist.filter(movie => movie.title !== movieTitle);
+    localStorage.setItem('watchlist', JSON.stringify(watchlist));
+}
+
+function showWatchlist() {
+    const mainContent = document.getElementById('mainContent');
+    const watchlist = JSON.parse(localStorage.getItem('watchlist') || '[]');
+    
+    mainContent.innerHTML = `
+        <div class="watchlist-container">
+            <h2 class="section-title">My Watchlist</h2>
+            ${watchlist.length === 0 ? 
+                '<p style="color: #aaa; text-align: center; padding: 2rem;">Your watchlist is empty</p>' :
+                watchlist.map(movie => `
+                    <div class="watchlist-item">
+                        <div class="watchlist-poster">
+                            <svg viewBox="0 0 24 24" fill="#aaa">
+                                <path d="M18 3v2h-2V3H8v2H6V3H4v18h2v-2h2v2h8v-2h2v2h2V3h-2zM8 17H6v-2h2v2zm0-4H6v-2h2v2zm0-4H6V7h2v2zm10 8h-2v-2h2v2zm0-4h-2v-2h2v2zm0-4h-2V7h2v2z"/>
+                            </svg>
+                        </div>
+                        <div class="watchlist-info">
+                            <h3 class="watchlist-title">${movie.title} (${movie.year})</h3>
+                            <div class="watchlist-meta">
+                                ${movie.genres.join(', ')} · ${movie.duration}
+                            </div>
+                            <div class="watchlist-meta">
+                                ⭐ ${movie.rating}/10
+                            </div>
+                            <p style="color: #aaa; margin-top: 0.5rem;">${movie.plot}</p>
+                        </div>
+                        <button class="watchlist-remove-btn" onclick="removeFromWatchlistAndRefresh('${movie.title}')">Remove</button>
+                    </div>
+                `).join('')
+            }
+        </div>
+    `;
+}
+
+function removeFromWatchlistAndRefresh(movieTitle) {
+    removeFromWatchlist(movieTitle);
+    showWatchlist(); // Refresh the watchlist display
+}
+
+function showDeleteConfirmation(reviewId) {
+    // Create modal overlay
+    const modalOverlay = document.createElement('div');
+    modalOverlay.className = 'modal-overlay';
+    modalOverlay.style.display = 'flex';
+
+    modalOverlay.innerHTML = `
+        <div class="modal">
+            <h3 class="modal-title">Delete Review?</h3>
+            <p style="color: #ddd;">Are you sure you want to delete this review? This action cannot be undone.</p>
+            <div class="modal-buttons">
+                <button class="modal-btn modal-btn-cancel">Cancel</button>
+                <button class="modal-btn modal-btn-delete">Delete</button>
+            </div>
+        </div>
+    `;
+
+    document.body.appendChild(modalOverlay);
+
+    // Add event listeners
+    const deleteBtn = modalOverlay.querySelector('.modal-btn-delete');
+    const cancelBtn = modalOverlay.querySelector('.modal-btn-cancel');
+
+    deleteBtn.addEventListener('click', () => {
+        deleteReview(reviewId);
+        const reviewCard = document.querySelector(`[data-review-id="${reviewId}"]`);
+        if (reviewCard) {
+            reviewCard.remove();
+        }
+        modalOverlay.remove();
+    });
+
+    cancelBtn.addEventListener('click', () => {
+        modalOverlay.remove();
+    });
+}
+
+async function getCurrentUser() {
+    const user = await window.websim.getUser();
+    return user || {
+        username: "Anonymous",
+        avatar_url: null
+    };
+}
+
+async function generatePosterArt(movieData) {
+    try {
+        // Check if Anime is one of the genres
+        const isAnime = movieData.genres.includes('Anime');
+        
+        const response = await fetch('/api/ai_completion', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+            },
+            body: JSON.stringify({
+                prompt: `Generate a movie poster image for "${movieData.title}". The movie is a ${movieData.genres.join(', ')} film about: "${movieData.plot}". ${
+                    isAnime ? 
+                    'Create a high-quality anime-style poster in the distinctive Japanese animation art style, with bold colors, dramatic composition, and anime character designs.' : 
+                    'Create a high-quality, professional movie poster that captures the essence of the film.'
+                }
+                
+                <typescript-interface>
+                interface Response {
+                    imageUrl: string;
+                }
+                </typescript-interface>
+                
+                <example>
+                {
+                    "imageUrl": "https://example.com/generated-poster.jpg"
+                }
+                </example>`,
+                data: {
+                    ...movieData,
+                    requireAnimeStyle: isAnime
+                }
+            }),
+        });
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error('Error generating poster art:', error);
+        return null;
+    }
+}
+
+async function generateRandomTitle() {
+    try {
+        const contentType = document.getElementById('contentTypeSelect').value;
+        const response = await fetch('/api/ai_completion', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+            },
+            body: JSON.stringify({
+                prompt: `Generate a creative and unique ${contentType === 'tv' ? 'TV show' : 'movie'} title that sounds like it could be real but doesn't exist.
+                
+                <typescript-interface>
+                interface Response {
+                    title: string;
+                }
+                </typescript-interface>
+                
+                <example>
+                {
+                    "title": "${contentType === 'tv' ? 'The Neon Dynasty' : 'The Quantum Echo'}"
+                }
+                </example>`,
+                data: {}
+            }),
+        });
+        const data = await response.json();
+        return data.title;
+    } catch (error) {
+        console.error('Error generating random title:', error);
+        return contentType === 'tv' ? 'The Lost Chronicles' : 'The Lost Dream';
+    }
+}
+
+async function getMovieContent(title) {
+    try {
+        const contentType = document.getElementById('contentTypeSelect').value;
+        const response = await fetch('/api/ai_completion', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+            },
+            body: JSON.stringify({
+                prompt: `Generate a fictional ${contentType === 'tv' ? 'TV show' : 'movie'} description based on the title "${title}". ${contentType === 'tv' ? 'Include number of seasons and total episodes. ' : ''}Include title, year, rating, ${contentType === 'tv' ? 'episode duration' : 'duration'}, genres, plot, cast members with their roles. For the release date, generate a random date in 2024 in the format "Month DD, 2024". The studio name and age rating should also be random.
+                
+                <typescript-interface>
+                interface ${contentType === 'tv' ? 'TVShowData' : 'MovieData'} {
+                    title: string;
+                    year: number;
+                    rating: number;
+                    duration: string;
+                    genres: string[];
+                    plot: string;
+                    cast: Array<{name: string, role: string}>;
+                    voteCount: number;
+                    studio: string;
+                    releaseDate: string;
+                    ageRating: string;
+                    ${contentType === 'tv' ? `
+                    seasons: number;
+                    totalEpisodes: number;
+                    topEpisodes: Array<{
+                        title: string;
+                        episodeNumber: string;
+                        rating: number;
+                        description: string;
+                    }>
+                    ` : ''}
+                }
+                </typescript-interface>
+                
+                <example>
+                {
+                    "title": "${contentType === 'tv' ? 'The Midnight Chronicles' : 'The Midnight Runner'}",
+                    "year": 2024,
+                    "rating": 8.4,
+                    "duration": "${contentType === 'tv' ? '45min per episode' : '2h 5min'}",
+                    "genres": ["${contentType === 'tv' ? 'Drama' : 'Action'}", "Thriller"],
+                    "plot": "${contentType === 'tv' ? 'A gripping series about...' : 'A former Olympic athlete must...'}",
+                    "cast": [
+                        {"name": "John Cho", "role": "Alex Chen"},
+                        {"name": "Karen Gillan", "role": "Sarah Mitchell"}
+                    ],
+                    "voteCount": 32750,
+                    "studio": "Quantum Pictures",
+                    "releaseDate": "September 15, 2024",
+                    "ageRating": "TV-MA"${contentType === 'tv' ? `,
+                    "seasons": 3,
+                    "totalEpisodes": 36,
+                    "topEpisodes": [
+                        {
+                            "title": "The Beginning",
+                            "episodeNumber": "S01E01",
+                            "rating": 9.2,
+                            "description": "In this groundbreaking pilot episode, we are introduced to our main characters as they face their first major challenge."
+                        },
+                        {
+                            "title": "The Twist",
+                            "episodeNumber": "S02E05", 
+                            "rating": 9.8,
+                            "description": "A shocking revelation changes everything the characters thought they knew about their world."
+                        },
+                        {
+                            "title": "The Discovery",
+                            "episodeNumber": "S02E08",
+                            "rating": 9.4,
+                            "description": "An unexpected discovery leads our heroes down a dangerous path of no return."
+                        },
+                        {
+                            "title": "The Confrontation",
+                            "episodeNumber": "S02E10",
+                            "rating": 9.6,
+                            "description": "Everything comes to a head as secrets are revealed and loyalties are tested."
+                        },
+                        {
+                            "title": "The Finale",
+                            "episodeNumber": "S03E10",
+                            "rating": 9.9,
+                            "description": "The season comes to a dramatic close as all storylines converge in an explosive conclusion."
+                        }
+                    ]` : ''}
+                }
+                </example>`,
+                data: title
+            }),
+        });
+        return await response.json();
+    } catch (error) {
+        console.error('Error:', error);
+        return null;
+    }
+}
+
+async function getAdvancedMovieContent(searchCriteria) {
+    try {
+        const response = await fetch('/api/ai_completion', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+            },
+            body: JSON.stringify({
+                prompt: `Generate a ${searchCriteria.contentType === 'tv' ? 'TV show' : 'movie'} that matches these criteria: ${
+                    searchCriteria.title ? `Title containing "${searchCriteria.title}"` : 'Any title'
+                }. Year between ${searchCriteria.yearFrom || 1900} and ${searchCriteria.yearTo || 2024}. ${
+                    searchCriteria.studio ? `From studio "${searchCriteria.studio}".` : ''
+                } ${
+                    searchCriteria.rating ? `Minimum rating of ${searchCriteria.rating}.` : ''
+                } ${
+                    searchCriteria.genres.length ? `Genres: ${searchCriteria.genres.join(', ')}.` : ''
+                } ${
+                    searchCriteria.actors.length ? `Starring ${searchCriteria.actors.join(' and ')}.` : ''
+                } ${
+                    searchCriteria.ageRating ? `Age rating: ${searchCriteria.ageRating}.` : ''
+                }
+                
+                <typescript-interface>
+                interface ${searchCriteria.contentType === 'tv' ? 'TVShowData' : 'MovieData'} {
+                    title: string;
+                    year: number;
+                    rating: number;
+                    duration: string;
+                    genres: string[];
+                    plot: string;
+                    cast: Array<{name: string, role: string}>;
+                    voteCount: number;
+                    studio: string;
+                    releaseDate: string;
+                    ageRating: string;
+                    ${searchCriteria.contentType === 'tv' ? `
+                    seasons: number;
+                    totalEpisodes: number;
+                    topEpisodes: Array<{
+                        title: string;
+                        episodeNumber: string;
+                        rating: number;
+                        description: string;
+                    }>
+                    ` : ''}
+                }
+                </typescript-interface>
+                
+                <example>
+                {
+                    "title": "${searchCriteria.contentType === 'tv' ? 'The Midnight Chronicles' : 'The Midnight Runner'}",
+                    "year": 2024,
+                    "rating": 8.4,
+                    "duration": "${searchCriteria.contentType === 'tv' ? '45min per episode' : '2h 5min'}",
+                    "genres": ["${searchCriteria.contentType === 'tv' ? 'Drama' : 'Action'}", "Thriller"],
+                    "plot": "${searchCriteria.contentType === 'tv' ? 'A gripping series about...' : 'A former Olympic athlete must...'}",
+                    "cast": [
+                        {"name": "John Cho", "role": "Alex Chen"},
+                        {"name": "Karen Gillan", "role": "Sarah Mitchell"}
+                    ],
+                    "voteCount": 32750,
+                    "studio": "Quantum Pictures",
+                    "releaseDate": "September 15, 2024",
+                    "ageRating": "${searchCriteria.ageRating || 'PG-13'}"${searchCriteria.contentType === 'tv' ? `,
+                    "seasons": 3,
+                    "totalEpisodes": 36,
+                    "topEpisodes": [
+                        {
+                            "title": "The Beginning",
+                            "episodeNumber": "S01E01",
+                            "rating": 9.2,
+                            "description": "In this groundbreaking pilot episode, we are introduced to our main characters as they face their first major challenge."
+                        },
+                        {
+                            "title": "The Twist",
+                            "episodeNumber": "S02E05", 
+                            "rating": 9.8,
+                            "description": "A shocking revelation changes everything the characters thought they knew about their world."
+                        },
+                        {
+                            "title": "The Discovery",
+                            "episodeNumber": "S02E08",
+                            "rating": 9.4,
+                            "description": "An unexpected discovery leads our heroes down a dangerous path of no return."
+                        },
+                        {
+                            "title": "The Confrontation",
+                            "episodeNumber": "S02E10",
+                            "rating": 9.6,
+                            "description": "Everything comes to a head as secrets are revealed and loyalties are tested."
+                        },
+                        {
+                            "title": "The Finale",
+                            "episodeNumber": "S03E10",
+                            "rating": 9.9,
+                            "description": "The season comes to a dramatic close as all storylines converge in an explosive conclusion."
+                        }
+                    ]` : ''}
+                }
+                </example>`,
+                data: searchCriteria
+            }),
+        });
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error('Error generating advanced content:', error);
+        return null;
+    }
+}
+
+async function updateContent(movieData) {
+    currentMovieData = movieData;
+    
+    const mainContent = document.getElementById('mainContent');
+    mainContent.style.marginBottom = '4rem';
+
+    let mainContentHTML = `
+        <section class="hero">
+            <div class="info" style="display: flex; gap: 2rem;">
+                <div style="display: flex; flex-direction: column; gap: 2rem;">
+                    <div class="poster loading">
+                        <div style="width: 100%; height: 100%; display: flex; justify-content: center; align-items: center;">
+                            <span style="color: #aaa;">Generating poster...</span>
+                        </div>
+                    </div>
+                </div>
+                <div style="flex: 1;">
+                    <h1 class="title">${movieData.title} (${movieData.year})</h1>
+                    <div class="rating">
+                        <svg class="star" viewBox="0 0 24 24">
+                            <path d="M12 2l2.4 7.4h7.6l-6 4.6 2.4 7.4-6-4.6-6 4.6 2.4-7.4-6-4.6h7.6z"/>
+                        </svg>
+                        <span style="font-size: 1.2rem; font-weight: bold;">${movieData.rating}</span>
+                        <span class="rating-count">/10 · ${movieData.voteCount.toLocaleString()} reviews</span>
+                    </div>
+                    <div class="meta">
+                        ${movieData.studio} · ${movieData.ageRating} · ${movieData.duration} ${
+                            movieData.seasons ? 
+                            `· ${movieData.seasons} Seasons · ${movieData.totalEpisodes} Episodes` : 
+                            ''
+                        } · ${movieData.genres.join(', ')} · ${movieData.releaseDate} (USA)
+                    </div>
+                    <div class="buttons">
+                        <button class="btn btn-primary">${watchlist.some(movie => movie.title === movieData.title) ? '✓ Added to Watchlist' : '+ Add to Watchlist'}</button>
+                        <button class="btn btn-secondary">↗ Share</button>
+                    </div>
+                    <div class="plot">${movieData.plot}</div>
+                </div>
+            </div>
+        </section>
+        <section class="cast-section" style="margin: 2rem;">
+            <h2 class="section-title">Cast</h2>
+            <div class="cast-grid">
+                ${movieData.cast.map(actor => `
+                    <div class="cast-card">
+                        <h3 style="font-size: 1.1rem; margin-bottom: 0.5rem;">${actor.name}</h3>
+                        <p style="color: #aaa;">${actor.role}</p>
+                    </div>
+                `).join('')}
+            </div>
+        </section>
+        ${movieData.seasons ? `
+        <section class="cast-section" style="margin: 2rem;">
+            <h2 class="section-title">Top Episodes</h2>
+            <div class="cast-grid">
+                ${movieData.topEpisodes?.map(episode => `
+                    <div class="cast-card" style="display: flex; flex-direction: column; gap: 0.5rem;">
+                        <div style="display: flex; align-items: center; justify-content: space-between;">
+                            <h3 style="font-size: 1.1rem;">${episode.title}</h3>
+                            <div class="rating" style="display: flex; align-items: center; gap: 0.25rem;">
+                                <svg class="star" viewBox="0 0 24 24" style="width: 16px; height: 16px;">
+                                    <path d="M12 2l2.4 7.4h7.6l-6 4.6 2.4 7.4-6-4.6-6 4.6 2.4-7.4-6-4.6h7.6z"/>
+                                </svg>
+                                <span style="font-size: 0.9rem;">${episode.rating}/10</span>
+                            </div>
+                        </div>
+                        <p style="color: #aaa; font-size: 0.9rem;">Episode ${episode.episodeNumber}</p>
+                        <p style="color: #ddd; font-size: 0.9rem; line-height: 1.4;">${episode.description}</p>
+                    </div>
+                `).join('')}
+            </div>
+        </section>
+        ` : ''}
+        <section class="reviews-section">
+            <h2 class="section-title">User Reviews</h2>
+            <div id="reviewFormContainer" style="display: none; margin-bottom: 2rem;">
+                <form id="reviewForm" style="display: flex; flex-direction: column; gap: 1rem; max-width: 600px;">
+                    <div>
+                        <label for="reviewRating">Rating</label>
+                        <select id="reviewRating" required style="width: 100%; padding: 0.5rem;">
+                            ${[10,9,8,7,6,5,4,3,2,1].map(num => 
+                                `<option value="${num}">${num}</option>`
+                            ).join('')}
+                        </select>
+                    </div>
+                    <div>
+                        <label for="reviewTitle">Title</label>
+                        <input type="text" id="reviewTitle" required style="width: 100%; padding: 0.5rem;">
+                    </div>
+                    <div>
+                        <label for="reviewContent">Review</label>
+                        <textarea id="reviewContent" required style="width: 100%; padding: 0.5rem; min-height: 100px;"></textarea>
+                    </div>
+                    <div style="display: flex; gap: 1rem;">
+                        <button type="submit" class="btn btn-primary">Submit Review</button>
+                        <button type="button" class="btn btn-secondary" id="cancelReview">Cancel</button>
+                    </div>
+                </form>
+            </div>
+            <button class="btn btn-primary" id="writeReviewBtn" style="margin-bottom: 2rem;">Write a Review</button>
+            <div id="reviewsContainer">
+            </div>
+        </section>
+    `;
+
+    mainContent.innerHTML = mainContentHTML;
+
+    // Generate and display reviews
+    const reviewsData = await generateReviews(movieData);
+    const reviewsContainer = document.getElementById('reviewsContainer');
+    if (reviewsData && reviewsData.reviews) {
+        reviewsContainer.innerHTML = reviewsData.reviews.map(review => `
+            <div class="review-card">
+                <div class="review-header">
+                    <div class="user-avatar">${review.username.charAt(0).toUpperCase()}</div>
+                    <div class="review-meta">
+                        <div class="review-username">${review.username}</div>
+                        <div class="review-date">${review.date}</div>
+                    </div>
+                    <div class="review-rating">
+                        <svg class="star" viewBox="0 0 24 24" style="width: 16px;">
+                            <path d="M12 2l2.4 7.4h7.6l-6 4.6 2.4 7.4-6-4.6-6 4.6 2.4-7.4-6-4.6h7.6z"/>
+                        </svg>
+                        <span>${review.rating}/10</span>
+                    </div>
+                </div>
+                <div class="review-title">${review.title}</div>
+                <div class="review-content">${review.content}</div>
+                <div class="review-actions">
+                    <button class="review-action-btn like-btn">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M1 21h4V9H1v12zm22-11c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 1 7.59 7.59C7.22 7.95 7 8.45 7 9v10c0 1.1.9 2 2 2h9c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73v-2z"/>
+                        </svg>
+                        <span class="review-action-count">0</span>
+                    </button>
+                    <button class="review-action-btn dislike-btn">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M15 3H6c-.83 0-1.54.5-1.84 1.22l-3.02 7.05c-.09.23-.14.47-.14.73v2c0 1.1.9 2 2 2h6.31l-.95 4.57-.03.32c0 .41.17.79.44 1.06L9.83 23l6.59-6.59c.36-.36.58-.86.58-1.41V5c0-1.1-.9-2-2-2zm4 0v12h4V3h-4z"/>
+                        </svg>
+                        <span class="review-action-count">0</span>
+                    </button>
+                    <button class="btn btn-secondary reply-btn">Reply</button>
+                </div>
+                <div class="reply-form">
+                    <textarea class="reply-textarea" placeholder="Write your reply..."></textarea>
+                    <div class="reply-button-container">
+                        <button class="btn btn-primary submit-reply-btn">Submit Reply</button>
+                        <button class="btn btn-secondary cancel-reply-btn">Cancel</button>
+                    </div>
+                </div>
+                <div class="review-replies"></div>
+            </div>
+        `).join('');
+
+        // Add click handlers for like/dislike buttons
+        const reviewButtons = document.querySelectorAll('.review-action-btn');
+        reviewButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                // Get current button state and count
+                const isActive = this.classList.contains('active');
+                const counter = this.querySelector('.review-action-count');
+                let count = parseInt(counter.textContent);
+                
+                // Find the opposite button in the same review
+                const reviewActions = this.closest('.review-actions');
+                const otherButton = button.classList.contains('like-btn') ? 
+                    reviewActions.querySelector('.dislike-btn') : 
+                    reviewActions.querySelector('.like-btn');
+                const otherCounter = otherButton.querySelector('.review-action-count');
+                
+                // Handle button state changes
+                if (isActive) {
+                    // If already active, deactivate and decrease count
+                    this.classList.remove('active');
+                    count = Math.max(0, count - 1);
+                } else {
+                    // If not active, activate and increase count
+                    this.classList.add('active');
+                    count++;
+                    
+                    // If other button was active, deactivate it and decrease its count
+                    if (otherButton.classList.contains('active')) {
+                        otherButton.classList.remove('active');
+                        const otherCount = parseInt(otherCounter.textContent);
+                        otherCounter.textContent = Math.max(0, otherCount - 1);
+                    }
+                }
+                
+                counter.textContent = count;
+            });
+        });
+    }
+
+    // Generate poster after initial render
+    const posterData = await generatePosterArt(movieData);
+    const poster = document.querySelector('.poster');
+
+    if (posterData && posterData.imageUrl) {
+        poster.classList.remove('loading');
+        poster.innerHTML = `<img src="${posterData.imageUrl}" alt="${movieData.title} poster" style="width: 100%; height: 100%; object-fit: cover;">`;
+    } else {
+        poster.classList.remove('loading');
+        poster.style.background = '#2c2c2c';
+        poster.innerHTML = `
+            <div style="width: 100%; height: 100%; display: flex; justify-content: center; align-items: center;">
+                <span style="color: #aaa;">${movieData.title}</span>
+            </div>
+        `;
+    }
+
+    attachEventListeners();
+    handleReplyButtons();
+}
+
+function handleReplyButtons() {
+    // Get all reply buttons
+    const replyButtons = document.querySelectorAll('.reply-btn');
+    
+    replyButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            // Find the reply form for this review
+            const reviewCard = this.closest('.review-card');
+            const replyForm = reviewCard.querySelector('.reply-form');
+            
+            // Toggle reply form visibility
+            if (replyForm.style.display === 'block') {
+                replyForm.style.display = 'none';
+            } else {
+                // Hide all other reply forms first
+                document.querySelectorAll('.reply-form').forEach(form => {
+                    form.style.display = 'none';
+                });
+                replyForm.style.display = 'block';
+            }
+        });
+    });
+
+    // Handle submit reply buttons
+    const submitReplyButtons = document.querySelectorAll('.submit-reply-btn');
+    submitReplyButtons.forEach(button => {
+        button.addEventListener('click', async function() {
+            const reviewCard = this.closest('.review-card');
+            const replyForm = reviewCard.querySelector('.reply-form');
+            const replyText = replyForm.querySelector('.reply-textarea').value.trim();
+            
+            if (replyText) {
+                const user = await getCurrentUser();
+                const replyHtml = `
+                    <div class="reply-card">
+                        <div class="review-header">
+                            ${user.avatar_url ? 
+                                `<img src="${user.avatar_url}" class="user-avatar" style="object-fit: cover;">` :
+                                `<div class="user-avatar">${user.username.charAt(0).toUpperCase()}</div>`
+                            }
+                            <div class="review-meta">
+                                <div class="review-username">${user.username}</div>
+                                <div class="review-date">${new Date().toLocaleDateString('en-US', {
+                                    year: 'numeric',
+                                    month: 'long',
+                                    day: 'numeric'
+                                })}</div>
+                            </div>
+                        </div>
+                        <div class="review-content">${replyText}</div>
+                    </div>
+                `;
+                
+                const repliesContainer = reviewCard.querySelector('.review-replies');
+                repliesContainer.insertAdjacentHTML('beforeend', replyHtml);
+                
+                // Clear and hide the reply form
+                replyForm.querySelector('.reply-textarea').value = '';
+                replyForm.style.display = 'none';
+            }
+        });
+    });
+
+    // Handle cancel reply buttons
+    const cancelReplyButtons = document.querySelectorAll('.cancel-reply-btn');
+    cancelReplyButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const replyForm = this.closest('.reply-form');
+            replyForm.querySelector('.reply-textarea').value = '';
+            replyForm.style.display = 'none';
+        });
+    });
+}
+
+function attachEventListeners() {
+    const buttons = document.querySelectorAll('.btn');
+    buttons.forEach(btn => {
+        btn.addEventListener('mouseenter', () => {
+            btn.style.opacity = '0.8';
+        });
+        btn.addEventListener('mouseleave', () => {
+            btn.style.opacity = '1';
+        });
+    });
+
+    const watchlistBtn = document.querySelector('.btn.btn-primary');
+    if (watchlistBtn && currentMovieData) {
+        watchlistBtn.addEventListener('click', () => {
+            const isInWatchlist = watchlist.some(movie => movie.title === currentMovieData.title);
+            
+            if (isInWatchlist) {
+                removeFromWatchlist(currentMovieData.title);
+                watchlistBtn.textContent = '+ Add to Watchlist';
+            } else {
+                addToWatchlist(currentMovieData);
+                watchlistBtn.textContent = '✓ Added to Watchlist';
+            }
+            
+            // Add hover effect
+            watchlistBtn.style.transition = 'transform 0.2s';
+            watchlistBtn.style.transform = 'scale(1.05)';
+            setTimeout(() => {
+                watchlistBtn.style.transform = 'scale(1)';
+            }, 200);
+        });
+    }
+
+    const writeReviewBtn = document.getElementById('writeReviewBtn');
+    const reviewFormContainer = document.getElementById('reviewFormContainer');
+    const reviewForm = document.getElementById('reviewForm');
+    const cancelReviewBtn = document.getElementById('cancelReview');
+
+    // Show review form when Write Review button is clicked
+    writeReviewBtn.addEventListener('click', () => {
+        reviewFormContainer.style.display = 'block';
+        writeReviewBtn.style.display = 'none';
+    });
+
+    // Handle cancel review button
+    cancelReviewBtn.addEventListener('click', () => {
+        reviewFormContainer.style.display = 'none';
+        writeReviewBtn.style.display = 'block';
+        reviewForm.reset();
+    });
+
+    // Handle review form submission
+    reviewForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        if (!currentMovieData) {
+            console.error('No movie data available');
+            return;
+        }
+        
+        const rating = document.getElementById('reviewRating').value;
+        const title = document.getElementById('reviewTitle').value;
+        const content = document.getElementById('reviewContent').value;
+        
+        // Get current user info
+        const user = await getCurrentUser();
+        
+        // Create new review with ID
+        const newReview = {
+            id: Date.now(), // Add unique ID
+            username: user.username,
+            rating: parseInt(rating),
+            date: new Date().toLocaleDateString('en-US', { 
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            }),
+            title: title,
+            content: content,
+            movieTitle: currentMovieData.title
+        };
+
+        // Save to localStorage
+        const userReviews = JSON.parse(localStorage.getItem('userReviews') || '[]');
+        userReviews.push(newReview);
+        localStorage.setItem('userReviews', JSON.stringify(userReviews));
+
+        // Create and insert new review HTML
+        const reviewsContainer = document.getElementById('reviewsContainer');
+        const reviewHTML = `
+            <div class="review-card" data-review-id="${newReview.id}">
+                <div class="review-header">
+                    ${user.avatar_url ? 
+                        `<img src="${user.avatar_url}" class="user-avatar" style="object-fit: cover;">` :
+                        `<div class="user-avatar">${user.username.charAt(0).toUpperCase()}</div>`
+                    }
+                    <div class="review-meta">
+                        <div class="review-username">${user.username}</div>
+                        <div class="review-date">${newReview.date}</div>
+                    </div>
+                    <div class="review-rating">
+                        <svg class="star" viewBox="0 0 24 24" style="width: 16px;">
+                            <path d="M12 2l2.4 7.4h7.6l-6 4.6 2.4 7.4-6-4.6-6 4.6 2.4-7.4-6-4.6h7.6z"/>
+                        </svg>
+                        <span>${newReview.rating}/10</span>
+                    </div>
+                    <button class="delete-review-btn">Delete</button>
+                </div>
+                <div class="review-title">${newReview.title}</div>
+                <div class="review-content">${newReview.content}</div>
+                <div class="review-actions">
+                    <button class="review-action-btn like-btn">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M1 21h4V9H1v12zm22-11c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 1 7.59 7.59C7.22 7.95 7 8.45 7 9v10c0 1.1.9 2 2 2h9c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73v-2z"/>
+                        </svg>
+                        <span class="review-action-count">0</span>
+                    </button>
+                    <button class="review-action-btn dislike-btn">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M15 3H6c-.83 0-1.54.5-1.84 1.22l-3.02 7.05c-.09.23-.14.47-.14.73v2c0 1.1.9 2 2 2h6.31l-.95 4.57-.03.32c0 .41.17.79.44 1.06L9.83 23l6.59-6.59c.36-.36.58-.86.58-1.41V5c0-1.1-.9-2-2-2zm4 0v12h4V3h-4z"/>
+                        </svg>
+                        <span class="review-action-count">0</span>
+                    </button>
+                    <button class="btn btn-secondary reply-btn">Reply</button>
+                </div>
+                <div class="reply-form">
+                    <textarea class="reply-textarea" placeholder="Write your reply..."></textarea>
+                    <div class="reply-button-container">
+                        <button class="btn btn-primary submit-reply-btn">Submit Reply</button>
+                        <button class="btn btn-secondary cancel-reply-btn">Cancel</button>
+                    </div>
+                </div>
+                <div class="review-replies"></div>
+            </div>
+        `;
+        reviewsContainer.insertAdjacentHTML('afterbegin', reviewHTML);
+        
+        // Add delete button handler for the new review
+        const deleteBtn = reviewsContainer.querySelector(`[data-review-id="${newReview.id}"] .delete-review-btn`);
+        deleteBtn.addEventListener('click', () => {
+            showDeleteConfirmation(newReview.id);
+        });
+        
+        // Reset form and hide it
+        reviewForm.reset();
+        reviewFormContainer.style.display = 'none';
+        writeReviewBtn.style.display = 'block';
+        handleReplyButtons();
+    });
+}
+
+function deleteReview(reviewId) {
+    // Get current reviews
+    let userReviews = JSON.parse(localStorage.getItem('userReviews') || '[]');
+    // Remove the review with matching ID
+    userReviews = userReviews.filter(review => review.id !== reviewId);
+    // Save back to localStorage
+    localStorage.setItem('userReviews', JSON.stringify(userReviews));
+}
+
+function returnToStartScreen() {
+    const mainContent = document.getElementById('mainContent');
+    mainContent.innerHTML = `
+        <div style="text-align: center; padding: 4rem; color: #aaa;">
+            <h2>Welcome to TMDNE</h2>
+            <p>Use the search bar or random button to discover movies</p>
+        </div>
+    `;
+    
+    // Clear the search input
+    const searchInput = document.getElementById('movieSearch');
+    if (searchInput) {
+        searchInput.value = '';
+    }
+    
+    // Reset current movie data
+    currentMovieData = null;
+}
+
+async function showUserReviews() {
+    const mainContent = document.getElementById('mainContent');
+    const user = await getCurrentUser();
+    
+    const userReviews = JSON.parse(localStorage.getItem('userReviews') || '[]');
+    
+    mainContent.innerHTML = `
+        <div class="reviews-section" style="margin: 2rem;">
+            <h2 class="section-title">My Reviews</h2>
+            ${userReviews.length === 0 ? 
+                '<p style="color: #aaa; text-align: center; padding: 2rem;">You haven\'t written any reviews yet</p>' :
+                userReviews.map(review => `
+                    <div class="review-card" data-review-id="${review.id}">
+                        <div class="review-header">
+                            ${user.avatar_url ? 
+                                `<img src="${user.avatar_url}" class="user-avatar" style="object-fit: cover;">` :
+                                `<div class="user-avatar">${user.username.charAt(0).toUpperCase()}</div>`
+                            }
+                            <div class="review-meta">
+                                <div class="review-username">${user.username}</div>
+                                <div class="review-date">${review.date}</div>
+                            </div>
+                            <div class="review-rating">
+                                <svg class="star" viewBox="0 0 24 24" style="width: 16px;">
+                                    <path d="M12 2l2.4 7.4h7.6l-6 4.6 2.4 7.4-6-4.6-6 4.6 2.4-7.4-6-4.6h7.6z"/>
+                                </svg>
+                                <span>${review.rating}/10</span>
+                            </div>
+                            <button class="delete-review-btn">Delete</button>
+                        </div>
+                        <div class="review-title">${review.title}</div>
+                        <div class="review-content">${review.content}</div>
+                        <div style="color: #aaa; margin-top: 1rem; font-size: 0.9rem;">
+                            Review for: ${review.movieTitle}
+                        </div>
+                    </div>
+                `).join('')
+            }
+        </div>
+    `;
+
+    // Update the delete button handlers
+    document.querySelectorAll('.delete-review-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const reviewCard = this.closest('.review-card');
+            const reviewId = parseInt(reviewCard.dataset.reviewId);
+            showDeleteConfirmation(reviewId);
+        });
+    });
+}
+
+function updateHeader() {
+    const userMenu = document.querySelector('.user-menu');
+    const userAvatar = document.getElementById('userAvatar');
+    const username = document.getElementById('username');
+
+    getCurrentUser().then(user => {
+        if (user.avatar_url) {
+            userAvatar.innerHTML = `<img src="${user.avatar_url}" alt="${user.username}'s avatar">`;
+        } else {
+            userAvatar.innerHTML = user.username.charAt(0).toUpperCase();
+        }
+        username.innerText = `@${user.username}`;
+    });
+
+    userMenu.addEventListener('click', (e) => {
+        const dropdown = userMenu.querySelector('.user-menu-dropdown');
+        dropdown.classList.toggle('active');
+        e.stopPropagation();
+    });
+
+    document.addEventListener('click', () => {
+        const dropdown = userMenu.querySelector('.user-menu-dropdown');
+        dropdown.classList.remove('active');
+    });
+
+    document.getElementById('watchlistMenuItem').addEventListener('click', (e) => {
+        e.preventDefault();
+        showWatchlist();
+    });
+
+    document.getElementById('reviewsMenuItem').addEventListener('click', (e) => {
+        e.preventDefault();
+        showUserReviews();
+    });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    const searchInput = document.getElementById('movieSearch');
+    const searchButton = document.getElementById('searchButton');
+    const advancedSearchButton = document.getElementById('advancedSearchButton');
+    const randomButton = document.getElementById('randomButton');
+    const advancedSearchModal = document.getElementById('advancedSearchModal');
+    const advancedSearchBackdrop = document.getElementById('advancedSearchBackdrop');
+    const cancelAdvancedSearch = document.getElementById('cancelAdvancedSearch');
+    const advancedSearchForm = document.getElementById('advancedSearchForm');
+
+    searchInput.addEventListener('keypress', async (event) => {
+        if (event.key === 'Enter') {
+            const searchValue = searchInput.value.trim();
+            if (searchValue) {
+                const loadingScreen = document.createElement('div');
+                loadingScreen.className = 'loading-screen';
+                loadingScreen.innerHTML = `
+                    <div class="loading-spinner"></div>
+                    <div class="loading-text">Generating movie details...</div>
+                `;
+                document.body.appendChild(loadingScreen);
+
+                const movieData = await getMovieContent(searchValue);
+                
+                loadingScreen.remove();
+                
+                if (movieData) updateContent(movieData);
+            }
+        }
+    });
+
+    searchButton.addEventListener('click', async () => {
+        const searchValue = searchInput.value.trim();
+        if (searchValue) {
+            const loadingScreen = document.createElement('div');
+            loadingScreen.className = 'loading-screen';
+            loadingScreen.innerHTML = `
+                <div class="loading-spinner"></div>
+                <div class="loading-text">Generating movie details...</div>
+            `;
+            document.body.appendChild(loadingScreen);
+
+            const movieData = await getMovieContent(searchValue);
+            
+            loadingScreen.remove();
+            
+            if (movieData) updateContent(movieData);
+        }
+    });
+
+    randomButton.addEventListener('click', async () => {
+        randomButton.disabled = true;
+        
+        const loadingScreen = document.createElement('div');
+        loadingScreen.className = 'loading-screen';
+        loadingScreen.innerHTML = `
+            <div class="loading-spinner"></div>
+            <div class="loading-text">Generating random movie...</div>
+        `;
+        document.body.appendChild(loadingScreen);
+
+        const randomTitle = await generateRandomTitle();
+        searchInput.value = randomTitle;
+        const movieData = await getMovieContent(randomTitle);
+        
+        loadingScreen.remove();
+        
+        if (movieData) updateContent(movieData);
+        randomButton.disabled = false;
+        randomButton.textContent = '🎲 Random';
+    });
+
+    advancedSearchButton.addEventListener('click', () => {
+        advancedSearchModal.style.display = 'block';
+        advancedSearchBackdrop.style.display = 'block';
+    });
+
+    cancelAdvancedSearch.addEventListener('click', () => {
+        advancedSearchModal.style.display = 'none';
+        advancedSearchBackdrop.style.display = 'none';
+        advancedSearchForm.reset();
+    });
+
+    advancedSearchBackdrop.addEventListener('click', () => {
+        advancedSearchModal.style.display = 'none';
+        advancedSearchBackdrop.style.display = 'none';
+    });
+
+    advancedSearchForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const formData = new FormData(advancedSearchForm);
+        const searchCriteria = {
+            title: formData.get('title'),
+            yearFrom: formData.get('yearFrom'),
+            yearTo: formData.get('yearTo'),
+            studio: formData.get('studio'),
+            rating: formData.get('rating'),
+            genres: formData.getAll('genres'),
+            // Split actor string by commas and trim whitespace
+            actors: formData.get('actor').split(',').map(actor => actor.trim()).filter(actor => actor),
+            contentType: formData.get('contentType'),
+            ageRating: formData.get('ageRating')
+        };
+
+        const loadingScreen = document.createElement('div');
+        loadingScreen.className = 'loading-screen';
+        loadingScreen.innerHTML = `
+            <div class="loading-spinner"></div>
+            <div class="loading-text">Searching...</div>
+        `;
+        document.body.appendChild(loadingScreen);
+
+        try {
+            const movieData = await getAdvancedMovieContent(searchCriteria);
+            if (movieData) {
+                advancedSearchModal.style.display = 'none';
+                advancedSearchBackdrop.style.display = 'none';
+                advancedSearchForm.reset();
+                updateContent(movieData);
+            }
+        } catch (error) {
+            console.error('Error during advanced search:', error);
+        } finally {
+            loadingScreen.remove();
+        }
+    });
+
+    document.getElementById('contentTypeSelect').addEventListener('change', function() {
+        document.getElementById('advancedContentType').value = this.value;
+    });
+
+    document.getElementById('advancedContentType').addEventListener('change', function() {
+        document.getElementById('contentTypeSelect').value = this.value;
+    });
+
+    setTimeout(() => {
+        document.querySelectorAll('.loading').forEach(el => {
+            el.style.animation = 'none';
+            if (el.classList.contains('poster')) {
+                el.style.background = '#2a2a2a';
+            }
+        });
+    }, 2000);
+
+    updateHeader();
+});
+</script>
+</body>
+</html>

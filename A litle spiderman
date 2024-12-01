@@ -1,0 +1,147 @@
+<html><head><base href=""><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Spider-Man Web Swinging</title>
+<style>
+body {
+    margin: 0;
+    overflow: hidden;
+    background: linear-gradient(to bottom, #1a1a40, #2a2a50);
+    height: 100vh;
+}
+
+.buildings {
+    position: absolute;
+    bottom: .5;
+    width: 100%;
+    height: 70vh;
+}
+
+.spiderman {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    transition: transform 0.5s;
+}
+
+.web {
+    position: absolute;
+    height: 2px;
+    background: #fff;
+    transform-origin: 0 0;
+}
+
+@keyframes swing {
+    0% { transform: rotate(-45deg); }
+    50% { transform: rotate(45deg); }
+    100% { transform: rotate(-45deg); }
+}
+
+.swinging {
+    animation: swing 2s infinite ease-in-out;
+}
+</style>
+</head>
+<body>
+
+<svg class="buildings" viewBox="0 0 1000 600">
+    <defs>
+        <pattern id="window" width="10" height="10" patternUnits="userSpaceOnUse">
+            <rect width="8" height="8" fill="#ffeb3b" opacity="0.3"/>
+        </pattern>
+    </defs>
+    
+    <rect x="50" y="100" width="100" height="500" fill="#2c3e50"/>
+    <rect x="60" y="110" width="80" height="480" fill="url(#window)"/>
+    
+    <rect x="200" y="200" width="120" height="400" fill="#34495e"/>
+    <rect x="210" y="210" width="100" height="380" fill="url(#window)"/>
+    
+    <rect x="400" y="150" width="150" height="450" fill="#2c3e50"/>
+    <rect x="410" y="160" width="130" height="430" fill="url(#window)"/>
+    
+    <rect x="600" y="250" width="100" height="350" fill="#34495e"/>
+    <rect x="610" y="260" width="80" height="330" fill="url(#window)"/>
+    
+    <rect x="800" y="180" width="130" height="420" fill="#2c3e50"/>
+    <rect x="810" y="190" width="110" height="400" fill="url(#window)"/>
+</svg>
+
+<svg class="spiderman" viewBox="0 0 100 100" id="spidey">
+    <circle cx="50" cy="50" r="25" fill="#ff1744"/>
+    <path d="M25 50 L75 50 M50 25 L50 75" stroke="black" stroke-width="2"/>
+    <path d="M30 30 L70 70 M30 70 L70 30" stroke="black" stroke-width="2"/>
+</svg>
+
+<script>
+const spidey = document.getElementById('spidey');
+let webElement = null;
+let swinging = false;
+let anchorPoint = { x: 0, y: 0 };
+let spideyPos = { x: window.innerWidth/2, y: window.innerHeight/2 };
+let velocity = { x: 0, y: 0 };
+const gravity = 0.5;
+const swingSpeed = 5;
+
+document.addEventListener('click', (e) => {
+    if (webElement) {
+        // Release web
+        webElement.remove();
+        webElement = null;
+        spidey.classList.remove('swinging');
+        swinging = false;
+    } else {
+        // Create new web
+        anchorPoint = { x: e.clientX, y: e.clientY };
+        webElement = document.createElement('div');
+        webElement.className = 'web';
+        document.body.appendChild(webElement);
+        spidey.classList.add('swinging');
+        swinging = true;
+    }
+});
+
+function updateSpideyPosition() {
+    if (swinging && webElement) {
+        // Calculate web length and angle
+        const dx = spideyPos.x - anchorPoint.x;
+        const dy = spideyPos.y - anchorPoint.y;
+        const length = Math.sqrt(dx * dx + dy * dy);
+        const angle = Math.atan2(dy, dx);
+
+        // Update web visual
+        webElement.style.left = `${anchorPoint.x}px`;
+        webElement.style.top = `${anchorPoint.y}px`;
+        webElement.style.width = `${length}px`;
+        webElement.style.transform = `rotate(${angle}rad)`;
+
+        // Swing physics
+        velocity.x += Math.sin(angle) * swingSpeed;
+        velocity.y += gravity;
+    } else {
+        velocity.y += gravity;
+    }
+
+    // Update position
+    spideyPos.x += velocity.x;
+    spideyPos.y += velocity.y;
+
+    // Bounds checking
+    if (spideyPos.y > window.innerHeight - 50) {
+        spideyPos.y = window.innerHeight - 50;
+        velocity.y = -velocity.y * 0.8;
+    }
+    if (spideyPos.x < 0 || spideyPos.x > window.innerWidth - 50) {
+        velocity.x *= -0.8;
+        spideyPos.x = Math.max(0, Math.min(window.innerWidth - 50, spideyPos.x));
+    }
+
+    // Update spidey position
+    spidey.style.left = `${spideyPos.x}px`;
+    spidey.style.top = `${spideyPos.y}px`;
+
+    requestAnimationFrame(updateSpideyPosition);
+}
+
+updateSpideyPosition();
+
+</script>
+</body></html>

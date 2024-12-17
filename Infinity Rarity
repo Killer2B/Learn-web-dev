@@ -1,0 +1,2519 @@
+<html><head><base href="/" /><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>Multiplayer Rarity Creator</title><style>* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background: linear-gradient(135deg, #1a1a1a, #2d2d2d);
+    color: #fff;
+    min-height: 100vh;
+    display: flex;
+}
+
+.sidebar {
+    width: 280px;
+    background: linear-gradient(180deg, #2a2a2a, #232323);
+    padding: 25px;
+    border-right: 1px solid #3a3a3a;
+    box-shadow: 2px 0 10px rgba(0,0,0,0.2);
+}
+
+.sidebar h2 {
+    margin-bottom: 25px;
+    color: #fff;
+    font-size: 1.8em;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+.sidebar-menu {
+    list-style: none;
+}
+
+.sidebar-menu li {
+    margin-bottom: 10px;
+}
+
+.sidebar-menu a {
+    background: rgba(255,255,255,0.05);
+    margin: 8px 0;
+    border: 1px solid rgba(255,255,255,0.1);
+    text-decoration: none;
+    display: block;
+    padding: 10px;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+}
+
+.sidebar-menu a:hover {
+    background: rgba(255,255,255,0.1);
+    transform: translateX(5px);
+}
+
+.sidebar-menu a.active {
+    background: linear-gradient(45deg, #4CAF50, #45a049);
+    box-shadow: 0 2px 10px rgba(76,175,80,0.3);
+}
+
+.main-content {
+    margin-left: 280px;
+    flex: 1;
+    padding: 20px;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.rarity-form {
+    background: linear-gradient(45deg, #2a2a2a, #333);
+    padding: 25px;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    border: 1px solid rgba(255,255,255,0.1);
+    margin-bottom: 20px;
+}
+
+.rarity-form input,
+.rarity-form select {
+    width: 100%;
+    padding: 10px;
+    margin: 5px 0;
+    border: none;
+    border-radius: 5px;
+    background: rgba(255,255,255,0.05);
+    box-shadow: inset 0 2px 5px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+}
+
+.rarity-form input:focus,
+.rarity-form select:focus {
+    background: rgba(255,255,255,0.1);
+    box-shadow: inset 0 2px 5px rgba(0,0,0,0.2), 0 0 0 2px rgba(76,175,80,0.3);
+}
+
+.rarity-form button {
+    background: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.rarity-form button:hover {
+    background: #45a049;
+}
+
+.color-inputs {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 15px;
+    margin: 15px 0;
+    align-items: center;
+}
+
+.color-inputs label {
+    flex: 1;
+}
+
+.color-inputs input[type="color"] {
+    width: 50px;
+    height: 40px;
+    padding: 0;
+}
+
+.gradient-select {
+    background: #3a3a3a;
+    color: #fff;
+    padding: 8px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 150px;
+}
+
+.gradient-select:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px #4CAF50;
+}
+
+.rarities {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 25px;
+    margin-top: 30px;
+}
+
+.rarity-card {
+    background: linear-gradient(45deg, #2a2a2a, #333);
+    padding: 25px;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    border: 1px solid rgba(255,255,255,0.1);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.rarity-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+}
+
+.rarity-card h3 {
+    font-size: 1.4em;
+    margin-bottom: 10px;
+}
+
+.color-preview {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin: 10px auto;
+    border: 2px solid #fff;
+    background-size: cover !important;
+}
+
+.roll-button {
+    background: linear-gradient(45deg, #9c27b0, #7b1fa2);
+    color: white;
+    padding: 15px 30px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1.2em;
+    margin: 20px 0;
+    width: 100%;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    box-shadow: 0 4px 15px rgba(156,39,176,0.3);
+    transition: all 0.3s ease;
+}
+
+.roll-button:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(156,39,176,0.4);
+}
+
+.roll-button:disabled {
+    background: linear-gradient(45deg, #666, #555);
+    transform: none;
+}
+
+.roll-result {
+    text-align: center;
+    font-size: 1.5em;
+    margin: 20px 0;
+    padding: 20px;
+    background: #2a2a2a;
+    border-radius: 10px;
+    animation: fadeIn 0.3s ease;
+    background-size: cover !important;
+}
+
+.search-bar {
+    width: 100%;
+    padding: 15px;
+    margin: 20px 0;
+    border: none;
+    border-radius: 10px;
+    background: rgba(255,255,255,0.05);
+    color: #fff;
+    font-size: 1.1em;
+    transition: all 0.3s ease;
+    box-shadow: inset 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.search-bar:focus {
+    background: rgba(255,255,255,0.08);
+    box-shadow: inset 0 2px 5px rgba(0,0,0,0.2), 0 0 0 2px rgba(76,175,80,0.3);
+    outline: none;
+}
+
+.page {
+    display: none;
+}
+
+.page.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+        transform: translateY(-5px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.created-by {
+    font-size: 0.8em;
+    color: #666;
+}
+
+.leaderboard-container {
+    background: linear-gradient(45deg, #2a2a2a, #333);
+    border-radius: 15px;
+    padding: 25px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+    border: 1px solid rgba(255,255,255,0.1);
+    margin-top: 20px;
+}
+
+.leaderboard-entry {
+    display: grid;
+    grid-template-columns: 50px 1fr 200px;
+    gap: 20px;
+    align-items: center;
+    padding: 15px;
+    margin: 10px 0;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+}
+
+.leaderboard-entry:hover {
+    transform: translateX(8px) scale(1.01);
+    background: rgba(255,255,255,0.08);
+}
+
+.rank {
+    font-size: 1.5em;
+    font-weight: bold;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+}
+
+.player-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.player-name {
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+.rarity-info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+.rarity-name {
+    font-weight: bold;
+}
+
+.rarity-chance {
+    font-size: 0.9em;
+    color: #aaa;
+}
+
+.rarity-preview {
+    width: 100%;
+    height: 5px;
+    border-radius: 2px;
+    margin-top: 5px;
+}
+
+/* Medal colors for top ranks */
+.rank-platin {
+    background: linear-gradient(45deg, rgba(229,228,226,0.2), rgba(229,228,226,0.1));
+    border: 1px solid rgba(229,228,226,0.4);
+    box-shadow: 0 0 20px rgba(229,228,226,0.3);
+}
+
+.rank-diamond {
+    background: linear-gradient(45deg, rgba(185, 242, 255, 0.1), rgba(185, 242, 255, 0.05));
+    border: 1px solid rgba(185, 242, 255, 0.3);
+    box-shadow: 0 0 15px rgba(185, 242, 255, 0.2);
+}
+
+.rank-gold {
+    background: linear-gradient(45deg, rgba(255,215,0,0.1), rgba(255,215,0,0.05));
+    border: 1px solid rgba(255,215,0,0.3);
+    box-shadow: 0 0 10px rgba(255,215,0,0.2);
+}
+
+.rank-silver {
+    background: linear-gradient(45deg, rgba(192,192,192,0.1), rgba(192,192,192,0.05));
+    border: 1px solid rgba(192,192,192,0.3);
+    box-shadow: 0 0 8px rgba(192,192,192,0.2);
+}
+
+.rank-bronze {
+    background: linear-gradient(45deg, rgba(205,127,50,0.1), rgba(205,127,50,0.05));
+    border: 1px solid rgba(205,127,50,0.3);
+    box-shadow: 0 0 6px rgba(205,127,50,0.2);
+}
+
+/* Update existing rank-1, rank-2, rank-3 styles to match new system */
+.rank-1 {
+    background: linear-gradient(45deg, rgba(229,228,226,0.2), rgba(229,228,226,0.1));
+    border: 1px solid rgba(229,228,226,0.4);
+    box-shadow: 0 0 20px rgba(229,228,226,0.3);
+}
+
+.rank-2 {
+    background: linear-gradient(45deg, rgba(185, 242, 255, 0.1), rgba(185, 242, 255, 0.05));
+    border: 1px solid rgba(185, 242, 255, 0.3);
+    box-shadow: 0 0 15px rgba(185, 242, 255, 0.2);
+}
+
+.rank-3 {
+    background: linear-gradient(45deg, rgba(185, 242, 255, 0.1), rgba(185, 242, 255, 0.05));
+    border: 1px solid rgba(185, 242, 255, 0.3);
+    box-shadow: 0 0 15px rgba(185, 242, 255, 0.2);
+}
+
+/* Enhanced medal display */
+.rank-platin .rank { 
+    color: #e5e4e2; 
+    text-shadow: 0 0 6px rgba(229,228,226, 0.6); 
+}
+
+.rank-diamond .rank { color: #b9f2ff; text-shadow: 0 0 5px rgba(185, 242, 255, 0.5); }
+.rank-gold .rank { color: #ffd700; text-shadow: 0 0 5px rgba(255, 215, 0, 0.5); }
+.rank-silver .rank { color: #c0c0c0; text-shadow: 0 0 5px rgba(192, 192, 192, 0.5); }
+.rank-bronze .rank { color: #cd7f32; text-shadow: 0 0 5px rgba(205, 127, 50, 0.5); }
+
+/* Celebration styles */
+.celebration {
+    position: relative;
+    animation: fadeInScale 0.5s ease-out;
+    box-shadow: 0 0 30px rgba(255,255,255,0.2);
+    border: 2px solid rgba(255,255,255,0.3);
+}
+
+.celebration:before, .celebration:after {
+    content: '🎉';
+    position: absolute;
+    font-size: 2em;
+    animation: celebrationEmoji 2s infinite;
+    opacity: 0;
+}
+
+.celebration:before {
+    left: 20px;
+    animation-delay: 0s;
+}
+
+.celebration:after {
+    right: 20px;
+    animation-delay: 1s;
+}
+
+@keyframes fadeInScale {
+    0% {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes celebrationEmoji {
+    0% {
+        opacity: 0;
+        transform: translateY(20px) rotate(0deg);
+    }
+    20% {
+        opacity: 1;
+        transform: translateY(-10px) rotate(20deg);
+    }
+    80% {
+        opacity: 1;
+        transform: translateY(-15px) rotate(-20deg);
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(-20px) rotate(0deg);
+    }
+}
+
+/* Enhanced reset buttons */
+.reset-button {
+    background: linear-gradient(45deg, #dc3545, #c82333);
+    color: white;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    box-shadow: 0 4px 15px rgba(220,53,69,0.3);
+    transition: all 0.3s ease;
+}
+
+.reset-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(220,53,69,0.4);
+    background: linear-gradient(45deg, #c82333, #bd2130);
+}
+
+/* Confetti effect */
+.confetti {
+    position: fixed;
+    width: 10px;
+    height: 10px;
+    background: var(--color);
+    top: -10px;
+    left: var(--x);
+    opacity: 0;
+    transform: translateY(0);
+    animation: confetti 3s ease-in forwards;
+}
+
+@keyframes confetti {
+    0% {
+        opacity: 1;
+        transform: translateY(0) rotate(0deg);
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(100vh) rotate(720deg);
+    }
+}
+
+.pack-form {
+    margin-bottom: 30px;
+}
+
+.pack-rarities-selector {
+    background: rgba(255,255,255,0.05);
+    padding: 15px;
+    border-radius: 10px;
+    margin: 15px 0;
+    max-height: 400px; /* Increased to accommodate search bar */
+    overflow-y: auto;
+}
+
+.pack-rarities-selector .search-bar {
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.2);
+    margin-bottom: 15px;
+}
+
+.pack-rarities-selector .search-bar:focus {
+    border-color: rgba(255,255,255,0.3);
+    box-shadow: 0 0 0 2px rgba(76,175,80,0.3);
+}
+
+.pack-rarity-item {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    background: rgba(255,255,255,0.05);
+    margin: 5px 0;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    gap: 10px;
+}
+
+.pack-rarity-item:hover {
+    background: rgba(255,255,255,0.1);
+}
+
+.pack-rarity-item input[type="checkbox"] {
+    margin-right: 10px;
+}
+
+.pack-rarity-preview {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.packs-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.pack-card {
+    background: linear-gradient(45deg, #2a2a2a, #333);
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    border: 1px solid rgba(255,255,255,0.1);
+    transition: all 0.3s ease;
+}
+
+.pack-card button {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: bold;
+}
+
+.pack-card button:first-child {
+    background: linear-gradient(45deg, #4CAF50, #45a049);
+    color: white;
+}
+
+.pack-card button:first-child:hover {
+    background: linear-gradient(45deg, #45a049, #3d8b40);
+    transform: translateY(-2px);
+}
+
+.pack-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.delete-pack-btn {
+    background: linear-gradient(45deg, #dc3545, #c82333);
+    color: white;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.delete-pack-btn:hover {
+    background: linear-gradient(45deg, #c82333, #bd2130);
+    transform: translateY(-2px);
+}
+
+.pack-progress-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 10px;
+    margin: 15px 0;
+}
+
+.pack-progress-item {
+    background: rgba(255,255,255,0.05);
+    padding: 10px;
+    border-radius: 5px;
+    text-align: center;
+}
+
+.pack-progress-item.collected {
+    background: rgba(76,175,80,0.2);
+    border: 1px solid rgba(76,175,80,0.5);
+}
+
+.active-pack {
+    background: linear-gradient(45deg, #2a2a2a, #333);
+    padding: 25px;
+    border-radius: 15px;
+    margin: 15px 0 30px 0;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    border: 1px solid rgba(255,255,255,0.1);
+    position: relative;
+    animation: fadeIn 0.3s ease;
+}
+
+/* Divider style */
+.active-pack:after {
+    content: '';
+    position: absolute;
+    bottom: -15px;
+    left: 10%;
+    right: 10%;
+    height: 1px;
+    background: rgba(255,255,255,0.1);
+}
+
+.pagination-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    margin: 20px 0;
+    padding: 10px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 10px;
+}
+
+.pagination-controls button {
+    background: linear-gradient(45deg, #4CAF50, #45a049);
+    color: white;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.pagination-controls button:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 2px 8px rgba(76,175,80,0.3);
+}
+
+.pagination-controls button:disabled {
+    background: linear-gradient(45deg, #666, #555);
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+.pagination-controls span {
+    font-size: 1.1em;
+    color: #fff;
+}
+
+.vote-card {
+    background: linear-gradient(45deg, #2a2a2a, #333);
+    padding: 20px;
+    border-radius: 15px;
+    margin: 20px 0;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    border: 1px solid rgba(255,255,255,0.1);
+}
+
+.vote-card h3 {
+    font-size: 1.4em;
+    margin-bottom: 10px;
+}
+
+.vote-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin: 15px 0;
+}
+
+.vote-stat {
+    background: rgba(255,255,255,0.05);
+    padding: 15px;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.vote-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.vote-yes {
+    background: linear-gradient(45deg, #4CAF50, #45a049);
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.vote-no {
+    background: linear-gradient(45deg, #f44336, #d32f2f);
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.vote-delete {
+    background: linear-gradient(45deg, #9e9e9e, #757575);
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.vote-deadline {
+    font-size: 0.9em;
+    color: #aaa;
+    margin-top: 5px;
+}
+
+.vote-progress {
+    height: 10px;
+    background: #2a2a2a;
+    border-radius: 5px;
+    margin-top: 10px;
+    overflow: hidden;
+}
+
+.vote-progress-bar {
+    height: 100%;
+    background: linear-gradient(45deg, #4CAF50, #45a049);
+    border-radius: 5px;
+    transition: width 0.3s ease;
+}
+
+.welcome-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, #1a1a1a, #2d2d2d);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    animation: fadeOutWelcome 1s ease-out 2.5s forwards;
+    color: #fff;
+    padding: 20px;
+}
+
+.welcome-title {
+    font-size: 3em;
+    margin-bottom: 20px;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 0.8s ease-out 0.2s forwards;
+    text-shadow: 0 0 10px rgba(76,175,80,0.5);
+}
+
+.welcome-subtitle {
+    font-size: 1.5em;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 0.8s ease-out 0.8s forwards;
+    text-align: center;
+    color: #aaa;
+}
+
+.welcome-icon {
+    font-size: 4em;
+    opacity: 0;
+    transform: scale(0.5);
+    animation: popIn 0.8s ease-out 1.4s forwards;
+    margin-bottom: 20px;
+}
+
+@keyframes fadeOutWelcome {
+    from {
+        opacity: 1;
+        visibility: visible;
+    }
+    to {
+        opacity: 0;
+        visibility: hidden;
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes popIn {
+    from {
+        opacity: 0;
+        transform: scale(0.5);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+</style></head><body>
+<div class="welcome-overlay">
+    <div class="welcome-icon">🎲</div>
+    <div class="welcome-title">Welcome to Infinity Rarity!</div>
+    <div class="welcome-subtitle">Create, collect, and discover unique rarities with friends</div>
+</div>
+<div class="sidebar">
+    <h2>🎲 Categories</h2>
+    <ul class="sidebar-menu">
+        <li><a href="#" data-page="roller" class="active">Rarity Roller</a></li>
+        <li><a href="#" data-page="browser">Rarity Browser</a></li>
+        <li><a href="#" data-page="leaderboard">Leaderboard</a></li>
+        <li><a href="#" data-page="packs">Packs (Demo)</a></li>
+        <li><a href="#" data-page="votes">Vote for Update</a></li>
+        <li><a href="#" class="disabled" style="opacity: 0.5; cursor: not-allowed">Coming Soon...</a></li>
+    </ul>
+</div>
+
+<div class="main-content">
+    <div class="container">
+        <div id="rollerPage" class="page active">
+            <h1>🎲 Rarity Creator & Roller</h1>
+            
+            <div class="rarity-form">
+                <input type="text" id="rarityName" placeholder="Rarity Name" maxlength="50">
+                <input type="number" id="rarityChance" placeholder="1 in ? chance">
+                <div class="color-inputs">
+                    <label>
+                        Start Color:
+                        <input type="color" id="rarityColorStart" value="#ff0000">
+                    </label>
+                    <label>
+                        End Color:
+                        <input type="color" id="rarityColorEnd" value="#ff0000">
+                    </label>
+                    <label>
+                        Direction:
+                        <select id="gradientDirection" class="gradient-select">
+                            <option value="to right">Horizontal ➡️</option>
+                            <option value="to bottom">Vertical ⬇️</option>
+                            <option value="45deg">Diagonal ↘️</option>
+                            <option value="135deg">Diagonal ↙️</option>
+                            <option value="circle at center">Radial 🔘</option>
+                            <option value="-45deg">Diagonal ↗️</option>
+                            <option value="-135deg">Diagonal ↖️</option>
+                        </select>
+                    </label>
+                </div>
+                <button onclick="createRarity()">Create Rarity</button>
+            </div>
+
+            <button class="roll-button" onclick="rollRarity()">Roll Rarity!</button>
+            <div id="rollResult" class="roll-result celebration" style="display: none;"></div>
+            <button class="reset-button" onclick="resetPersonalBest()" style="margin-top: 20px;">
+                Reset Personal Best
+            </button>
+        </div>
+
+        <div id="browserPage" class="page">
+            <h1>🔍 Rarity Browser</h1>
+            <input type="text" id="searchRarities" class="search-bar" placeholder="Search rarities by name...">
+            <div id="raritiesList" class="rarities">
+                <!-- Rarities will be displayed here -->
+            </div>
+        </div>
+
+        <div id="leaderboardPage" class="page">
+            <h1>🏆 Rarity Leaderboard</h1>
+            <div class="leaderboard-container">
+                <div id="leaderboardList">
+                    <!-- Leaderboard entries will be displayed here -->
+                </div>
+            </div>
+            <button class="reset-button" onclick="resetLeaderboardStats()" style="margin-top: 20px;">
+                Reset My Leaderboard Stats
+            </button>
+        </div>
+
+        <div id="packsPage" class="page">
+            <h1>📦 Rarity Packs</h1>
+            
+            <!-- Active Pack Section -->
+            <div id="activePack" class="active-pack" style="display: none;">
+                <h2>Currently Playing: <span id="activePackName"></span></h2>
+                <div class="pack-progress">
+                    <h3>Progress</h3>
+                    <div id="packProgress" class="pack-progress-grid">
+                        <!-- Progress will be shown here -->
+                    </div>
+                </div>
+                <button class="roll-button" onclick="rollPackRarity()">Roll Pack Rarity!</button>
+                <div id="packRollResult" class="roll-result" style="display: none;"></div>
+                <button class="reset-button" onclick="abandonPack()">Abandon Pack</button>
+            </div>
+            
+            <!-- Pack Creation Form -->
+            <div class="rarity-form pack-form">
+                <h2>Create a Pack</h2>
+                <input type="text" id="packName" placeholder="Pack Name" style="margin-bottom: 15px;">
+                <input type="text" id="packRaritiesSearch" class="search-bar" placeholder="Search rarities..." style="margin-bottom: 15px;">
+                <div class="pack-rarities-selector">
+                    <h3>Select Rarities</h3>
+                    <div id="packRaritiesSelector" class="rarities">
+                        <!-- Rarities will be listed here with checkboxes -->
+                    </div>
+                </div>
+                <button onclick="createPack()">Publish Pack</button>
+            </div>
+
+            <!-- Pack Browser -->
+            <div class="packs-browser">
+                <h2>Available Packs</h2>
+                <input type="text" id="searchPacks" class="search-bar" placeholder="Search packs by name...">
+                <div id="packsList" class="packs-list">
+                    <!-- Packs will be displayed here -->
+                </div>
+            </div>
+        </div>
+
+        <div id="votesPage" class="page">
+            <h1>🗳️ Vote for Update</h1>
+            
+            <!-- Vote Creation Form -->
+            <div class="rarity-form">
+                <h2>Create Vote</h2>
+                <input type="text" id="voteName" placeholder="Update Name" maxlength="100">
+                <textarea id="voteDescription" placeholder="Description (optional)" style="width: 100%; min-height: 100px; margin: 10px 0; background: rgba(255,255,255,0.05); border: none; border-radius: 5px; padding: 10px; color: #fff;"></textarea>
+                <button onclick="createVote()">Create Vote</button>
+            </div>
+
+            <!-- Active Votes Section -->
+            <div class="votes-container" style="margin-top: 30px;">
+                <h2>Active Votes</h2>
+                <div id="activeVotes"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+const room = new WebsimSocket();
+
+// Update the welcome title
+document.querySelector('.welcome-title').textContent = 'Welcome to Infinity Rarity!';
+
+// Ban check code
+room.party.subscribe((peers) => {
+  for (const clientId in peers) {
+    const { username } = peers[clientId];
+    // Check if the user is finedawn
+    if (username === 'finedawn') {
+      // Display ban message 
+      document.body.innerHTML = `
+        <div style="
+          position: fixed;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background: #1a1a1a;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex-direction: column;
+          color: #fff;
+          font-family: Arial, sans-serif;
+          padding: 20px;
+          text-align: center;
+        ">
+          <h1 style="color: #f44336; font-size: 2em; margin-bottom: 20px;">🚫 Access Denied</h1>
+          <p style="font-size: 1.2em; margin-bottom: 10px;">You have been banned from this website.</p>
+          <p style="color: #aaa;">If you believe this is a mistake, please contact the administrator.</p>
+        </div>
+      `;
+
+      // Clear localStorage to prevent any stored data from being used
+      localStorage.clear();
+      
+      // Disconnect from WebSocket
+      room.disconnect();
+      
+      // Prevent any further script execution
+      throw new Error('User banned');
+    }
+  }
+});
+
+let currentLeaderboardPage = 0;
+
+function hexToRgb(hex) {
+    // Return a default color if hex is undefined/null
+    if (!hex) {
+        return [128, 128, 128]; // Default gray color
+    }
+    
+    hex = hex.replace(/^#/, '');
+    const r = parseInt(hex.slice(0, 2), 16);
+    const g = parseInt(hex.slice(2, 4), 16);
+    const b = parseInt(hex.slice(4, 6), 16);
+    
+    // Return default color if parsing failed
+    if (isNaN(r) || isNaN(g) || isNaN(b)) {
+        return [128, 128, 128];
+    }
+    
+    return [r, g, b];
+}
+
+function averageColors(color1, color2) {
+    // Use default colors if either is undefined/null
+    color1 = color1 || '#808080';
+    color2 = color2 || '#808080';
+    
+    const [r1, g1, b1] = hexToRgb(color1);
+    const [r2, g2, b2] = hexToRgb(color2);
+    
+    const r = Math.round((r1 + r2) / 2);
+    const g = Math.round((g1 + g2) / 2);
+    const b = Math.round((b1 + b2) / 2);
+    
+    return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
+}
+
+function getContrastColor(hexColor) {
+    const rgb = hexToRgb(hexColor);
+    // Calculate relative luminance using the formula
+    // Luminance = 0.299R + 0.587G + 0.114B
+    const luminance = (0.299 * rgb[0] + 0.587 * rgb[1] + 0.114 * rgb[2]) / 255;
+    
+    // Use white text for dark backgrounds, black text for light backgrounds
+    return luminance > 0.5 ? '#000000' : '#ffffff';
+}
+
+function displayRarities(rarities, containerId, searchTerm = '') {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+
+    container.innerHTML = '';
+
+    const filteredRarities = (rarities || []).filter(rarity => 
+        rarity && rarity.name && 
+        (!searchTerm || rarity.name.toLowerCase().includes(searchTerm.toLowerCase()))
+    );
+
+    // Get current user
+    const currentUser = room.party.client.username;
+
+    // Calculate statistics
+    const twoChanceRarities = filteredRarities.filter(r => r.chance === 2).length;
+    const ultraRareRarities = filteredRarities.filter(r => r.chance >= 1e21).length;
+    const userCreatedRarities = filteredRarities.filter(r => r.username === currentUser).length;
+
+    // Create stats container with click handler
+    const counterDiv = document.createElement('div');
+    counterDiv.style.cssText = `
+        background: linear-gradient(45deg, #2a2a2a, #333);
+        padding: 20px;
+        border-radius: 15px;
+        margin-bottom: 20px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        border: 1px solid rgba(255,255,255,0.1);
+        text-align: center;
+        font-size: 1.2em;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    `;
+
+    // Initial stats view
+    counterDiv.innerHTML = `
+        <h2 style="margin-bottom: 10px;">📊 Rarity Stats</h2>
+        <div class="basic-stats" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px;">
+            <div>
+                <div style="font-size: 2em; font-weight: bold; color: #4CAF50;">${filteredRarities.length}</div>
+                <div style="color: #aaa;">Total Rarities</div>
+            </div>
+            <div>
+                <div style="font-size: 2em; font-weight: bold; color: #2196F3;">
+                    ${filteredRarities.reduce((sum, rarity) => sum + (1/rarity.chance), 0).toFixed(2)}
+                </div>
+                <div style="color: #aaa;">Combined Chance</div>
+            </div>
+        </div>
+        <div class="detailed-stats" style="display: none; margin-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px;">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px;">
+                <div>
+                    <div style="font-size: 1.5em; font-weight: bold; color: #ff9800;">${twoChanceRarities}</div>
+                    <div style="color: #aaa;">1 in 2 Chances</div>
+                </div>
+                <div>
+                    <div style="font-size: 1.5em; font-weight: bold; color: #e91e63;">${ultraRareRarities}</div>
+                    <div style="color: #aaa;">Above 1 in 1e+21</div>
+                </div>
+                <div>
+                    <div style="font-size: 1.5em; font-weight: bold; color: #9c27b0;">${userCreatedRarities}</div>
+                    <div style="color: #aaa;">Created by You</div>
+                </div>
+            </div>
+        </div>
+        <div style="margin-top: 10px; color: #aaa; font-size: 0.8em;">
+            Click to see more stats
+        </div>
+    `;
+
+    // Add click handler to toggle detailed stats
+    let isExpanded = false;
+    counterDiv.addEventListener('click', () => {
+        const detailedStats = counterDiv.querySelector('.detailed-stats');
+        const clickText = counterDiv.querySelector('div:last-child');
+        isExpanded = !isExpanded;
+        
+        detailedStats.style.display = isExpanded ? 'block' : 'none';
+        clickText.textContent = isExpanded ? 'Click to show less' : 'Click to see more stats';
+        
+        // Add animation
+        if (isExpanded) {
+            detailedStats.style.animation = 'fadeIn 0.3s ease';
+        }
+    });
+
+    container.appendChild(counterDiv);
+
+    // Rest of the existing displayRarities function...
+    // Sort rarities by chance (highest chance first)
+    filteredRarities.sort((a, b) => b.chance - a.chance);
+
+    filteredRarities.forEach(rarity => {
+        const div = document.createElement('div');
+        div.className = 'rarity-card';
+        div.style.cursor = 'pointer';
+
+        // Set default values for missing properties
+        const direction = rarity.direction || 'to right';
+        const colorStart = rarity.colorStart || '#808080';
+        const colorEnd = rarity.colorEnd || '#808080';
+        
+        const gradientStyle = direction.includes('circle') 
+            ? `radial-gradient(${direction.replace('circle at center', 'circle')}, ${colorStart}, ${colorEnd})`
+            : `linear-gradient(${direction}, ${colorStart}, ${colorEnd})`;
+
+        const avgColor = averageColors(colorStart, colorEnd);
+        const textColor = getContrastColor(avgColor);
+
+        div.style.background = gradientStyle;
+        div.style.color = textColor;
+        div.style.transition = 'transform 0.3s ease, box-shadow 0.3s ease';
+
+        div.innerHTML = `
+            <div>
+                <h3 style="margin-bottom: 5px;">${rarity.name}</h3>
+                <p style="font-size: 1.2em;">1 in ${rarity.chance} chance</p>
+                <p class="created-by" style="margin-top: 10px; opacity: 0.7;">by @${rarity.username || 'unknown'}</p>
+            </div>
+        `;
+
+        // Add hover effects
+        div.addEventListener('mouseenter', () => {
+            div.style.transform = 'translateY(-5px)';
+            div.style.boxShadow = '0 8px 25px rgba(0,0,0,0.3)';
+        });
+
+        div.addEventListener('mouseleave', () => {
+            div.style.transform = '';
+            div.style.boxShadow = '';
+        });
+
+        container.appendChild(div);
+    });
+}
+
+const COLLECTION_NAME = 'rarity_v2';
+const ROLLS_COLLECTION = 'rarity_rolls_v1';
+const PACKS_COLLECTION = 'rarity_packs_v1';
+const PACK_PROGRESS_COLLECTION = 'pack_progress_v1';
+const VOTES_COLLECTION = 'update_votes_v1';
+const VOTE_RESPONSES_COLLECTION = 'vote_responses_v1';
+
+// Pagination constants
+let LEADERBOARD_PAGE_SIZE = 25; // 25 users per page
+
+// Update Leaderboard
+async function updateLeaderboard() {
+    const leaderboardDiv = document.getElementById('leaderboardList');
+    if (!leaderboardDiv) return;
+
+    // Store current search input state if it exists
+    const previousSearch = document.getElementById('leaderboardSearch');
+    let wasSearchFocused = false;
+    let cursorPosition = 0;
+    if (previousSearch) {
+        wasSearchFocused = document.activeElement === previousSearch;
+        cursorPosition = previousSearch.selectionStart;
+    }
+    
+    // Get all rolls
+    const rolls = (room.collection(ROLLS_COLLECTION).getList() || [])
+        .filter(roll => roll && roll.username && roll.rarity_chance);
+    
+    // Create a map of best rolls per user
+    const userBestRolls = new Map();
+    
+    rolls.forEach(roll => {
+        if (!roll || !roll.username) return;
+        const currentBest = userBestRolls.get(roll.username);
+        if (!currentBest || roll.rarity_chance > currentBest.rarity_chance) {
+            userBestRolls.set(roll.username, roll);
+        }
+    });
+
+    // Before filtering for search, get the full ordered list for accurate ranks
+    const sortedEntries = Array.from(userBestRolls.entries())
+        .map(([username, roll]) => roll)
+        .filter(roll => roll && roll.rarity_chance)
+        .sort((a, b) => b.rarity_chance - a.rarity_chance);
+
+    // Store actual ranks in a Map before filtering
+    const actualRanks = new Map();
+    sortedEntries.forEach((roll, index) => {
+        actualRanks.set(roll.id, index + 1);
+    });
+
+    const searchTerm = previousSearch ? previousSearch.value.toLowerCase() : '';
+
+    // Filter entries by search term while maintaining original ranking
+    const displayedEntries = sortedEntries.filter(roll => 
+        !searchTerm || roll.username.toLowerCase().includes(searchTerm)
+    );
+
+    // Limit to top 100 entries
+    const top100Entries = displayedEntries.slice(0, 100);
+    const totalPages = Math.ceil(top100Entries.length / LEADERBOARD_PAGE_SIZE);
+
+    // Find current user's best roll and rank in the FULL list (not filtered)
+    const currentUser = room.party.client.username;
+    const userBestRoll = sortedEntries.find(roll => roll.username === currentUser);
+    const userRank = userBestRoll ? sortedEntries.findIndex(roll => roll.username === currentUser) + 1 : null;
+
+    // Clear leaderboard
+    leaderboardDiv.innerHTML = '';
+
+    // Add personal stats section (same as before)
+    const statsDiv = document.createElement('div');
+    statsDiv.className = 'personal-stats';
+    statsDiv.style.cssText = `
+        background: linear-gradient(45deg, #2a2a2a, #333);
+        padding: 25px;
+        border-radius: 15px;
+        margin-bottom: 20px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        border: 1px solid rgba(255,255,255,0.1);
+    `;
+
+    if (userBestRoll) {
+        const direction = userBestRoll.direction || 'to right';
+        const gradient = direction.includes('circle') 
+            ? `radial-gradient(${direction.replace('circle at center', 'circle')}, ${userBestRoll.colorStart || '#ff0000'}, ${userBestRoll.colorEnd || '#ff0000'})`
+            : `linear-gradient(${direction}, ${userBestRoll.colorStart || '#ff0000'}, ${userBestRoll.colorEnd || '#ff0000'})`;
+
+        statsDiv.innerHTML = `
+            <h2 style="margin-bottom: 15px;">Your Stats</h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px;">
+                <div>
+                    <h3 style="color: #4CAF50;">Current Rank</h3>
+                    <p style="font-size: 1.8em; font-weight: bold;">#${userRank} of ${sortedEntries.length}</p>
+                    <p style="color: #aaa; font-size: 0.9em;">Showing top 100 players</p>
+                </div>
+                <div>
+                    <h3 style="color: #4CAF50;">Best Rarity</h3>
+                    <div style="
+                        background: ${gradient};
+                        padding: 15px;
+                        border-radius: 10px;
+                        margin-top: 10px;
+                    ">
+                        <div style="font-size: 1.2em; font-weight: bold;">${userBestRoll.rarity_name}</div>
+                        <div>1 in ${userBestRoll.rarity_chance}</div>
+                    </div>
+                </div>
+            </div>
+        `;
+    } else {
+        statsDiv.innerHTML = `
+            <h2 style="margin-bottom: 15px;">Your Stats</h2>
+            <p>You haven't rolled any rarities yet! Roll some rarities to appear on the leaderboard.</p>
+            <p style="color: #aaa; font-size: 0.9em;">Showing top 100 players</p>
+        `;
+    }
+
+    leaderboardDiv.appendChild(statsDiv);
+
+    // Add search bar
+    const searchDiv = document.createElement('div');
+    searchDiv.style.cssText = `
+        background: linear-gradient(45deg, #2a2a2a, #333);
+        padding: 15px;
+        border-radius: 15px;
+        margin: 15px 0;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        border: 1px solid rgba(255,255,255,0.1);
+    `;
+
+    searchDiv.innerHTML = `
+        <input 
+            type="text" 
+            id="leaderboardSearch" 
+            placeholder="Search users..."
+            style="
+                width: 100%;
+                padding: 12px;
+                border: 1px solid rgba(255,255,255,0.1);
+                border-radius: 8px;
+                background: rgba(255,255,255,0.05);
+                color: #fff;
+                font-size: 1em;
+                transition: all 0.3s ease;
+                margin: 0;
+            "
+            value="${searchTerm}"
+        >
+    `;
+
+    leaderboardDiv.appendChild(searchDiv);
+
+    // Get the new search input and restore focus/cursor position if needed
+    const newSearchInput = document.getElementById('leaderboardSearch');
+    if (wasSearchFocused) {
+        newSearchInput.focus();
+        newSearchInput.setSelectionRange(cursorPosition, cursorPosition);
+    }
+
+    // Add input event listener with debouncing to prevent rapid re-renders
+    let debounceTimer;
+    newSearchInput.addEventListener('input', (e) => {
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(() => {
+            updateLeaderboard();
+        }, 100); // Debounce for 100ms
+    });
+
+    // Add pagination controls at top
+    const paginationTop = document.createElement('div');
+    paginationTop.className = 'pagination-controls';
+    paginationTop.innerHTML = `
+        <button onclick="changePage(-1)" ${currentLeaderboardPage === 0 ? 'disabled' : ''}>Previous</button>
+        <span>Page ${currentLeaderboardPage + 1} of ${totalPages}</span>
+        <button onclick="changePage(1)" ${currentLeaderboardPage >= totalPages - 1 ? 'disabled' : ''}>Next</button>
+    `;
+    leaderboardDiv.appendChild(paginationTop);
+
+    // Display initial leaderboard entries with pagination
+    const startIndex = currentLeaderboardPage * LEADERBOARD_PAGE_SIZE;
+    const paginatedEntries = top100Entries.slice(startIndex, startIndex + LEADERBOARD_PAGE_SIZE);
+
+    // Display entries
+    paginatedEntries.forEach((roll) => {
+        if (!roll || !roll.username) return;
+
+        // Get the actual rank from our map instead of calculating from filtered list
+        const actualRank = actualRanks.get(roll.id);
+        let rankClass = '';
+        let medalEmoji = '';
+
+        // Use actual rank for styling
+        if (actualRank === 1) {
+            rankClass = 'rank-platin'; 
+            medalEmoji = '🎖️';
+        } else if (actualRank <= 3) {
+            rankClass = 'rank-diamond';
+            medalEmoji = '💎';
+        } else if (actualRank <= 10) {
+            rankClass = 'rank-gold';
+            medalEmoji = '🥇';
+        } else if (actualRank <= 25) {
+            rankClass = 'rank-silver';
+            medalEmoji = '🥈';
+        } else if (actualRank <= 50) {
+            rankClass = 'rank-bronze';
+            medalEmoji = '🥉';
+        }
+
+        const direction = roll.direction || 'to right';
+        const gradient = direction.includes('circle') 
+            ? `radial-gradient(${direction.replace('circle at center', 'circle')}, ${roll.colorStart || '#ff0000'}, ${roll.colorEnd || '#ff0000'})`
+            : `linear-gradient(${direction}, ${roll.colorStart || '#ff0000'}, ${roll.colorEnd || '#ff0000'})`;
+
+        const entry = document.createElement('div');
+        entry.className = `leaderboard-entry ${rankClass}`;
+        entry.innerHTML = `
+            <div class="rank">#${actualRank} ${medalEmoji}</div>
+            <div class="player-info">
+                <div class="player-name">@${roll.username}</div>
+                <div class="rarity-name">${roll.rarity_name || 'Unknown'}</div>
+            </div>
+            <div class="rarity-info">
+                <div class="rarity-chance">1 in ${roll.rarity_chance}</div>
+                <div class="rarity-preview" style="background: ${gradient}"></div>
+            </div>
+        `;
+
+        leaderboardDiv.appendChild(entry);
+    });
+
+    // Add pagination controls at bottom
+    const paginationBottom = document.createElement('div');
+    paginationBottom.className = 'pagination-controls';
+    paginationBottom.innerHTML = paginationTop.innerHTML;
+    leaderboardDiv.appendChild(paginationBottom);
+}
+
+// Add pagination change function
+function changePage(direction) {
+    currentLeaderboardPage = Math.max(0, currentLeaderboardPage + direction);
+    updateLeaderboard();
+}
+
+// Navigation
+document.querySelectorAll('.sidebar-menu a[data-page]').forEach(link => {
+    link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const pageId = e.target.dataset.page;
+        
+        // Update active states
+        document.querySelectorAll('.sidebar-menu a').forEach(a => a.classList.remove('active'));
+        e.target.classList.add('active');
+        
+        // Show selected page
+        document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+        document.getElementById(pageId + 'Page').classList.add('active');
+    });
+});
+
+// This will initialize the leaderboard when the page loads
+document.addEventListener('DOMContentLoaded', () => {
+    updateLeaderboard();
+    
+    // Also initialize other data
+    const rarities = room.collection(COLLECTION_NAME).getList();
+    displayRarities(rarities, 'raritiesList', '');
+});
+
+// Additionally modify the leaderboard page click handler to ensure loading
+document.querySelector('a[data-page="leaderboard"]').addEventListener('click', () => {
+    updateLeaderboard();
+});
+
+async function createRarity() {
+    const name = document.getElementById('rarityName').value;
+    const chance = parseInt(document.getElementById('rarityChance').value);
+    const colorStart = document.getElementById('rarityColorStart').value;
+    const colorEnd = document.getElementById('rarityColorEnd').value;
+    const direction = document.getElementById('gradientDirection').value;
+
+    if (!name || !chance || chance <= 1) {
+        alert('Please fill in all fields correctly! Chance must be greater than 1.');
+        return;
+    }
+
+    if (name.length > 50) {
+        alert('Rarity name cannot be longer than 50 characters!');
+        return;
+    }
+
+    // Get existing rarities
+    const existingRarities = room.collection(COLLECTION_NAME).getList();
+    
+    // Check if rarity name already exists
+    const nameExists = existingRarities.some(rarity => 
+        rarity.name.toLowerCase() === name.toLowerCase()
+    );
+
+    if (nameExists) {
+        alert('A rarity with this name already exists! Please choose a different name.');
+        return;
+    }
+
+    // Check if current user already has a rarity with the same chance
+    const currentUser = room.party.client.username;
+    const sameChanceExists = existingRarities.some(rarity => 
+        rarity.username === currentUser && 
+        rarity.chance === chance
+    );
+
+    if (sameChanceExists) {
+        alert(`You already have a rarity with 1 in ${chance} chance! Please choose a different chance value.`);
+        return;
+    }
+
+    await room.collection(COLLECTION_NAME).create({
+        name,
+        chance,
+        colorStart,
+        colorEnd,
+        direction: direction
+    });
+
+    // Clear form after successful creation
+    document.getElementById('rarityName').value = '';
+    document.getElementById('rarityChance').value = '';
+}
+
+async function rollRarity() {
+    // Disable the roll button during animation
+    const rollButton = document.querySelector('.roll-button');
+    const resultDiv = document.getElementById('rollResult');
+    
+    if (rollButton.disabled) return;
+    
+    rollButton.disabled = true;
+    
+    const rarities = room.collection(COLLECTION_NAME).getList();
+    const validRarities = rarities.filter(rarity => rarity && rarity.chance > 1);
+
+    if (!validRarities || validRarities.length === 0) {
+        alert('No valid rarities available to roll!');
+        rollButton.disabled = false;
+        return;
+    }
+
+    try {
+        const totalSpace = validRarities.reduce((acc, rarity) => acc + (1 / rarity.chance), 0);
+        const roll = Math.random() * totalSpace;
+
+        let currentSum = 0;
+        let selected = validRarities[0];
+
+        for (const rarity of validRarities) {
+            currentSum += 1 / rarity.chance;
+            if (roll <= currentSum) {
+                selected = rarity;
+                break;
+            }
+        }
+
+        // Setup the gradient style
+        const startColor = selected.colorStart || '#ff0000';
+        const endColor = selected.colorEnd || '#ff0000';
+        const direction = selected.direction || 'to right';
+        
+        const gradientStyle = direction.includes('circle') 
+            ? `radial-gradient(${direction.replace('circle at center', 'circle')}, ${startColor}, ${endColor})`
+            : `linear-gradient(${direction}, ${startColor}, ${endColor})`;
+            
+        // Calculate contrast color
+        const avgColor = averageColors(startColor, endColor);
+        const textColor = getContrastColor(avgColor);
+
+        // Clear previous classes and set initial styles
+        resultDiv.className = 'roll-result';
+        
+        // Apply styles and content
+        resultDiv.style.cssText = `
+            display: block;
+            background: ${gradientStyle};
+            color: ${textColor};
+        `;
+
+        resultDiv.innerHTML = `
+            <h2>🎉 You rolled:</h2>
+            <h1>${selected.name}</h1>
+            <p>(1 in ${selected.chance} chance!)</p>
+        `;
+
+        // Store the roll result
+        await room.collection(ROLLS_COLLECTION).create({
+            rarity_id: selected.id,
+            rarity_name: selected.name,
+            rarity_chance: selected.chance,
+            colorStart: selected.colorStart,
+            colorEnd: selected.colorEnd,
+            direction: selected.direction
+        });
+
+        // Check if this is a new personal best
+        let previousBest;
+        try {
+            const storedBest = localStorage.getItem('personalBestRoll');
+            previousBest = storedBest ? JSON.parse(storedBest) : null;
+        } catch (error) {
+            console.error('Error parsing stored personal best:', error);
+            previousBest = null;
+        }
+
+        // This is a new best if there's no previous best, or if the new roll has a higher chance
+        const isNewBest = !previousBest || selected.chance > previousBest.chance;
+
+        if (isNewBest) {
+            localStorage.setItem('personalBestRoll', JSON.stringify(selected));
+            resultDiv.classList.add('celebration');
+            
+            // Reduced cooldown for celebration rolls to 500ms
+            setTimeout(() => {
+                rollButton.disabled = false;
+                resultDiv.classList.remove('celebration');
+            }, 500);
+            
+            // Add confetti effect
+            createConfetti();
+        } else {
+            // Reduced cooldown for normal rolls to 500ms
+            setTimeout(() => {
+                rollButton.disabled = false;
+            }, 500);
+        }
+
+    } catch (error) {
+        console.error('Error during roll:', error);
+        rollButton.disabled = false;
+    }
+}
+
+// Add confetti effect function
+function createConfetti() {
+    for (let i = 0; i < 50; i++) {
+        const confetti = document.createElement('div');
+        confetti.classList.add('confetti');
+        confetti.style.setProperty('--delay', `${Math.random() * 3}s`);
+        confetti.style.setProperty('--x', `${Math.random() * 100}vw`);
+        confetti.style.setProperty('--color', `hsl(${Math.random() * 360}deg, 100%, 50%)`);
+        document.body.appendChild(confetti);
+        
+        // Remove confetti after animation
+        setTimeout(() => confetti.remove(), 3000);
+    }
+}
+
+async function displayPackRarities(searchTerm = '') {
+    try {
+        // Wait for rarities to load with retries
+        let rarities = [];
+        let attempts = 0;
+        const maxAttempts = 10;
+
+        while (attempts < maxAttempts) {
+            rarities = room.collection(COLLECTION_NAME).getList() || [];
+            if (rarities.length > 0) break;
+            
+            await new Promise(resolve => setTimeout(resolve, 500));
+            attempts++;
+        }
+
+        const selectorDiv = document.getElementById('packRaritiesSelector');
+        if (!selectorDiv) {
+            console.error('Pack rarities selector div not found');
+            return;
+        }
+        
+        selectorDiv.innerHTML = '';
+
+        // Filter rarities with more thorough validation
+        const filteredRarities = rarities
+            .filter(rarity => 
+                rarity && 
+                rarity.id && 
+                rarity.name && 
+                rarity.chance > 1 && 
+                (!searchTerm || rarity.name.toLowerCase().includes(searchTerm.toLowerCase()))
+            );
+
+        if (filteredRarities.length === 0) {
+            selectorDiv.innerHTML = searchTerm ? 
+                '<p>No rarities found matching your search</p>' : 
+                '<p>No rarities available. Create some rarities first!</p>';
+            return;
+        }
+
+        filteredRarities.forEach(rarity => {
+            const div = document.createElement('div');
+            div.className = 'pack-rarity-item';
+            
+            const direction = rarity.direction || 'to right';
+            const colorStart = rarity.colorStart || '#ff0000';
+            const colorEnd = rarity.colorEnd || '#ff0000';
+            
+            const gradient = direction.includes('circle') 
+                ? `radial-gradient(${direction.replace('circle at center', 'circle')}, ${colorStart}, ${colorEnd})`
+                : `linear-gradient(${direction}, ${colorStart}, ${colorEnd})`;
+
+            div.innerHTML = `
+                <input type="checkbox" value="${rarity.id}">
+                <div class="pack-rarity-preview" style="background: ${gradient}"></div>
+                <div style="flex: 1;">
+                    <div>${rarity.name} (1 in ${rarity.chance})</div>
+                    <div style="font-size: 0.8em; color: #888;">by @${rarity.username || 'unknown'}</div>
+                </div>
+            `;
+            selectorDiv.appendChild(div);
+        });
+
+    } catch (error) {
+        console.error('Error in displayPackRarities:', error);
+        const selectorDiv = document.getElementById('packRaritiesSelector');
+        if (selectorDiv) {
+            selectorDiv.innerHTML = '<p>Error loading rarities. Please try again.</p>';
+        }
+    }
+}
+
+async function createPack() {
+    try {
+        const packName = document.getElementById('packName').value;
+        if (!packName || !packName.trim()) {
+            alert('Please enter a pack name!');
+            return;
+        }
+
+        // Get selected rarities with error handling
+        const selectedCheckboxes = document.querySelectorAll('#packRaritiesSelector input:checked');
+        if (!selectedCheckboxes || selectedCheckboxes.length === 0) {
+            alert('Please select at least one rarity for your pack!');
+            return;
+        }
+
+        const selectedRarities = Array.from(selectedCheckboxes).map(input => input.value);
+        if (selectedRarities.length < 2) {
+            alert('Please select at least 2 rarities for your pack!');
+            return;
+        }
+
+        // Check for existing packs with better null handling
+        const existingPacks = room.collection(PACKS_COLLECTION).getList() || [];
+        if (existingPacks.some(pack => 
+            pack && pack.name && pack.name.toLowerCase() === packName.toLowerCase()
+        )) {
+            alert('A pack with this name already exists!');
+            return;
+        }
+
+        // Create the pack with explicit username
+        const newPack = await room.collection(PACKS_COLLECTION).create({
+            name: packName,
+            rarities: selectedRarities,
+            username: room.party.client.username // Explicitly set the username
+        });
+
+        if (!newPack) {
+            throw new Error('Failed to create pack');
+        }
+
+        // Clear form
+        document.getElementById('packName').value = '';
+        document.querySelectorAll('#packRaritiesSelector input').forEach(input => input.checked = false);
+        alert('Pack created successfully!');
+        
+        // Refresh pack display
+        await displayPacks();
+        
+    } catch (error) {
+        console.error('Error creating pack:', error);
+        alert('Failed to create pack. Please try again.');
+    }
+}
+
+async function displayPacks(searchTerm = '') {
+    const packs = room.collection(PACKS_COLLECTION).getList();
+    const packsDiv = document.getElementById('packsList');
+    const currentUser = room.party.client.username;
+    
+    packsDiv.innerHTML = '';
+
+    const filteredPacks = packs.filter(pack => 
+        pack.name.toLowerCase().includes((searchTerm || '').toLowerCase())
+    );
+
+    filteredPacks.forEach(pack => {
+        const div = document.createElement('div');
+        div.className = 'pack-card';
+        
+        // Add delete button only if current user created the pack
+        const deleteButton = pack.username === currentUser ? 
+            `<button class="delete-pack-btn" onclick="deletePack('${pack.id}')">Delete Pack</button>` : 
+            '';
+
+        div.innerHTML = `
+            <h3>${pack.name}</h3>
+            <p>${pack.rarities.length} Rarities</p>
+            <p class="created-by">by @${pack.username}</p>
+            <div class="pack-buttons">
+                <button onclick="startPack('${pack.id}')">Play Pack</button>
+                ${deleteButton}
+            </div>
+        `;
+        packsDiv.appendChild(div);
+    });
+}
+
+// Add delete pack function
+async function deletePack(packId) {
+    try {
+        const pack = room.collection(PACKS_COLLECTION).getList()
+            .find(p => p.id === packId);
+            
+        if (!pack) {
+            throw new Error('Pack not found');
+        }
+
+        // Verify ownership
+        if (pack.username !== room.party.client.username) {
+            alert('You can only delete packs you created!');
+            return;
+        }
+
+        if (!confirm('Are you sure you want to delete this pack? This action cannot be undone.')) {
+            return;
+        }
+
+        // Delete the pack
+        await room.collection(PACKS_COLLECTION).delete(packId);
+
+        // Delete associated progress records
+        const progressRecords = room.collection(PACK_PROGRESS_COLLECTION).getList()
+            .filter(p => p.pack_id === packId);
+            
+        for (const progress of progressRecords) {
+            await room.collection(PACK_PROGRESS_COLLECTION).delete(progress.id);
+        }
+
+        alert('Pack deleted successfully!');
+        
+        // If this was the current pack, clear it
+        if (currentPack && currentPack.id === packId) {
+            currentPack = null;
+            document.getElementById('activePack').style.display = 'none';
+        }
+
+        // Refresh pack display
+        displayPacks();
+
+    } catch (error) {
+        console.error('Error deleting pack:', error);
+        alert('Failed to delete pack. Please try again.');
+    }
+}
+
+let currentPack = null;
+
+async function startPack(packId) {
+    try {
+        // Clear any existing pack state
+        const activePack = document.getElementById('activePack');
+        const activePackName = document.getElementById('activePackName');
+        const packRollResult = document.getElementById('packRollResult');
+
+        // Reset display elements
+        packRollResult.style.display = 'none';
+        activePack.style.display = 'none';
+
+        // Get pack data with retries
+        let pack = null;
+        let attempts = 0;
+        const maxAttempts = 10;
+
+        while (attempts < maxAttempts) {
+            const packs = room.collection(PACKS_COLLECTION).getList() || [];
+            pack = packs.find(p => p.id === packId);
+            if (pack) break;
+            
+            await new Promise(resolve => setTimeout(resolve, 500));
+            attempts++;
+        }
+
+        if (!pack) {
+            throw new Error('Pack not found after multiple attempts');
+        }
+
+        currentPack = pack;
+
+        // Get or create progress with retries
+        let progress = null;
+        attempts = 0;
+
+        while (attempts < maxAttempts) {
+            const progressList = room.collection(PACK_PROGRESS_COLLECTION).getList() || [];
+            progress = progressList.find(p => 
+                p?.pack_id === packId && p?.username === room.party.client.username
+            );
+            
+            if (!progress) {
+                // If no progress exists, create new progress
+                progress = await room.collection(PACK_PROGRESS_COLLECTION).create({
+                    pack_id: packId,
+                    collected_rarities: []
+                });
+                break; // Exit loop if creation successful 
+            }
+
+            await new Promise(resolve => setTimeout(resolve, 500));
+            attempts++;
+        }
+
+        // Update UI
+        activePack.style.display = 'block';
+        activePackName.textContent = pack.name;
+        await updatePackProgress();
+
+    } catch (error) {
+        console.error('Error starting pack:', error);
+        alert(error.message || 'Something went wrong while starting the pack. Please try again.');
+        currentPack = null;
+        document.getElementById('activePack').style.display = 'none';
+    }
+}
+
+async function rollPackRarity() {
+    const rollButton = document.querySelector('#activePack .roll-button');
+    const resultDiv = document.getElementById('packRollResult');
+    const COOLDOWN_MS = 500; // Changed from 3000 to 500ms
+
+    if (!currentPack) {
+        alert('No active pack selected!');
+        return;
+    }
+
+    if (rollButton.hasAttribute('data-cooldown')) {
+        return;
+    }
+
+    try {
+        rollButton.disabled = true;
+        resultDiv.style.display = 'none';
+
+        // Wait for rarities to load
+        let allRarities = room.collection(COLLECTION_NAME).getList();
+        if (!allRarities || !allRarities.length) {
+            await new Promise(resolve => setTimeout(resolve, 500));
+            allRarities = room.collection(COLLECTION_NAME).getList();
+        }
+
+        // Filter pack rarities and ensure they exist
+        const packRarities = allRarities.filter(r => 
+            r && r.id && currentPack.rarities.includes(r.id) && r.chance > 1
+        );
+
+        // Create None rarity
+        const noneRarity = {
+            id: 'none',
+            name: 'None',
+            chance: 1,
+            colorStart: '#808080',
+            colorEnd: '#808080',
+            direction: 'to right'
+        };
+
+        const rarities = [...packRarities, noneRarity];
+
+        // Calculate probabilities
+        const totalSpace = rarities.reduce((acc, rarity) => acc + (1 / rarity.chance), 0);
+        const roll = Math.random() * totalSpace;
+
+        let currentSum = 0;
+        let selected = noneRarity;
+
+        for (const rarity of rarities) {
+            currentSum += 1 / rarity.chance;
+            if (roll <= currentSum) {
+                selected = rarity;
+                break;
+            }
+        }
+
+        // Set up gradient
+        const direction = selected.direction || 'to right';
+        const gradientStyle = direction.includes('circle') 
+            ? `radial-gradient(${direction.replace('circle at center', 'circle')}, ${selected.colorStart}, ${selected.colorEnd})`
+            : `linear-gradient(${direction}, ${selected.colorStart}, ${selected.colorEnd})`;
+
+        const avgColor = averageColors(selected.colorStart, selected.colorEnd);
+        const textColor = getContrastColor(avgColor);
+
+        // Update display
+        resultDiv.style.cssText = `
+            display: block;
+            background: ${gradientStyle};
+            color: ${textColor};
+        `;
+
+        resultDiv.innerHTML = `
+            <h2>🎲 You rolled:</h2>
+            <h1>${selected.name}</h1>
+            <p>(1 in ${selected.chance} chance!)</p>
+        `;
+
+        // Only update progress if a real rarity was rolled
+        if (selected.id !== 'none') {
+            // Get current progress with retry
+            let progress = null;
+            let attempts = 0;
+            while (attempts < 5 && !progress) {
+                const progressList = room.collection(PACK_PROGRESS_COLLECTION).getList();
+                progress = progressList.find(p => 
+                    p?.pack_id === currentPack.id && 
+                    p?.username === room.party.client.username
+                );
+
+                if (!progress) {
+                    // If no progress exists, create it
+                    try {
+                        progress = await room.collection(PACK_PROGRESS_COLLECTION).create({
+                            pack_id: currentPack.id,
+                            collected_rarities: []
+                        });
+                        break;
+                    } catch (error) {
+                        console.error('Error creating progress:', error);
+                    }
+                }
+
+                if (!progress) {
+                    await new Promise(resolve => setTimeout(resolve, 200));
+                    attempts++;
+                }
+            }
+
+            if (progress) {
+                // Ensure collected_rarities is an array
+                const collected = Array.isArray(progress.collected_rarities) ? 
+                    progress.collected_rarities : [];
+
+                // Only add if not already collected
+                if (!collected.includes(selected.id)) {
+                    try {
+                        await room.collection(PACK_PROGRESS_COLLECTION).update(progress.id, {
+                            collected_rarities: [...collected, selected.id]
+                        });
+                        console.log('Updated progress:', selected.id, 'added to collection');
+                    } catch (error) {
+                        console.error('Error updating progress:', error);
+                    }
+                }
+            }
+        }
+
+        // Wait a moment then update progress display
+        setTimeout(async () => {
+            await updatePackProgress();
+        }, 500);
+
+        // Set cooldown
+        rollButton.setAttribute('data-cooldown', 'true');
+        setTimeout(() => {
+            rollButton.removeAttribute('data-cooldown');
+            rollButton.disabled = false;
+        }, COOLDOWN_MS);
+
+    } catch (error) {
+        console.error('Error during pack roll:', error);
+        rollButton.disabled = false;
+        rollButton.removeAttribute('data-cooldown');
+    }
+}
+
+async function updatePackProgress() {
+    if (!currentPack) return;
+
+    try {
+        const progressDiv = document.getElementById('packProgress');
+        if (!progressDiv) return;
+
+        // Get rarities with retry
+        let allRarities = room.collection(COLLECTION_NAME).getList();
+        if (!allRarities || !allRarities.length) {
+            await new Promise(resolve => setTimeout(resolve, 500));
+            allRarities = room.collection(COLLECTION_NAME).getList();
+        }
+
+        const packRarities = allRarities.filter(r => 
+            r && r.id && currentPack.rarities.includes(r.id)
+        );
+
+        // Get progress with retry
+        let progress = null;
+        let attempts = 0;
+        while (attempts < 5 && !progress) {
+            const progressList = room.collection(PACK_PROGRESS_COLLECTION).getList();
+            progress = progressList.find(p => 
+                p?.pack_id === currentPack.id && 
+                p?.username === room.party.client.username
+            );
+
+            if (!progress) {
+                await new Promise(resolve => setTimeout(resolve, 200));
+                attempts++;
+            } else {
+                break;
+            }
+        }
+
+        // Ensure we have a valid progress object
+        if (!progress) {
+            console.error('Could not get or create progress');
+            return;
+        }
+
+        // Ensure collected_rarities is an array
+        const collected = Array.isArray(progress.collected_rarities) ? 
+            progress.collected_rarities : [];
+
+        // Clear and rebuild progress display
+        progressDiv.innerHTML = '';
+
+        // Sort rarities by rarity (highest chance first)
+        packRarities.sort((a, b) => b.chance - a.chance);
+
+        // Show completion status
+        const totalRarities = packRarities.length;
+        const collectedCount = collected.length;
+        
+        const statusDiv = document.createElement('div');
+        statusDiv.className = 'pack-progress-status';
+        statusDiv.innerHTML = `
+            <h3>Progress: ${collectedCount}/${totalRarities}</h3>
+        `;
+        progressDiv.appendChild(statusDiv);
+
+        // Show each rarity's status
+        packRarities.forEach(rarity => {
+            const isCollected = collected.includes(rarity.id);
+            
+            const div = document.createElement('div');
+            div.className = `pack-progress-item ${isCollected ? 'collected' : ''}`;
+
+            const direction = rarity.direction || 'to right';
+            const gradientStyle = direction.includes('circle') 
+                ? `radial-gradient(${direction.replace('circle at center', 'circle')}, ${rarity.colorStart}, ${rarity.colorEnd})`
+                : `linear-gradient(${direction}, ${rarity.colorStart}, ${rarity.colorEnd})`;
+
+            div.innerHTML = `
+                <div style="
+                    background: ${gradientStyle}; 
+                    height: 30px; 
+                    border-radius: 5px; 
+                    margin-bottom: 5px;
+                "></div>
+                <div style="color: ${isCollected ? '#4CAF50' : '#fff'}">
+                    ${rarity.name}
+                    ${isCollected ? '✓' : '?'}
+                </div>
+            `;
+            progressDiv.appendChild(div);
+        });
+
+    } catch (error) {
+        console.error('Error updating pack progress:', error);
+        const progressDiv = document.getElementById('packProgress');
+        if (progressDiv) {
+            progressDiv.innerHTML = '<p>Progress will update shortly...</p>';
+        }
+    }
+}
+
+// Add this function for abandoning packs
+async function abandonPack() {
+    if (!currentPack) return;
+    
+    if (confirm('Are you sure you want to abandon this pack? Your progress will be lost.')) {
+        try {
+            // Find and delete progress
+            const progress = room.collection(PACK_PROGRESS_COLLECTION).getList()
+                .find(p => p && p.pack_id === currentPack.id && p.username === room.party.client.username);
+            
+            if (progress) {
+                await room.collection(PACK_PROGRESS_COLLECTION).delete(progress.id);
+            }
+            
+            // Reset UI
+            currentPack = null;
+            document.getElementById('activePack').style.display = 'none';
+            document.getElementById('packRollResult').style.display = 'none';
+            
+            alert('Pack abandoned successfully');
+        } catch (error) {
+            console.error('Error abandoning pack:', error);
+            alert('Failed to abandon pack. Please try again.');
+        }
+    }
+}
+
+async function cleanupDuplicateRarities() {
+    try {
+        const rarities = room.collection(COLLECTION_NAME).getList() || [];
+        
+        // Create a map to group rarities by name (case-insensitive)
+        const rarityGroups = new Map();
+        
+        rarities.forEach(rarity => {
+            if (!rarity || !rarity.name) return;
+            
+            const normalizedName = rarity.name.toLowerCase();
+            if (!rarityGroups.has(normalizedName)) {
+                rarityGroups.set(normalizedName, []);
+            }
+            rarityGroups.get(normalizedName).push(rarity);
+        });
+
+        // Check each group for duplicates
+        for (const [name, rarityList] of rarityGroups) {
+            if (rarityList.length > 1) {
+                console.log(`Found ${rarityList.length} duplicate rarities named "${name}"`);
+                
+                // Sort by creation date (keep the oldest)
+                rarityList.sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
+                
+                // Keep the first one, delete the rest
+                for (let i = 1; i < rarityList.length; i++) {
+                    try {
+                        await room.collection(COLLECTION_NAME).delete(rarityList[i].id);
+                        console.log(`Deleted duplicate rarity: ${rarityList[i].id}`);
+                    } catch (error) {
+                        console.error(`Failed to delete duplicate rarity: ${rarityList[i].id}`, error);
+                    }
+                }
+            }
+        }
+    } catch (error) {
+        console.error('Error cleaning up rarities:', error);
+    }
+}
+
+// Add periodic cleanup
+setInterval(cleanupDuplicateRarities, 30000); // Check every 30 seconds
+
+// Add initial cleanup on script load
+cleanupDuplicateRarities();
+
+// Subscribe to pack updates
+room.collection(PACKS_COLLECTION).subscribe(() => {
+    displayPacks(document.getElementById('searchPacks')?.value || '');
+});
+
+// Subscribe to pack progress updates
+room.collection(PACK_PROGRESS_COLLECTION).subscribe(() => {
+    updatePackProgress();
+});
+
+// Initialize leaderboard update subscription
+room.collection(ROLLS_COLLECTION).subscribe(rolls => {
+    updateLeaderboard();
+});
+
+// Subscribe to rarity updates
+room.collection(COLLECTION_NAME).subscribe(rarities => {
+    displayRarities(rarities, 'raritiesList', document.getElementById('searchRarities').value);
+});
+
+// Initialize pack rarities display when switching to packs page
+document.querySelector('a[data-page="packs"]')?.addEventListener('click', () => {
+    // Wait a moment for collections to be ready
+    setTimeout(() => {
+        try {
+            displayPackRarities();
+            displayPacks();
+        } catch (error) {
+            console.error('Error initializing packs page:', error);
+        }
+    }, 100);
+});
+
+// Update the search handler to include error handling
+document.getElementById('packRaritiesSearch')?.addEventListener('input', (e) => {
+    try {
+        displayPackRarities(e.target.value || '');
+    } catch (error) {
+        console.error('Error handling pack rarity search:', error);
+    }
+});
+
+// Add this function near the other voting-related functions:
+async function castVote(voteId, response) {
+    try {
+        const currentUser = room.party.client.username;
+        
+        // Get all responses for this vote
+        const existingResponses = room.collection(VOTE_RESPONSES_COLLECTION).getList()
+            .filter(r => r.vote_id === voteId && r.username === currentUser);
+        
+        // If user has already voted, delete their previous votes
+        for (const response of existingResponses) {
+            await room.collection(VOTE_RESPONSES_COLLECTION).delete(response.id);
+        }
+
+        // Create new vote response
+        await room.collection(VOTE_RESPONSES_COLLECTION).create({
+            vote_id: voteId,
+            response: response
+        });
+
+        // Update display
+        displayVotes();
+        
+    } catch (error) {
+        console.error('Error casting vote:', error);
+        alert('Failed to cast vote. Please try again.');
+    }
+}
+
+async function resetPersonalBest() {
+    if (confirm('Are you sure you want to reset your personal best roll?')) {
+        try {
+            // Clear personal best from localStorage
+            localStorage.removeItem('personalBestRoll');
+            
+            // Show feedback
+            alert('Personal best reset successfully!');
+            
+            // Update leaderboard display since it shows personal best
+            updateLeaderboard();
+        } catch (error) {
+            console.error('Error resetting personal best:', error);
+            alert('Failed to reset personal best. Please try again.');
+        }
+    }
+}
+
+async function createVote() {
+    const name = document.getElementById('voteName').value;
+    const description = document.getElementById('voteDescription').value;
+    
+    if (!name) {
+        alert('Please fill in the name!');
+        return;
+    }
+
+    // Set deadline to 24 hours from now
+    const deadline = new Date(Date.now() + 24 * 60 * 60 * 1000);
+
+    try {
+        await room.collection(VOTES_COLLECTION).create({
+            name,
+            description,
+            deadline: deadline.toISOString(),
+            created_at: new Date().toISOString()
+        });
+
+        // Clear form
+        document.getElementById('voteName').value = '';
+        document.getElementById('voteDescription').value = '';
+        
+        alert('Vote created successfully!');
+    } catch (error) {
+        console.error('Error creating vote:', error);
+        alert('Failed to create vote. Please try again.');
+    }
+}
+
+async function displayVotes() {
+    const votesDiv = document.getElementById('activeVotes');
+    if (!votesDiv) return;
+
+    const votes = room.collection(VOTES_COLLECTION).getList() || [];
+    const responses = room.collection(VOTE_RESPONSES_COLLECTION).getList() || [];
+    const currentUser = room.party.client.username;
+    const now = new Date();
+
+    votesDiv.innerHTML = '';
+
+    // Sort votes: lucky_luc369's votes first, then by creation date
+    votes.sort((a, b) => {
+        // If lucky_luc369's vote, move to top
+        if (a.username === 'lucky_luc369' && b.username !== 'lucky_luc369') return -1;
+        if (b.username === 'lucky_luc369' && a.username !== 'lucky_luc369') return 1;
+        // Otherwise sort by date
+        return new Date(b.created_at) - new Date(a.created_at);
+    }).forEach(vote => {
+        const deadline = new Date(vote.deadline);
+        const isExpired = deadline <= now;
+        const userResponse = responses.find(r => 
+            r.vote_id === vote.id && 
+            r.username === currentUser
+        );
+        
+        const yesVotes = responses.filter(r => 
+            r.vote_id === vote.id && r.response === 'yes'
+        ).length;
+        
+        const noVotes = responses.filter(r => 
+            r.vote_id === vote.id && r.response === 'no'
+        ).length;
+        
+        const totalVotes = yesVotes + noVotes;
+        const yesPercentage = totalVotes > 0 ? (yesVotes / totalVotes) * 100 : 0;
+
+        const card = document.createElement('div');
+        // Add diamond class if vote is from lucky_luc369
+        card.className = `vote-card ${vote.username === 'lucky_luc369' ? 'rank-diamond' : ''}`;
+        
+        // Add special styling for lucky_luc369's votes
+        const luckyStyle = vote.username === 'lucky_luc369' ? `
+            border: 1px solid rgba(185, 242, 255, 0.3);
+            box-shadow: 0 0 15px rgba(185, 242, 255, 0.2);
+            background: linear-gradient(45deg, rgba(185, 242, 255, 0.1), rgba(185, 242, 255, 0.05));
+        ` : '';
+        
+        card.style.cssText = luckyStyle;
+        
+        // Add diamond badge for lucky_luc369's votes
+        const luckyBadge = vote.username === 'lucky_luc369' ? `
+            <div style="
+                position: absolute;
+                top: 10px;
+                right: 10px;
+                color: #b9f2ff;
+                text-shadow: 0 0 5px rgba(185, 242, 255, 0.5);
+            ">💎</div>
+        ` : '';
+        
+        card.innerHTML = `
+            ${luckyBadge}
+            <h3>${vote.name}</h3>
+            ${vote.description ? `<p>${vote.description}</p>` : ''}
+            <div class="vote-deadline">
+                Deadline: ${deadline.toLocaleString()}
+                ${isExpired ? ' (Expired)' : ''}
+            </div>
+            <div class="vote-stats">
+                <div class="vote-stat">
+                    <div>Yes Votes</div>
+                    <div style="font-size: 1.2em; color: #4CAF50;">${yesVotes}</div>
+                </div>
+                <div class="vote-stat">
+                    <div>No Votes</div>
+                    <div style="font-size: 1.2em; color: #f44336;">${noVotes}</div>
+                </div>
+            </div>
+            <div class="vote-progress">
+                <div class="vote-progress-bar" style="width: ${yesPercentage}%"></div>
+            </div>
+            <div class="vote-buttons">
+                ${!isExpired && !userResponse ? `
+                    <button class="vote-yes" onclick="castVote('${vote.id}', 'yes')">Vote Yes</button>
+                    <button class="vote-no" onclick="castVote('${vote.id}', 'no')">Vote No</button>
+                ` : ''}
+                ${vote.username === currentUser ? `
+                    <button class="vote-delete" onclick="deleteVote('${vote.id}')">Delete Vote</button>
+                ` : ''}
+            </div>
+            ${userResponse ? `
+                <div style="margin-top: 10px; color: #aaa;">
+                    You voted: ${userResponse.response}
+                </div>
+            ` : ''}
+        `;
+        
+        votesDiv.appendChild(card);
+    });
+}
+
+async function deleteVote(voteId) {
+    try {
+        const vote = room.collection(VOTES_COLLECTION).getList()
+            .find(v => v.id === voteId);
+            
+        if (!vote || vote.username !== room.party.client.username) {
+            alert('You can only delete your own votes!');
+            return;
+        }
+
+        if (!confirm('Are you sure you want to delete this vote?')) return;
+
+        await room.collection(VOTES_COLLECTION).delete(voteId);
+        
+        // Delete associated responses
+        const responses = room.collection(VOTE_RESPONSES_COLLECTION).getList()
+            .filter(r => r.vote_id === voteId);
+            
+        for (const response of responses) {
+            await room.collection(VOTE_RESPONSES_COLLECTION).delete(response.id);
+        }
+
+        alert('Vote deleted successfully!');
+        displayVotes();
+    } catch (error) {
+        console.error('Error deleting vote:', error);
+        alert('Failed to delete vote. Please try again.');
+    }
+}
+
+// Add subscription for votes updates
+room.collection(VOTES_COLLECTION).subscribe(() => {
+    displayVotes();
+});
+
+// Add subscription for vote responses updates
+room.collection(VOTE_RESPONSES_COLLECTION).subscribe(() => {
+    displayVotes();
+});
+</script></body></html>

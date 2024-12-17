@@ -1,0 +1,1672 @@
+<html><head><base href="." />
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Anton&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Amatic+SC:wght@700&family=Dancing+Script:wght@700&family=Indie+Flower&display=swap');
+        body {
+            margin: 0;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        #canvasOverlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 500;
+            pointer-events: auto;
+        }
+
+        .rain, .snow {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            filter: blur(0.5px);
+            pointer-events: none;
+        }
+
+        .drop, .snowflake {
+            position: absolute;
+            animation: fall linear infinite;
+            pointer-events: none;
+        }
+
+        .drop {
+            width: 3px;
+            height: 20px;
+            background: linear-gradient(transparent, rgba(255, 0, 0, 0.4));
+        }
+
+        .snowflake {
+            width: 5px;
+            height: 5px;
+            background: white;
+            border-radius: 50%;
+        }
+
+        .ember {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: #ff6633;
+            border-radius: 50%;
+            animation: float 3s ease-out infinite;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        @keyframes fall {
+            0% { transform: translateY(-120vh); }
+            100% { transform: translateY(120vh); }
+        }
+
+        .text-container {
+            color: #ff3333;
+            text-align: center;
+            z-index: 100;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            animation: rageShake 0.5s ease-in-out infinite;
+            padding: 20px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+        }
+
+        .rage-text {
+            font-size: 72px;
+            margin-bottom: 20px;
+            animation: flamePulse 1s ease-in-out infinite;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .rage-subtext {
+            font-size: 24px;
+            max-width: 800px;
+            line-height: 1.5;
+            margin-bottom: 20px;
+            animation: angryFlicker 0.3s ease-in-out infinite;
+        }
+
+        .final-rage {
+            font-size: 32px;
+            font-weight: bold;
+            animation: explosivePulse 0.8s ease-in-out infinite;
+            color: #ff6666;
+        }
+
+        .lightning {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: #ff2222;
+            opacity: 0;
+            pointer-events: none;
+            z-index: 90;
+        }
+
+        @keyframes angryPulse {
+            0%, 100% { background: linear-gradient(0deg, #2e1a1a 0%, #3e1616 100%); }
+            50% { background: linear-gradient(0deg, #3e1616 0%, #4e1616 100%); }
+        }
+
+        @keyframes rageShake {
+            0%, 100% { transform: translate(0, 0); }
+            25% { transform: translate(-5px, -5px); }
+            50% { transform: translate(5px, 5px); }
+            75% { transform: translate(-5px, 5px); }
+        }
+
+        @keyframes flamePulse {
+            0%, 100% { text-shadow: 0 0 20px #ff0000, 0 0 30px #ff0000; }
+            50% { text-shadow: 0 0 40px #ff0000, 0 0 60px #ff0000; }
+        }
+
+        @keyframes angryFlicker {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+
+        @keyframes explosivePulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .explosion {
+            position: absolute;
+            pointer-events: none;
+            z-index: 95;
+        }
+
+        .explosion-circle {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle, 
+                rgba(255,200,0,0.9) 0%, 
+                rgba(255,140,0,0.8) 20%, 
+                rgba(255,69,0,0.7) 40%, 
+                rgba(255,0,0,0) 80%);
+            transform: translate(-50%, -50%);
+            animation: explode 0.8s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
+        }
+
+        .explosion-particle {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: #ff8833;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 0 20px #ff6633;
+        }
+
+        @keyframes explode {
+            0% {
+                width: 0;
+                height: 0;
+                opacity: 1;
+            }
+            50% {
+                opacity: 1;
+            }
+            100% {
+                width: 600px;
+                height: 600px;
+                opacity: 0;
+            }
+        }
+
+        .disclaimer {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            color: #ff9999;
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+            z-index: 1000;
+            opacity: 0.8;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+        }
+
+        .top-controls {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            display: flex;
+            gap: 10px;
+            z-index: 1000;
+        }
+
+        .settings-icon, .mute-button {
+            font-size: 24px;
+            color: #ff9999;
+            cursor: pointer;
+            opacity: 0.8;
+        }
+
+        .settings-window {
+            position: fixed;
+            top: 40px;
+            right: 10px;
+            width: 300px;
+            background-color: rgba(50, 50, 50, 0.9);
+            padding: 20px;
+            border-radius: 5px;
+            color: #ff9999;
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+            z-index: 1000;
+            display: none;
+        }
+
+        .settings-window h2 {
+            margin-top: 0;
+            color: #ff6666;
+            text-align: center;
+        }
+
+        .settings-window label {
+            display: block;
+            margin: 10px 0 5px;
+        }
+
+        .settings-window input[type="range"],
+        .settings-window input[type="color"],
+        .settings-window select {
+            width: 100%;
+        }
+
+        .settings-window input[type="checkbox"] {
+            margin-right: 5px;
+        }
+
+        .theme-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            justify-content: center;
+            margin-top: 10px;
+        }
+
+        .theme-button {
+            background-color: #ff6666;
+            color: #fff;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 3px;
+            font-size: 14px;
+        }
+
+        .theme-button:hover {
+            background-color: #ff9999;
+        }
+
+        @keyframes lovePulse {
+            0%, 100% { text-shadow: 0 0 20px #ff69b4, 0 0 30px #ff69b4; }
+            50% { text-shadow: 0 0 40px #ff69b4, 0 0 60px #ff69b4; }
+        }
+
+        /* New styles for floating hearts */
+        .heart {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background-color: transparent;
+            background-image: radial-gradient(circle at 25% 25%, pink, hotpink);
+            clip-path: polygon(50% 0%, 61% 10%, 70% 20%, 75% 30%, 80% 50%, 75% 70%, 65% 85%, 50% 100%, 35% 85%, 25% 70%, 20% 50%, 25% 30%, 30% 20%, 39% 10%);
+            animation: floatHeart 5s infinite ease-in-out;
+            opacity: 0;
+            z-index: 50;
+            pointer-events: none;
+        }
+
+        @keyframes floatHeart {
+            0% {
+                transform: translateY(0) scale(0.5);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-120vh) scale(1);
+                opacity: 0;
+            }
+        }
+
+        /* Styles for floating emojis */
+        .emoji {
+            position: absolute;
+            font-size: 30px;
+            animation: floatEmoji 5s infinite ease-in-out;
+            opacity: 0;
+            z-index: 50;
+            pointer-events: none;
+        }
+
+        @keyframes floatEmoji {
+            0% {
+                transform: translateY(0) scale(0.5) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-120vh) scale(1) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* Spray paint styles */
+        #canvasOverlay {
+            cursor: crosshair;
+        }
+
+        /* Styles for thrown items */
+        .item {
+            position: absolute;
+            font-size: 30px;
+            z-index: 100;
+            pointer-events: none;
+        }
+
+        .pray {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 0, 0.2);
+            animation: prayAnimation 2s infinite;
+            pointer-events: none;
+        }
+
+        @keyframes prayAnimation {
+            0% {
+                opacity: 0;
+            }
+            50% {
+                opacity: 0.5;
+            }
+            100% {
+                opacity: 0;
+            }
+        }
+
+        /* Feedback section styles */
+        .feedback-section {
+            text-align: center;
+            margin: 20px auto;
+            position: relative;
+            z-index: 999;
+            color: #ff9999;
+            font-family: 'Indie Flower', cursive;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .feedback-section h2 {
+            font-size: 36px;
+            margin-bottom: 10px;
+            animation: funBounce 2s infinite;
+        }
+
+        .feedback-section input[type="range"] {
+            -webkit-appearance: none;
+            width: 50%;
+            height: 15px;
+            border-radius: 5px;
+            background: linear-gradient(to right, red 0%, yellow 50%, green 100%);
+            outline: none;
+            margin: 20px 0;
+        }
+
+        .feedback-section input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 25px;
+            height: 25px;
+            background: #fff;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid #000;
+        }
+
+        .feedback-section input[type="range"]::-moz-range-thumb {
+            width: 25px;
+            height: 25px;
+            background: #fff;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid #000;
+        }
+
+        .slider-labels {
+            display: flex;
+            justify-content: space-between;
+            width: 50%;
+            margin: 0 auto;
+        }
+
+        .slider-labels .label-negative {
+            color: red;
+        }
+
+        .slider-labels .label-neutral {
+            color: yellow;
+        }
+
+        .slider-labels .label-positive {
+            color: green;
+        }
+
+        @keyframes funBounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        /* Styles for trail items */
+        .trail-item {
+            position: absolute;
+            font-size: 24px;
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        /* Styles for fizzle particles */
+        .fizzle-particle {
+            position: absolute;
+            font-size: 24px;
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        /* Styles for negative trail items */
+        .negative-trail-item {
+            position: absolute;
+            font-size: 24px;
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        /* Styles for neutral trail items */
+        .neutral-trail-item {
+            position: absolute;
+            font-size: 24px;
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+    </style>
+    </head>
+    <body>
+        <div class="disclaimer">this is a parody btw</div>
+        <div class="top-controls">
+            <div class="settings-icon" id="settingsIcon">&#9881;</div>
+            <div class="mute-button" id="muteButton">&#128266;</div>
+        </div>
+        <canvas id="canvasOverlay"></canvas>
+        <div class="text-container">
+            <div class="rage-text">Welcome to Kirax!</div>
+            <div class="rage-subtext">Adjust the slider below to express your feelings about KiraX!</div>
+            <div class="final-rage">Let's make it interactive!</div>
+        </div>
+        <div class="feedback-section">
+            <h2>Tell us how you feel about Websim!</h2>
+            <input type="range" id="loveHateScale" min="-10" max="10" step="1" value="0">
+            <div class="slider-labels">
+                <span class="label-negative">Hate</span>
+                <span class="label-neutral">Neutral</span>
+                <span class="label-positive">Love</span>
+            </div>
+        </div>
+        <div class="settings-window" id="settingsWindow">
+            <h2>Settings</h2>
+            <label for="backgroundColor">Background Color</label>
+            <input type="color" id="backgroundColor" value="#3e1616">
+
+            <label for="textColor">Text Color</label>
+            <input type="color" id="textColor" value="#ff3333">
+
+            <div class="theme-buttons">
+                <p>Select Theme:</p>
+                <button class="theme-button" data-theme="default">Default Theme</button>
+                <button class="theme-button" data-theme="fire">Fire Theme</button>
+                <button class="theme-button" data-theme="ice">Ice Theme</button>
+                <button class="theme-button" data-theme="nature">Nature Theme</button>
+                <button class="theme-button" data-theme="retro">Retro Theme</button>
+                <button class="theme-button" data-theme="love">Love Theme</button>
+                <button class="theme-button" data-theme="random">Random Theme</button>
+            </div>
+        </div>
+        <audio id="backgroundMusic" preload="auto" loop>
+            <source src="/[ Megalovania Hard - Mode] Full Animated OST [ ezmp3.cc ].mp3" type="audio/mp3">
+            Your browser does not support the audio element.
+        </audio>
+        <audio id="explosionSound" preload="auto">
+            <source src="/explosion.mp3" type="audio/mp3">
+            Your browser does not support the audio element.
+        </audio>
+        <audio id="gunshotSound" preload="auto">
+            <source src="/beamshoot.wav" type="audio/wav">
+            Your browser does not support the audio element.
+        </audio>
+
+        <div class="lightning" id="lightning"></div>
+        <div class="rain" id="rain"></div>
+        <div class="snow" id="snow"></div>
+        <div id="embers"></div>
+
+    <script>
+        // Get references to elements
+        const backgroundMusic = document.getElementById('backgroundMusic');
+        const explosionSound = document.getElementById('explosionSound');
+        const gunshotSound = document.getElementById('gunshotSound');
+        const backgroundColorControl = document.getElementById('backgroundColor');
+        const textColorControl = document.getElementById('textColor');
+        const loveHateScaleControl = document.getElementById('loveHateScale');
+        const muteButton = document.getElementById('muteButton');
+        const themeButtons = document.querySelectorAll('.theme-button');
+
+        const rainElement = document.getElementById('rain');
+        const snowElement = document.getElementById('snow');
+        const embersElement = document.getElementById('embers');
+        const lightningElement = document.getElementById('lightning');
+        const textContainer = document.querySelector('.text-container');
+        const titleElement = document.querySelector('.rage-text');
+        const subtextElement = document.querySelector('.rage-subtext');
+        const finalRageElement = document.querySelector('.final-rage');
+        const canvasOverlay = document.getElementById('canvasOverlay');
+        const ctx = canvasOverlay.getContext('2d');
+
+        let isDrawing = false;
+        let prevX = 0;
+        let prevY = 0;
+        let drawnLines = [];
+        let scale = parseInt(loveHateScaleControl.value);
+        let isPositiveMode = (scale > 0);
+        let isNegativeMode = (scale < 0);
+        let isNeutralMode = (scale === 0);
+        let previousScale = parseInt(loveHateScaleControl.value);
+        let embersEnabled = true;
+        let explosionsEnabled = true;
+        let heartsEnabled = false;
+        let emojisEnabled = false;
+        let randomMode = false;
+        let randomModeInterval;
+        let currentTheme = 'default';
+
+        function resizeCanvas() {
+            canvasOverlay.width = window.innerWidth;
+            canvasOverlay.height = window.innerHeight;
+        }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        // Drawing event listeners
+        canvasOverlay.addEventListener('mousedown', startDrawing);
+        canvasOverlay.addEventListener('mousemove', draw);
+        canvasOverlay.addEventListener('mouseup', stopDrawing);
+        canvasOverlay.addEventListener('mouseout', stopDrawing);
+
+        let hue = 0;
+
+        function startDrawing(e) {
+            isDrawing = true;
+            prevX = e.clientX;
+            prevY = e.clientY;
+        }
+
+        function draw(e) {
+            if (!isDrawing) return;
+            if (isNegativeMode) {
+                // Negative mode drawing
+                ctx.lineWidth = 8;
+                // Vary hue and opacity
+                hue = (hue + 1) % 60; // Vary between 0 and 59
+                const opacity = 0.5 + 0.5 * Math.abs(Math.sin(Date.now() / 100));
+                const currentHue = (360 + hue + (Math.random() * 20 - 10)) % 360; // Random variation around red
+                ctx.strokeStyle = `hsla(${currentHue}, 100%, 50%, ${opacity})`;
+                ctx.beginPath();
+                ctx.moveTo(prevX, prevY);
+                ctx.lineTo(e.clientX, e.clientY);
+                ctx.stroke();
+                // Store the line segment
+                const line = {
+                    x1: prevX,
+                    y1: prevY,
+                    x2: e.clientX,
+                    y2: e.clientY,
+                    timestamp: Date.now(),
+                    mode: 'negative',
+                    hue: currentHue,
+                    opacity: opacity
+                };
+                drawnLines.push(line);
+                // Schedule fade after 15 seconds
+                setTimeout(() => {
+                    fadeLineIntoEmojis(line);
+                    // Remove line from drawnLines
+                    const index = drawnLines.indexOf(line);
+                    if (index > -1) {
+                        drawnLines.splice(index, 1);
+                        // Redraw canvas
+                        redrawCanvas();
+                    }
+                }, 15000);
+                // Create negative trail
+                createNegativeTrail(e.clientX, e.clientY);
+            } else if (isNeutralMode) {
+                // Neutral mode drawing
+                ctx.lineWidth = 5;
+                // Alternate between blue and yellow hues
+                const currentTime = Date.now();
+                const hue = (currentTime / 10) % 360; // Cycle through hues
+                const sat = 100;
+                const light = 50;
+                let colorHue;
+                if (Math.floor((currentTime / 500)) % 2 === 0) {
+                    colorHue = 60; // Yellow
+                } else {
+                    colorHue = 210; // Blue
+                }
+                ctx.strokeStyle = `hsl(${colorHue}, ${sat}%, ${light}%)`;
+                ctx.beginPath();
+                ctx.moveTo(prevX, prevY);
+                ctx.lineTo(e.clientX, e.clientY);
+                ctx.stroke();
+                // Store the line segment
+                const line = {
+                    x1: prevX,
+                    y1: prevY,
+                    x2: e.clientX,
+                    y2: e.clientY,
+                    timestamp: Date.now(),
+                    mode: 'neutral',
+                    hue: colorHue,
+                    sat: sat,
+                    light: light
+                };
+                drawnLines.push(line);
+                // Schedule fade after 15 seconds
+                setTimeout(() => {
+                    fadeLineIntoEmojis(line);
+                    // Remove line from drawnLines
+                    const index = drawnLines.indexOf(line);
+                    if (index > -1) {
+                        drawnLines.splice(index, 1);
+                        // Redraw canvas
+                        redrawCanvas();
+                    }
+                }, 15000);
+                // Create neutral trail
+                createNeutralTrail(e.clientX, e.clientY);
+            } else if (isPositiveMode) {
+                // Positive mode drawing
+                createPositiveTrail(e.clientX, e.clientY);
+            }
+            prevX = e.clientX;
+            prevY = e.clientY;
+        }
+
+        function stopDrawing() {
+            isDrawing = false;
+        }
+
+        function fadeLineIntoEmojis(line) {
+            const steps = 10;
+            for (let i = 0; i <= steps; i++) {
+                const t = i / steps;
+                const x = line.x1 + t * (line.x2 - line.x1);
+                const y = line.y1 + t * (line.y2 - line.y1);
+                if (isPositiveMode) {
+                    createPositiveTrail(x, y);
+                } else if (isNegativeMode) {
+                    createNegativeTrail(x, y);
+                } else if (isNeutralMode) {
+                    createNeutralTrail(x, y);
+                }
+            }
+        }
+
+        function redrawCanvas() {
+            ctx.clearRect(0, 0, canvasOverlay.width, canvasOverlay.height);
+            drawnLines.forEach(line => {
+                if (line.mode === 'negative') {
+                    ctx.lineWidth = 8;
+                    ctx.strokeStyle = `hsla(${line.hue}, 100%, 50%, ${line.opacity})`;
+                    ctx.beginPath();
+                    ctx.moveTo(line.x1, line.y1);
+                    ctx.lineTo(line.x2, line.y2);
+                    ctx.stroke();
+                } else if (line.mode === 'neutral') {
+                    ctx.lineWidth = 5;
+                    ctx.strokeStyle = `hsl(${line.hue}, ${line.sat}%, ${line.light}%)`;
+                    ctx.beginPath();
+                    ctx.moveTo(line.x1, line.y1);
+                    ctx.lineTo(line.x2, line.y2);
+                    ctx.stroke();
+                }
+                // Positive mode does not draw lines on canvas
+            });
+        }
+
+        function linesFizzleOut() {
+            // For each line segment, create particles along it
+            drawnLines.forEach(line => {
+                const steps = 10;
+                for (let i = 0; i <= steps; i++) {
+                    const t = i / steps;
+                    const x = line.x1 + t * (line.x2 - line.x1);
+                    const y = line.y1 + t * (line.y2 - line.y1);
+                    if (isPositiveMode) {
+                        createPositiveTrail(x, y);
+                    } else if (isNegativeMode) {
+                        createNegativeTrail(x, y);
+                    } else if (isNeutralMode) {
+                        createNeutralTrail(x, y);
+                    }
+                }
+            });
+
+            // Then clear the canvas
+            ctx.clearRect(0, 0, canvasOverlay.width, canvasOverlay.height);
+            drawnLines = [];
+        }
+
+        function createPositiveTrail(x, y) {
+            const items = ['💕', '💖', '💗', '💘', '😍', '😘', '😄', '😃', '😊', '🌸', '🌹', '🌼', '🌺'];
+            const item = document.createElement('div');
+            item.className = 'trail-item';
+            item.textContent = items[Math.floor(Math.random() * items.length)];
+            item.style.left = `${x}px`;
+            item.style.top = `${y}px`;
+            document.body.appendChild(item);
+            const duration = 2000 + Math.random() * 2000;
+            item.animate([
+                { transform: 'scale(1)', opacity: 1 },
+                { transform: 'scale(2)', opacity: 0 }
+            ], {
+                duration: duration,
+                easing: 'ease-out'
+            });
+            setTimeout(() => {
+                item.remove();
+            }, duration);
+        }
+
+        function createNegativeTrail(x, y) {
+            const items = ['🔪', '💢', '💀', '😠', '😡', '☠️', '😈', '👿', '💣', '😾', '🔫', '💥', '🗡️', '⚔️', '🪓'];
+            const item = document.createElement('div');
+            item.className = 'negative-trail-item';
+            item.textContent = items[Math.floor(Math.random() * items.length)];
+            item.style.left = `${x}px`;
+            item.style.top = `${y}px`;
+            document.body.appendChild(item);
+            const duration = 2000 + Math.random() * 2000;
+            item.animate([
+                { transform: 'scale(1) rotate(0deg)', opacity: 1 },
+                { transform: 'scale(0.5) rotate(-180deg)', opacity: 0 }
+            ], {
+                duration: duration,
+                easing: 'ease-out'
+            });
+            setTimeout(() => {
+                item.remove();
+            }, duration);
+        }
+
+        function createNeutralTrail(x, y) {
+            const items = ['🤖', '👨‍💻', '💻', '🖥️', '🧠', '📱', '🌐', '⚙️', '📡', '💿'];
+            const item = document.createElement('div');
+            item.className = 'neutral-trail-item';
+            item.textContent = items[Math.floor(Math.random() * items.length)];
+            item.style.left = `${x}px`;
+            item.style.top = `${y}px`;
+            document.body.appendChild(item);
+            const duration = 2000 + Math.random() * 2000;
+            item.animate([
+                { transform: 'scale(1)', opacity: 1 },
+                { transform: 'scale(2)', opacity: 0 }
+            ], {
+                duration: duration,
+                easing: 'ease-out'
+            });
+            setTimeout(() => {
+                item.remove();
+            }, duration);
+        }
+
+        function playGunshotSound(e) {
+            // Avoid playing sound when drawing
+            if (!isDrawing) {
+                gunshotSound.currentTime = 0;
+                gunshotSound.play().catch(function(error){
+                    console.log("Gunshot sound play failed:", error);
+                });
+            }
+        }
+
+        backgroundMusic.volume = 0.8;
+        gunshotSound.volume = 0.4;
+
+        backgroundMusic.addEventListener('error', function(e) {
+            console.log("Error loading background music:", e);
+        });
+
+        explosionSound.addEventListener('error', function(e) {
+            console.log("Error loading explosion sound:", e);
+        });
+
+        gunshotSound.addEventListener('error', function(e) {
+            console.log("Error loading gunshot sound:", e);
+        });
+
+        document.body.addEventListener('click', () => {
+            backgroundMusic.play().catch(function(error) {
+                console.log("Audio play failed:", error);
+            });
+        });
+
+        const EXPLOSION_POOL_SIZE = 5;
+        const explosionSoundPool = [];
+        for (let i = 0; i < EXPLOSION_POOL_SIZE; i++) {
+            const sound = new Audio('/explosion.mp3');
+            sound.addEventListener('error', function(e) {
+                console.log("Error loading explosion sound in pool:", e);
+            });
+            sound.volume = 0.4;
+            explosionSoundPool.push(sound);
+        }
+
+        let currentSoundIndex = 0;
+
+        function playExplosionSound() {
+            try {
+                explosionSoundPool[currentSoundIndex].currentTime = 0;
+                explosionSoundPool[currentSoundIndex].play().catch(function(error) {
+                    console.log("Explosion sound play failed:", error);
+                });
+                currentSoundIndex = (currentSoundIndex + 1) % EXPLOSION_POOL_SIZE;
+            } catch(e) {
+                console.log("Error playing explosion sound:", e);
+            }
+        }
+
+        function createRain() {
+            const rainContainer = document.getElementById('rain');
+            const dropCount = 200;
+            rainContainer.innerHTML = '';
+
+            for (let i = 0; i < dropCount; i++) {
+                const drop = document.createElement('div');
+                drop.className = 'drop';
+                
+                const left = Math.random() * 100;
+                const animationDuration = (Math.random() * 0.5 + 0.8);
+                const animationDelay = Math.random() * 2;
+                
+                drop.style.left = `${left}%`;
+                drop.style.animationDuration = `${animationDuration}s`;
+                drop.style.animationDelay = `${animationDelay}s`;
+                
+                rainContainer.appendChild(drop);
+            }
+        }
+
+        function createSnow() {
+            const snowContainer = document.getElementById('snow');
+            const flakeCount = 150;
+            snowContainer.innerHTML = '';
+
+            for (let i = 0; i < flakeCount; i++) {
+                const flake = document.createElement('div');
+                flake.className = 'snowflake';
+                
+                const left = Math.random() * 100;
+                const animationDuration = (Math.random() * 2 + 3);
+                const animationDelay = Math.random() * 5;
+                
+                flake.style.left = `${left}%`;
+                flake.style.animationDuration = `${animationDuration}s`;
+                flake.style.animationDelay = `${animationDelay}s`;
+                
+                snowContainer.appendChild(flake);
+            }
+        }
+
+        function createEmber() {
+            const ember = document.createElement('div');
+            ember.className = 'ember';
+            
+            const left = Math.random() * 100;
+            const size = Math.random() * 3 + 2;
+            
+            ember.style.left = `${left}%`;
+            ember.style.width = `${size}px`;
+            ember.style.height = `${size}px`;
+            ember.style.bottom = '0';
+            
+            embersElement.appendChild(ember);
+            
+            setTimeout(() => {
+                ember.remove();
+            }, 3000);
+        }
+
+        function createExplosion(x, y) {
+            if (!explosionsEnabled) return;
+            playExplosionSound(); 
+            
+            const explosion = document.createElement('div');
+            explosion.className = 'explosion';
+            explosion.style.left = x + 'px';
+            explosion.style.top = y + 'px';
+
+            const circle = document.createElement('div');
+            circle.className = 'explosion-circle';
+            explosion.appendChild(circle);
+
+            for (let i = 0; i < 40; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'explosion-particle';
+                const angle = (Math.PI * 2 * i) / 40;
+                
+                const particleAnimation = particle.animate([
+                    { 
+                        transform: 'translate(-50%, -50%)',
+                        opacity: 1
+                    },
+                    { 
+                        transform: `translate(${Math.cos(angle) * 300}px, ${Math.sin(angle) * 300}px)`,
+                        opacity: 0 
+                    }
+                ], {
+                    duration: 1500,
+                    easing: 'cubic-bezier(0.15, 0.86, 0.36, 0.94)'
+                });
+                
+                explosion.appendChild(particle);
+            }
+
+            document.body.appendChild(explosion);
+
+            setTimeout(() => {
+                explosion.remove();
+            }, 1500);
+        }
+
+        function randomExplosions() {
+            setInterval(() => {
+                if (!explosionsEnabled) return;
+                const x = Math.random() * window.innerWidth;
+                const y = Math.random() * window.innerHeight;
+                createExplosion(x, y);
+                
+                setTimeout(() => {
+                    const offsetX = x + (Math.random() * 200 - 100);
+                    const offsetY = y + (Math.random() * 200 - 100);
+                    createExplosion(offsetX, offsetY);
+                }, 100);
+            }, 1500);
+        }
+
+        function startEmbers() {
+            setInterval(() => {
+                if (embersEnabled) {
+                    createEmber();
+                }
+            }, 50);
+        }
+
+        function createLightning() {
+            setInterval(() => {
+                lightningElement.style.animation = 'none';
+                lightningElement.offsetHeight;
+                lightningElement.style.animation = 'lightning 1s';
+            }, Math.random() * 2000 + 1000);
+        }
+
+        // New functions for hearts and emojis
+        let heartInterval;
+        function startHearts() {
+            if (!heartInterval) {
+                heartInterval = setInterval(() => {
+                    if (heartsEnabled) {
+                        createHeart();
+                    }
+                }, 500); // Adjust interval as needed
+            }
+        }
+
+        let emojiInterval;
+        function startEmojis() {
+            if (!emojiInterval) {
+                emojiInterval = setInterval(() => {
+                    if (emojisEnabled) {
+                        createEmoji();
+                    }
+                }, 700); // Adjust interval as needed
+            }
+        }
+
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.className = 'heart';
+            const left = Math.random() * 100;
+            const size = Math.random() * 20 + 10;
+            heart.style.left = `${left}%`;
+            heart.style.bottom = '0';
+            heart.style.width = `${size}px`;
+            heart.style.height = `${size}px`;
+
+            document.body.appendChild(heart);
+
+            setTimeout(() => {
+                heart.remove();
+            }, 5000);
+        }
+
+        function createEmoji() {
+            const emoji = document.createElement('div');
+            emoji.className = 'emoji';
+            const left = Math.random() * 100;
+            const size = Math.random() * 30 + 20;
+            emoji.style.left = `${left}%`;
+            emoji.style.bottom = '0';
+            emoji.style.fontSize = `${size}px`;
+            const emojis = ['😊', '😍', '🥰', '😻', '🌸', '🎂', '🐱', '🌹', '🍰', '🐶', '💐', '🍦'];
+            emoji.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+
+            document.body.appendChild(emoji);
+
+            setTimeout(() => {
+                emoji.remove();
+            }, 5000);
+        }
+
+        createRain();
+        createLightning();
+        startEmbers();
+        startHearts();
+        startEmojis();
+        randomExplosions();
+
+        // Themes data
+        const themes = {
+            default: {
+                name: "Default Theme",
+                update: function(scale) {
+                    isPositiveMode = (scale > 0);
+                    isNegativeMode = (scale < 0);
+                    isNeutralMode = (scale === 0);
+                    // Existing updateContent code for default theme
+                    const intensity = Math.abs(scale) / 10;
+                    if (scale <= -6) {
+                        // Very negative
+                        titleElement.textContent = "I really dislike Websim!";
+                        subtextElement.textContent = "I've had enough of this! They think they can just time me out? I've given my heart and soul to this community and this is the thanks I get? I'm so frustrated with these timeouts! I don't need this negativity!";
+                        finalRageElement.textContent = "I'm not being sensitive, this is just unfair!";
+                        // Adjust styles
+                        document.body.style.background = 'linear-gradient(0deg, #2e1a1a 0%, #3e1616 100%)';
+                        document.body.style.filter = `brightness(${1 - intensity * 0.5}) contrast(${1 + intensity * 0.5})`;
+                        textContainer.style.color = '#ff3333';
+                        textContainer.style.animation = 'rageShake 0.5s ease-in-out infinite';
+                        textContainer.style.fontFamily = "'Anton', sans-serif";
+                        titleElement.style.fontFamily = "'Anton', sans-serif";
+                        subtextElement.style.fontFamily = "'Anton', sans-serif";
+                        finalRageElement.style.fontFamily = "'Anton', sans-serif";
+                        // Adjust music
+                        backgroundMusic.src = '/[ Megalovania Hard - Mode] Full Animated OST [ ezmp3.cc ].mp3';
+                        backgroundMusic.playbackRate = 1.2;
+                        backgroundMusic.volume = 0.8;
+                        backgroundMusic.play().catch(function(error){console.log("Audio play failed:", error);});
+                        embersEnabled = true;
+                        explosionsEnabled = true;
+                        rainElement.style.display = 'block';
+                        snowElement.style.display = 'none';
+                        heartsEnabled = false;
+                        emojisEnabled = false;
+                        // Remove gunshot sound listener
+                        document.body.removeEventListener('click', throwItem);
+                        // Add gunshot sound on click
+                        document.body.addEventListener('click', playGunshotSound);
+                        // Set cursor
+                        canvasOverlay.style.cursor = 'crosshair';
+                    } else if (scale <= -1) {
+                        // Negative
+                        titleElement.textContent = "I'm feeling upset";
+                        subtextElement.textContent = "This isn't fair. I don't deserve this treatment. I've been trying my best, but it feels unappreciated.";
+                        finalRageElement.textContent = "Maybe it's time to take a break...";
+                        // Adjust styles
+                        document.body.style.background = 'linear-gradient(0deg, #3e1a1a 0%, #4e1616 100%)';
+                        document.body.style.filter = `brightness(${1 - intensity * 0.3}) contrast(${1 + intensity * 0.3})`;
+                        textContainer.style.color = '#ff6666';
+                        textContainer.style.animation = 'none';
+                        textContainer.style.fontFamily = "'Anton', sans-serif";
+                        titleElement.style.fontFamily = "'Anton', sans-serif";
+                        subtextElement.style.fontFamily = "'Anton', sans-serif";
+                        finalRageElement.style.fontFamily = "'Anton', sans-serif";
+                        // Adjust music
+                        backgroundMusic.src = '/[ Megalovania Hard - Mode] Full Animated OST [ ezmp3.cc ].mp3';
+                        backgroundMusic.playbackRate = 1.0;
+                        backgroundMusic.volume = 0.6;
+                        backgroundMusic.play().catch(function(error){console.log("Audio play failed:", error);});
+                        embersEnabled = false;
+                        explosionsEnabled = false;
+                        rainElement.style.display = 'block';
+                        snowElement.style.display = 'none';
+                        heartsEnabled = false;
+                        emojisEnabled = false;
+                        // Remove gunshot sound listener
+                        document.body.removeEventListener('click', throwItem);
+                        // Add gunshot sound on click
+                        document.body.addEventListener('click', playGunshotSound);
+                        // Set cursor
+                        canvasOverlay.style.cursor = 'crosshair';
+                    } else if (scale === 0) {
+                        // Neutral
+                        titleElement.textContent = "Hello Websim!";
+                        subtextElement.textContent = "Just another day in the community, feeling neutral.";
+                        finalRageElement.textContent = "Let's see what happens.";
+                        // Adjust styles
+                        document.body.style.background = 'linear-gradient(0deg, #1a1a1a 0%, #161616 100%)';
+                        document.body.style.filter = 'none';
+                        textContainer.style.color = '#ffffff';
+                        textContainer.style.animation = 'none';
+                        textContainer.style.fontFamily = "'Indie Flower', cursive";
+                        titleElement.style.fontFamily = "'Indie Flower', cursive";
+                        subtextElement.style.fontFamily = "'Indie Flower', cursive";
+                        finalRageElement.style.fontFamily = "'Indie Flower', cursive";
+                        // Adjust music
+                        backgroundMusic.src = '/relaxing-piano-music-255028.mp3';
+                        backgroundMusic.playbackRate = 0.8;
+                        backgroundMusic.volume = 0.4;
+                        backgroundMusic.play().catch(function(error){console.log("Audio play failed:", error);});
+                        embersEnabled = false;
+                        explosionsEnabled = false;
+                        rainElement.style.display = 'none';
+                        snowElement.style.display = 'none';
+                        heartsEnabled = false;
+                        emojisEnabled = false;
+                        // Remove gunshot sound listener
+                        document.body.removeEventListener('click', playGunshotSound);
+                        // Remove throwItem listener
+                        document.body.removeEventListener('click', throwItem);
+                        // Set cursor
+                        canvasOverlay.style.cursor = 'default';
+                    } else if (scale <= 5) {
+                        // Positive
+                        titleElement.textContent = "I love Websim!";
+                        subtextElement.textContent = "This platform is amazing. I'm so glad to be a part of this community.";
+                        finalRageElement.textContent = "You all are the best!";
+                        // Adjust styles
+                        document.body.style.background = 'linear-gradient(0deg, #fff0f5 0%, #ffe4e1 100%)';
+                        document.body.style.filter = `brightness(${1 + intensity * 0.3}) saturate(${1 + intensity * 0.5})`;
+                        textContainer.style.color = '#ff69b4';
+                        textContainer.style.animation = 'flamePulse 1s ease-in-out infinite';
+                        textContainer.style.fontFamily = "'Dancing Script', cursive";
+                        titleElement.style.fontFamily = "'Dancing Script', cursive";
+                        subtextElement.style.fontFamily = "'Dancing Script', cursive";
+                        finalRageElement.style.fontFamily = "'Dancing Script', cursive";
+                        // Adjust music
+                        backgroundMusic.src = '/Limbus Company - Happy Story Theme.mp3';
+                        backgroundMusic.playbackRate = 0.9;
+                        backgroundMusic.volume = 0.64;
+                        backgroundMusic.play().catch(function(error){console.log("Audio play failed:", error);});
+                        embersEnabled = false;
+                        explosionsEnabled = false;
+                        rainElement.style.display = 'none';
+                        snowElement.style.display = 'none';
+                        heartsEnabled = true;
+                        emojisEnabled = true;
+                        // Remove gunshot sound listener
+                        document.body.removeEventListener('click', playGunshotSound);
+                        // Add throwItem listener
+                        document.body.addEventListener('click', throwItem);
+                        // Set cursor
+                        canvasOverlay.style.cursor = 'default';
+                        // Transition lines to positive emojis
+                        linesFizzleOut();
+                    } else {
+                        // Very positive
+                        titleElement.textContent = "I absolutely adore Websim!";
+                        subtextElement.textContent = "This is the best community ever! Thank you all for being so amazing!";
+                        finalRageElement.textContent = "I'm so happy to be here!";
+                        // Adjust styles
+                        document.body.style.background = 'linear-gradient(0deg, #fffaf0 0%, #f0fff0 100%)';
+                        document.body.style.filter = `brightness(${1 + intensity * 0.5}) saturate(${1 + intensity * 0.7})`;
+                        textContainer.style.color = '#ff1493';
+                        textContainer.style.animation = 'lovePulse 1s ease-in-out infinite';
+                        textContainer.style.fontFamily = "'Amatic SC', cursive";
+                        titleElement.style.fontFamily = "'Amatic SC', cursive";
+                        subtextElement.style.fontFamily = "'Amatic SC', cursive";
+                        finalRageElement.style.fontFamily = "'Amatic SC', cursive";
+                        // Adjust music
+                        backgroundMusic.src = '/Good Day (2008 Single Edit).flac';
+                        backgroundMusic.playbackRate = 1.0;
+                        backgroundMusic.volume = 0.8;
+                        backgroundMusic.play().catch(function(error){console.log("Audio play failed:", error);});
+                        embersEnabled = false;
+                        explosionsEnabled = false;
+                        rainElement.style.display = 'none';
+                        snowElement.style.display = 'none';
+                        heartsEnabled = true;
+                        emojisEnabled = true;
+                        // Remove gunshot sound listener
+                        document.body.removeEventListener('click', playGunshotSound);
+                        // Add throwItem listener
+                        document.body.addEventListener('click', throwItem);
+                        // Set cursor
+                        canvasOverlay.style.cursor = 'default';
+                        // Transition lines to positive emojis
+                        linesFizzleOut();
+                    }
+                    previousScale = scale;
+                }
+            },
+            fire: {
+                name: "Fire Theme",
+                update: function(scale) {
+                    isPositiveMode = (scale > 0);
+                    isNegativeMode = (scale < 0);
+                    isNeutralMode = (scale === 0);
+                    const intensity = Math.abs(scale) / 10;
+                    if (scale < 0) {
+                        // Negative
+                        // Styles
+                        document.body.style.background = `linear-gradient(0deg, #550000 0%, #330000 100%)`;
+                        textContainer.style.color = '#ff0000';
+                        textContainer.style.textShadow = '0 0 20px #ff0000';
+                        rainElement.style.display = 'none';
+                        snowElement.style.display = 'none';
+                        embersEnabled = true;
+                        explosionsEnabled = true;
+                        heartsEnabled = false;
+                        emojisEnabled = false;
+                        // Music
+                        backgroundMusic.src = '/[ Megalovania Hard - Mode] Full Animated OST [ ezmp3.cc ].mp3';
+                        backgroundMusic.playbackRate = 1.2;
+                        backgroundMusic.volume = 0.8;
+                        backgroundMusic.play().catch(function(error){console.log("Audio play failed:", error);});
+                        // Remove gunshot sound listener
+                        document.body.removeEventListener('click', throwItem);
+                        // Add gunshot sound on click
+                        document.body.addEventListener('click', playGunshotSound);
+                        // Set cursor
+                        canvasOverlay.style.cursor = 'crosshair';
+                    } else {
+                        // Positive
+                        document.body.style.background = `linear-gradient(0deg, #ff4500 0%, #ff8c00 100%)`;
+                        textContainer.style.color = '#ffffff';
+                        textContainer.style.textShadow = '0 0 20px #ffffff';
+                        rainElement.style.display = 'none';
+                        snowElement.style.display = 'none';
+                        embersEnabled = true;
+                        explosionsEnabled = true;
+                        heartsEnabled = true;
+                        emojisEnabled = true;
+                        // Music
+                        backgroundMusic.src = '/Good Day (2008 Single Edit).flac';
+                        backgroundMusic.playbackRate = 1.0;
+                        backgroundMusic.volume = 0.8;
+                        backgroundMusic.play().catch(function(error){console.log("Audio play failed:", error);});
+                        // Remove gunshot sound listener
+                        document.body.removeEventListener('click', playGunshotSound);
+                        // Add throwItem listener
+                        document.body.addEventListener('click', throwItem);
+                        // Set cursor
+                        canvasOverlay.style.cursor = 'default';
+                        // Transition lines to positive emojis
+                        linesFizzleOut();
+                    }
+                    previousScale = scale;
+                }
+            },
+            ice: {
+                name: "Ice Theme",
+                update: function(scale) {
+                    isPositiveMode = (scale > 0);
+                    isNegativeMode = (scale < 0);
+                    isNeutralMode = (scale === 0);
+                    const intensity = Math.abs(scale) / 10;
+                    if (scale < 0) {
+                        // Negative
+                        document.body.style.background = `linear-gradient(0deg, #000033 0%, #000055 100%)`;
+                        textContainer.style.color = '#00ffff';
+                        textContainer.style.textShadow = '0 0 20px #00ffff';
+                        rainElement.style.display = 'none';
+                        snowElement.style.display = 'block';
+                        createSnow();
+                        embersEnabled = false;
+                        explosionsEnabled = false;
+                        heartsEnabled = false;
+                        emojisEnabled = false;
+                        // Music
+                        backgroundMusic.src = '/relaxing-piano-music-255028.mp3';
+                        backgroundMusic.playbackRate = 0.8;
+                        backgroundMusic.volume = 0.4;
+                        backgroundMusic.play().catch(function(error){console.log("Audio play failed:", error);});
+                        // Remove gunshot sound listener
+                        document.body.removeEventListener('click', throwItem);
+                        // Add gunshot sound on click
+                        document.body.addEventListener('click', playGunshotSound);
+                        // Set cursor
+                        canvasOverlay.style.cursor = 'crosshair';
+                    } else {
+                        // Positive
+                        document.body.style.background = `linear-gradient(0deg, #ccffff 0%, #99ccff 100%)`;
+                        textContainer.style.color = '#0033cc';
+                        textContainer.style.textShadow = '0 0 20px #0033cc';
+                        rainElement.style.display = 'none';
+                        snowElement.style.display = 'block';
+                        createSnow();
+                        embersEnabled = false;
+                        explosionsEnabled = false;
+                        heartsEnabled = true;
+                        emojisEnabled = true;
+                        // Music
+                        backgroundMusic.src = '/Limbus Company - Happy Story Theme.mp3';
+                        backgroundMusic.playbackRate = 1.0;
+                        backgroundMusic.volume = 0.64;
+                        backgroundMusic.play().catch(function(error){console.log("Audio play failed:", error);});
+                        // Remove gunshot sound listener
+                        document.body.removeEventListener('click', playGunshotSound);
+                        // Add throwItem listener
+                        document.body.addEventListener('click', throwItem);
+                        // Set cursor
+                        canvasOverlay.style.cursor = 'default';
+                        // Transition lines to positive emojis
+                        linesFizzleOut();
+                    }
+                    previousScale = scale;
+                }
+            },
+            nature: {
+                name: "Nature Theme",
+                update: function(scale) {
+                    isPositiveMode = (scale > 0);
+                    isNegativeMode = (scale < 0);
+                    isNeutralMode = (scale === 0);
+                    const intensity = Math.abs(scale) / 10;
+                    if (scale < 0) {
+                        // Negative
+                        document.body.style.background = `linear-gradient(0deg, #003300 0%, #001a00 100%)`;
+                        textContainer.style.color = '#00ff00';
+                        textContainer.style.textShadow = '0 0 20px #00ff00';
+                        rainElement.style.display = 'block';
+                        createRain();
+                        snowElement.style.display = 'none';
+                        embersEnabled = false;
+                        explosionsEnabled = false;
+                        heartsEnabled = false;
+                        emojisEnabled = false;
+                        // Music
+                        backgroundMusic.src = '/relaxing-piano-music-255028.mp3';
+                        backgroundMusic.playbackRate = 0.8;
+                        backgroundMusic.volume = 0.4;
+                        backgroundMusic.play().catch(function(error){console.log("Audio play failed:", error);});
+                        // Remove gunshot sound listener
+                        document.body.removeEventListener('click', throwItem);
+                        // Add gunshot sound on click
+                        document.body.addEventListener('click', playGunshotSound);
+                        // Set cursor
+                        canvasOverlay.style.cursor = 'crosshair';
+                    } else {
+                        // Positive
+                        document.body.style.background = `linear-gradient(0deg, #ccffcc 0%, #99ff99 100%)`;
+                        textContainer.style.color = '#006600';
+                        textContainer.style.textShadow = '0 0 20px #006600';
+                        rainElement.style.display = 'block';
+                        createRain();
+                        snowElement.style.display = 'none';
+                        embersEnabled = false;
+                        explosionsEnabled = false;
+                        heartsEnabled = true;
+                        emojisEnabled = true;
+                        // Music
+                        backgroundMusic.src = '/Limbus Company - Happy Story Theme.mp3';
+                        backgroundMusic.playbackRate = 1.0;
+                        backgroundMusic.volume = 0.64;
+                        backgroundMusic.play().catch(function(error){console.log("Audio play failed:", error);});
+                        // Remove gunshot sound listener
+                        document.body.removeEventListener('click', playGunshotSound);
+                        // Add throwItem listener
+                        document.body.addEventListener('click', throwItem);
+                        // Set cursor
+                        canvasOverlay.style.cursor = 'default';
+                        // Transition lines to positive emojis
+                        linesFizzleOut();
+                    }
+                    previousScale = scale;
+                }
+            },
+            retro: {
+                name: "Retro Theme",
+                update: function(scale) {
+                    isPositiveMode = (scale > 0);
+                    isNegativeMode = (scale < 0);
+                    isNeutralMode = (scale === 0);
+                    const intensity = Math.abs(scale) / 10;
+                    if (scale < 0) {
+                        // Negative
+                        document.body.style.background = `linear-gradient(0deg, #000000 0%, #333333 100%)`;
+                        textContainer.style.color = '#ff00ff';
+                        textContainer.style.textShadow = '0 0 20px #ff00ff';
+                        rainElement.style.display = 'none';
+                        snowElement.style.display = 'none';
+                        embersEnabled = false;
+                        explosionsEnabled = false;
+                        heartsEnabled = false;
+                        emojisEnabled = false;
+                        // Music
+                        backgroundMusic.src = '/[ Megalovania Hard - Mode] Full Animated OST [ ezmp3.cc ].mp3';
+                        backgroundMusic.playbackRate = 1.2;
+                        backgroundMusic.volume = 0.8;
+                        backgroundMusic.play().catch(function(error){console.log("Audio play failed:", error);});
+                        // Remove gunshot sound listener
+                        document.body.removeEventListener('click', throwItem);
+                        // Add gunshot sound on click
+                        document.body.addEventListener('click', playGunshotSound);
+                        // Set cursor
+                        canvasOverlay.style.cursor = 'crosshair';
+                    } else {
+                        // Positive
+                        document.body.style.background = `linear-gradient(0deg, #ffccff 0%, #cc99ff 100%)`;
+                        textContainer.style.color = '#660066';
+                        textContainer.style.textShadow = '0 0 20px #660066';
+                        rainElement.style.display = 'none';
+                        snowElement.style.display = 'none';
+                        embersEnabled = false;
+                        explosionsEnabled = false;
+                        heartsEnabled = true;
+                        emojisEnabled = true;
+                        // Music
+                        backgroundMusic.src = '/Good Day (2008 Single Edit).flac';
+                        backgroundMusic.playbackRate = 1.0;
+                        backgroundMusic.volume = 0.8;
+                        backgroundMusic.play().catch(function(error){console.log("Audio play failed:", error);});
+                        // Remove gunshot sound listener
+                        document.body.removeEventListener('click', playGunshotSound);
+                        // Add throwItem listener
+                        document.body.addEventListener('click', throwItem);
+                        // Set cursor
+                        canvasOverlay.style.cursor = 'default';
+                        // Transition lines to positive emojis
+                        linesFizzleOut();
+                    }
+                    previousScale = scale;
+                }
+            },
+            love: {
+                name: "Love Theme",
+                update: function(scale) {
+                    isPositiveMode = (scale > 0);
+                    isNegativeMode = (scale < 0);
+                    isNeutralMode = (scale === 0);
+                    const intensity = Math.abs(scale) / 10;
+                    if (scale < 0) {
+                        // Negative
+                        document.body.style.background = `linear-gradient(0deg, #660000 0%, #330000 100%)`;
+                        textContainer.style.color = '#ff0066';
+                        textContainer.style.textShadow = '0 0 20px #ff0066';
+                        rainElement.style.display = 'none';
+                        snowElement.style.display = 'none';
+                        embersEnabled = false;
+                        explosionsEnabled = false;
+                        heartsEnabled = false;
+                        emojisEnabled = false;
+                        // Music
+                        backgroundMusic.src = '/relaxing-piano-music-255028.mp3';
+                        backgroundMusic.playbackRate = 0.8;
+                        backgroundMusic.volume = 0.4;
+                        backgroundMusic.play().catch(function(error){console.log("Audio play failed:", error);});
+                        // Remove gunshot sound listener
+                        document.body.removeEventListener('click', throwItem);
+                        // Add gunshot sound on click
+                        document.body.addEventListener('click', playGunshotSound);
+                        // Set cursor
+                        canvasOverlay.style.cursor = 'crosshair';
+                    } else {
+                        // Positive
+                        document.body.style.background = `linear-gradient(0deg, #ffcccc 0%, #ff99cc 100%)`;
+                        textContainer.style.color = '#cc0066';
+                        textContainer.style.textShadow = '0 0 20px #cc0066';
+                        rainElement.style.display = 'none';
+                        snowElement.style.display = 'none';
+                        embersEnabled = false;
+                        explosionsEnabled = false;
+                        heartsEnabled = true;
+                        emojisEnabled = true;
+                        // Music
+                        backgroundMusic.src = '/Good Day (2008 Single Edit).flac';
+                        backgroundMusic.playbackRate = 1.0;
+                        backgroundMusic.volume = 0.8;
+                        backgroundMusic.play().catch(function(error){console.log("Audio play failed:", error);});
+                        // Remove gunshot sound listener
+                        document.body.removeEventListener('click', playGunshotSound);
+                        // Add throwItem listener
+                        document.body.addEventListener('click', throwItem);
+                        // Set cursor
+                        canvasOverlay.style.cursor = 'default';
+                        // Transition lines to positive emojis
+                        linesFizzleOut();
+                    }
+                    previousScale = scale;
+                }
+            },
+        };
+
+        // Theme selection via buttons
+        themeButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const selectedTheme = button.getAttribute('data-theme');
+                if (selectedTheme === 'random') {
+                    startRandomMode();
+                } else {
+                    stopRandomMode();
+                    currentTheme = selectedTheme;
+                    const scale = parseInt(loveHateScaleControl.value);
+                    updateContent(scale);
+                }
+            });
+        });
+
+        function startRandomMode() {
+            randomMode = true;
+            changeThemeRandomly();
+            randomModeInterval = setInterval(changeThemeRandomly, 30000);
+        }
+
+        function stopRandomMode() {
+            randomMode = false;
+            if (randomModeInterval) {
+                clearInterval(randomModeInterval);
+                randomModeInterval = null;
+            }
+        }
+
+        function changeThemeRandomly() {
+            const themeNames = Object.keys(themes);
+            const randomIndex = Math.floor(Math.random() * themeNames.length);
+            const randomTheme = themeNames[randomIndex];
+            currentTheme = randomTheme;
+            const scale = parseInt(loveHateScaleControl.value);
+            updateContent(scale);
+        }
+
+        // Thrown items
+        function throwItem(e) {
+            const x = e.clientX;
+            const y = e.clientY;
+            const item = document.createElement('div');
+            item.className = 'item';
+            item.style.left = `${x}px`;
+            item.style.top = `${y}px`;
+
+            const items = ['💐', '🌹', '😘', '😻', '🌸', '🎂', '🐱', '🍰', '🐶', '🍦'];
+            item.textContent = items[Math.floor(Math.random() * items.length)];
+
+            document.body.appendChild(item);
+
+            const animation = item.animate([
+                { transform: 'translateY(0)', opacity: 1 },
+                { transform: 'translateY(-200px)', opacity: 0 }
+            ], {
+                duration: 2000,
+                easing: 'ease-out'
+            });
+
+            animation.onfinish = () => item.remove();
+        }
+
+        // Settings functionality
+        const settingsIcon = document.getElementById('settingsIcon');
+        const settingsWindow = document.getElementById('settingsWindow');
+
+        settingsIcon.addEventListener('mouseover', () => {
+            settingsWindow.style.display = 'block';
+        });
+
+        settingsIcon.addEventListener('mouseout', () => {
+            settingsWindow.style.display = 'none';
+        });
+
+        settingsWindow.addEventListener('mouseover', () => {
+            settingsWindow.style.display = 'block';
+        });
+
+        settingsWindow.addEventListener('mouseout', () => {
+            settingsWindow.style.display = 'none';
+        });
+
+        // Color settings controls
+        backgroundColorControl.addEventListener('input', () => {
+            document.body.style.background = backgroundColorControl.value;
+        });
+
+        textColorControl.addEventListener('input', () => {
+            textContainer.style.color = textColorControl.value;
+        });
+
+        // Mute button functionality
+        muteButton.addEventListener('click', () => {
+            backgroundMusic.muted = !backgroundMusic.muted;
+            explosionSoundPool.forEach(sound => {
+                sound.muted = backgroundMusic.muted;
+            });
+            gunshotSound.muted = backgroundMusic.muted;
+            if (backgroundMusic.muted) {
+                muteButton.innerHTML = '&#128263;'; // Muted speaker
+            } else {
+                muteButton.innerHTML = '&#128266;'; // Speaker with sound waves
+            }
+        });
+
+        // Love/Hate scale control
+        loveHateScaleControl.addEventListener('input', () => {
+            const scale = parseInt(loveHateScaleControl.value);
+            updateContent(scale);
+        });
+
+        function updateContent(scale) {
+            themes[currentTheme].update(scale);
+
+            // Detect transition from negative to positive or neutral
+            if ((previousScale <= 0 && scale > 0) || (previousScale !== 0 && scale === 0)) {
+                linesFizzleOut();
+            }
+
+            previousScale = scale;
+        }
+
+        // Initialize content
+        updateContent(parseInt(loveHateScaleControl.value));
+
+        // Add mouse trails to every rating setting to reflect the rating
+        let lastTrailTime = 0;
+        const trailInterval = 100; // milliseconds
+
+        document.addEventListener('mousemove', function(e) {
+            const now = Date.now();
+            if (now - lastTrailTime > trailInterval) {
+                if (isNegativeMode) {
+                    createNegativeTrail(e.clientX, e.clientY);
+                } else if (isNeutralMode) {
+                    createNeutralTrail(e.clientX, e.clientY);
+                } else if (isPositiveMode) {
+                    createPositiveTrail(e.clientX, e.clientY);
+                }
+                lastTrailTime = now;
+            }
+        });
+
+    </script>
+    </body></html>

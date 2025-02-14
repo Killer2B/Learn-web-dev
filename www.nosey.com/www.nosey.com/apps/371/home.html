@@ -1,0 +1,76 @@
+<!-- 
+	This file is to handle error in S3
+-->
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        .loader {
+            border: 8px solid #f3f3f3;
+            border-radius: 50%;
+            border-top: 8px solid #3498db;
+            width: 40px;
+            height: 40px;
+            position: absolute;
+            top: 50%;
+            left: 47%;
+            -webkit-animation: spin 2s linear infinite;
+            /* Safari */
+            animation: spin 2s linear infinite;
+        }
+
+        /* Safari */
+
+        @-webkit-keyframes spin {
+            0% {
+                -webkit-transform: rotate(0deg);
+            }
+            100% {
+                -webkit-transform: rotate(360deg);
+            }
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        #error {
+            height: 90vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 40px;
+        }
+
+        .d-none {
+            display: none !important;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="loader" class="loader"></div>
+    <div id="error" class="d-none">
+        <P>Page not found!!!</P>
+    </div>
+    <script>
+        let origin = window.location.origin;
+        const query = window.location.search;
+        if (!query.includes("?paths=")) {
+            let paths = `${window.location.pathname}${query}`;
+            window.location.href = `${origin}?paths=${paths}`
+        } else {
+            document.getElementById("loader").classList.add("d-none");
+            document.getElementById("error").classList.remove("d-none");
+        }
+    </script>
+</body>
+
+</html>

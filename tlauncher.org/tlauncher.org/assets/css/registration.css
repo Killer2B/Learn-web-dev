@@ -1,0 +1,201 @@
+main {
+    padding: 60px 0;
+}
+
+.b-register-form {
+    overflow: hidden;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    -webkit-box-shadow: 0 2px 24px rgba(3, 74, 99, 0.52);
+    -moz-box-shadow: 0 2px 24px rgba(3, 74, 99, 0.52);
+    box-shadow: 0 2px 24px rgba(3, 74, 99, 0.52);
+}
+
+.b-register-form h2 {
+    margin: 0;
+    color: #fff;
+    font-size: 1.3125em;
+    font-weight: bold;
+    text-align: center;
+    text-transform: uppercase;
+    height: 85px;
+    line-height: 83px;
+    background: url("../images/regform_header_bg.jpg") repeat-x 0 0;
+}
+
+.b-register-form form {
+    padding: 20px;
+    font-size: 0.875em;
+    color: #202020;
+    background: url("../images/reg_form_bg.jpg") no-repeat center bottom;
+}
+
+.b-register-form form label {
+    font-weight: normal;
+}
+
+.b-register-form form input[type=submit],
+.b-register-form form [type=submit] {
+    border: 3px solid #cf5b5b;
+}
+
+#rule {
+    position: absolute;
+    opacity: 0;
+}
+
+#rule+label {
+    display: inline-block;
+    position: relative;
+    padding-left: 34px;
+    height: 24px;
+    line-height: 24px;
+}
+
+#rule+label>a {
+    color: #202020;
+    text-decoration: underline;
+}
+
+#rule+label>a:hover {
+    text-decoration: none;
+}
+
+#rule+label::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    display: block;
+    width: 24px;
+    height: 24px;
+    border: solid 1px #9cc5d5;
+    -webkit-box-shadow: inset 1px 2px 1px rgba(0, 0, 0, 0.14);
+    -moz-box-shadow: inset 1px 2px 1px rgba(0, 0, 0, 0.14);
+    box-shadow: inset 1px 2px 1px rgba(0, 0, 0, 0.14);
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    padding: 4px;
+}
+
+#rule:checked+label::before {
+    background: url("../images/check.png") no-repeat center center;
+}
+
+.g-recaptcha {
+    display: inline-block;
+    border: 5px solid #fff;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+}
+
+.b-reg-lozung {
+    margin-left: 25px;
+}
+
+.b-reg-lozung h1 {
+    font-size: 5.625em;
+    font-weight: bold;
+    color: #cf5b5b;
+}
+
+.b-reg-list {
+    font-size: 1.5em;
+    list-style: none;
+    padding: 0;
+}
+
+.b-reg-list>li {
+    background: url("../images/list_ico.png") no-repeat left center;
+    display: block;
+    height: 60px;
+    line-height: 58px;
+    padding-left: 45px;
+}
+
+label[for=psw] {
+    width: 100%;
+}
+
+label[for=psw]>span,
+label[for=new-password]>span,
+label[for^=user-profile]>span,
+.score>span {
+    float: right;
+}
+
+label[for=psw] span,
+label[for=psw] b,
+label[for=new-password] span,
+label[for=new-password] b,
+label[for^=user-profile] span,
+label[for^=user-profile] b,
+.score span,
+.score b {
+    font-size: 12px;
+    font-weight: bold;
+}
+
+label[for=psw] span.score-0,
+label[for=psw] span.score-1,
+label[for=psw] b.score-0,
+label[for=psw] b.score-1,
+label[for=new-password] span.score-0,
+label[for=new-password] span.score-1,
+label[for=new-password] b.score-0,
+label[for=new-password] b.score-1,
+label[for^=user-profile] span.score-0,
+label[for^=user-profile] span.score-1,
+label[for^=user-profile] b.score-0,
+label[for^=user-profile] b.score-1,
+.score span.score-0,
+.score span.score-1,
+.score b.score-0,
+.score b.score-1 {
+    color: #9e2020;
+}
+
+label[for=psw] span.score-2,
+label[for=psw] span.score-3,
+label[for=psw] b.score-2,
+label[for=psw] b.score-3,
+label[for=new-password] span.score-2,
+label[for=new-password] span.score-3,
+label[for=new-password] b.score-2,
+label[for=new-password] b.score-3,
+label[for^=user-profile] span.score-2,
+label[for^=user-profile] span.score-3,
+label[for^=user-profile] b.score-2,
+label[for^=user-profile] b.score-3,
+.score span.score-2,
+.score span.score-3,
+.score b.score-2,
+.score b.score-3 {
+    color: #ad6704;
+}
+
+label[for=psw] span.score-4,
+label[for=psw] b.score-4,
+label[for=new-password] span.score-4,
+label[for=new-password] b.score-4,
+label[for^=user-profile] span.score-4,
+label[for^=user-profile] b.score-4,
+.score span.score-4,
+.score b.score-4 {
+    color: #58C100;
+}
+
+span.score {
+    font-size: 12px;
+    font-weight: bold;
+}
+
+label[for=new-password]>span,
+label[for^=user-profile]>span {
+    margin-left: 10px;
+    line-height: 20px;
+}
+
+/*# sourceMappingURL=registration.css.map */

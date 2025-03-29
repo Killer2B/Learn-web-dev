@@ -1,0 +1,48 @@
+main #ya-site-results {
+    font: normal 16px "PFBeauSansPro" !important;
+    padding-bottom: 5px !important;
+}
+
+#ya-site-results .b-serp-item__title-link {
+    color: #198fb7 !important;
+    font-size: 1.3em !important;
+    font-weight: bold !important;
+    border-bottom: 1px solid #afd8e6;
+    text-decoration: none !important;
+}
+
+main #ya-site-results :link:hover,
+main #ya-site-results :visited:hover,
+main #ya-site-results .b-pseudo-link:hover {
+    color: #198fb7 !important;
+    border-bottom: none !important;
+    text-decoration: none !important;
+}
+
+#ya-site-results :visited,
+#ya-site-results .b-pager :visited,
+#ya-site-results .b-foot__link:visited,
+#ya-site-results .b-copyright__link:visited {
+    text-decoration: none !important;
+}
+
+#ya-site-results .b-serp-item__text {
+    line-height: 1.375em !important;
+}
+
+#ya-site-results .b-serp-url__item {
+    color: #cf5b5b !important;
+    font-weight: bold !important;
+}
+
+#ya-site-results .b-pager :link {
+    display: inline-block !important;
+    color: #198fb7 !important;
+}
+
+#ya-site-results .b-serp-item__number {
+    left: 40px !important;
+    margin: 0.5em 0 0;
+}
+
+/*# sourceMappingURL=ya_style.css.map */

@@ -1,0 +1,134 @@
+@charset "UTF-8";
+.b--language-switch {
+    position: relative;
+    display: inline-block;
+    padding: 12px 15px 0;
+    min-width: 145px;
+    color: #fff;
+}
+
+.b--language-switch::after {
+    content: "";
+    position: absolute;
+    left: 47px;
+    bottom: 3px;
+    z-index: 1;
+    display: inline-block;
+    height: 24px;
+    padding-left: 32px;
+    min-width: 62px;
+    border-bottom: 1px dotted #fff;
+}
+
+.b--language-switch::before {
+    display: inline-block;
+    background: no-repeat 0 0;
+    height: 24px;
+    line-height: 24px;
+    padding-left: 32px;
+    min-width: 101px;
+}
+
+.b--language-switch.ru::before {
+    content: "Русский";
+    background-image: url("../images/lang/ru.png");
+}
+
+.b--language-switch.en::before {
+    content: "English";
+    background-image: url("../images/lang/en.png");
+}
+
+.b--language-switch.pt::before {
+    content: "Portugal";
+    background-image: url("../images/lang/pt.png");
+}
+
+.b--language-switch>.caret {
+    margin-left: 1px;
+    margin-top: -1px;
+    display: inline-block;
+    width: 0;
+    height: 0;
+    vertical-align: middle;
+    border-top: 4px solid;
+    border-right: 4px solid transparent;
+    border-left: 4px solid transparent;
+}
+
+.b--language-switch:hover::after,
+.b--language-switch:active::after {
+    visibility: hidden;
+}
+
+.b--language-switch:hover .b--language-switch__menu,
+.b--language-switch:active .b--language-switch__menu {
+    display: block;
+}
+
+.b--language-switch:hover>.caret,
+.b--language-switch:active>.caret {
+    visibility: hidden;
+}
+
+.b--language-switch__menu {
+    display: none;
+    position: absolute;
+    right: 5px;
+    top: 0;
+    z-index: 2;
+    list-style: none;
+    width: max-content;
+    padding: 12px 15px;
+    background: rgba(4, 105, 142, 0.75);
+    -webkit-border-radius: 24px;
+    -moz-border-radius: 24px;
+    border-radius: 24px;
+}
+
+.b--language-switch__menu li {
+    margin-top: 10px;
+    width: 110px;
+}
+
+.b--language-switch__menu li:first-child {
+    margin-top: 0;
+}
+
+.b--language-switch__menu li a {
+    display: block;
+    text-decoration: none;
+    color: #fff;
+    background: url("../images/lang/ru.png") no-repeat 0 0;
+    height: 24px;
+    line-height: 24px;
+    padding-left: 32px;
+    min-width: 92px;
+}
+
+.b--language-switch__menu li a span {
+    border-bottom: 1px dotted rgba(4, 105, 142, 0.75);
+}
+
+.b--language-switch__menu li a.en {
+    background-image: url("../images/lang/en.png");
+}
+
+.b--language-switch__menu li a.pt {
+    background-image: url("../images/lang/pt.png");
+}
+
+.b--language-switch__menu li a:hover span {
+    border-bottom-color: #fff;
+}
+
+.b--language-switch__menu li a:hover span.caret {
+    border-bottom-color: rgba(4, 105, 142, 0.75);
+}
+
+.b--language-switch__menu li .caret {
+    margin-left: 8px;
+    display: none;
+}
+
+/*# sourceMappingURL=lang_menu.css.map */

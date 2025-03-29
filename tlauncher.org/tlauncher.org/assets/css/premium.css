@@ -1,0 +1,287 @@
+.body_premim {
+    background: #fff;
+}
+
+.premium {
+    background: none;
+}
+
+.premium .header {
+    background: url("../images/premium-bg.jpg") no-repeat 0 0;
+    min-height: 700px;
+    -webkit-box-shadow: 0 3px 9px rgba(27, 132, 168, 0.29);
+    -moz-box-shadow: 0 3px 9px rgba(27, 132, 168, 0.29);
+    box-shadow: 0 3px 9px rgba(27, 132, 168, 0.29);
+}
+
+.premium .header h1 {
+    font-weight: bold;
+    font-size: 3em;
+    text-align: center;
+    margin: 0;
+    height: 150px;
+    line-height: 150px;
+}
+
+.premium .header .banner {
+    margin-bottom: 45px;
+}
+
+.premium .b-line {
+    margin-top: 85px;
+    color: #096e90;
+    line-height: 1.5em;
+    font-size: 0.8125em;
+}
+
+.premium .b-line h2 {
+    font-size: 1.8461538462em;
+    font-weight: bold;
+    margin-top: 0;
+    text-transform: uppercase;
+    color: #000;
+}
+
+.premium .b-line img.left {
+    margin-left: 30px;
+    float: left;
+}
+
+.premium .b-line img.right {
+    margin-right: 30px;
+    float: right;
+}
+
+.premium .b-line .speed,
+.premium .b-line .chits {
+    padding-left: 16.67%;
+    min-height: 130px;
+}
+
+.premium .b-line .speed {
+    background: url("../images/speed.png") no-repeat 4.1% 0;
+}
+
+.premium .b-line .chits {
+    background: url("../images/chits.png") no-repeat 4.1% 0;
+}
+
+.premium .banner {
+    margin-bottom: 65px;
+}
+
+.premium .big {
+    padding: 0 40px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.premium .big-btn {
+    text-align: center;
+    margin: 70px auto;
+    font-size: 1.1875em;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.premium .big-btn span {
+    color: #ba260b;
+    text-shadow: 0 1px rgba(255, 255, 255, 0.4);
+}
+
+.banner {
+    background: url("../images/banner-bg.jpg") repeat-y 0 0;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    min-height: 140px;
+    text-align: center;
+}
+
+.banner h2,
+.banner h3 {
+    height: 150px;
+    line-height: 150px;
+    text-transform: uppercase;
+    color: #fff;
+    text-shadow: 0 3px 3px rgba(3, 71, 94, 0.14);
+    font-size: 3em;
+}
+
+.banner .premium-text {
+    color: transparent;
+    text-shadow: none;
+    display: inline-block;
+    background: url("../images/premium.png") no-repeat 0 center;
+    width: 284px;
+}
+
+.banner p {
+    font-style: italic;
+    font-weight: bold;
+    color: #fff;
+    text-align: center;
+    font-size: 1.875em;
+}
+
+.banner p.center {
+    padding-top: 42px;
+    background: url("../images/banner-p-bg.png") no-repeat center 44px;
+    line-height: 29px;
+}
+
+.tizer {
+    background-color: #fff;
+    background-image: -webkit-linear-gradient(98deg, #f7fbfc, #fff);
+    background-image: -moz-linear-gradient(98deg, #f7fbfc, #fff);
+    background-image: -o-linear-gradient(98deg, #f7fbfc, #fff);
+    background-image: -ms-linear-gradient(98deg, #f7fbfc, #fff);
+    background-image: linear-gradient(98deg, #f7fbfc, #fff);
+    -webkit-box-shadow: 0 3px 9px rgba(27, 132, 168, 0.13);
+    -moz-box-shadow: 0 3px 9px rgba(27, 132, 168, 0.13);
+    box-shadow: 0 3px 9px rgba(27, 132, 168, 0.13);
+    border: solid 1px #e8f1f4;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    padding: 60px 40px 54px;
+    text-align: center;
+}
+
+.tizer p {
+    line-height: 39px;
+    font-size: 2.25em;
+}
+
+.tizer span {
+    color: #cf5b5b;
+    font-weight: bold;
+}
+
+.tizer .name {
+    line-height: 39px;
+    display: block;
+    font-size: 3em;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: #000;
+}
+
+.tizer .b-button-premium {
+    margin-top: 40px;
+}
+
+.b-button-premium {
+    font-size: 1em;
+    color: #000;
+    display: inline-block;
+    height: 50px;
+    line-height: 48px;
+    padding: 0 25px;
+    -webkit-border-radius: 25px;
+    -moz-border-radius: 25px;
+    border-radius: 25px;
+    border: 3px solid transparent;
+}
+
+.b-button-premium:hover {
+    text-decoration: none;
+}
+
+.b-button-premium--red {
+    background-color: #cf5b5b;
+    color: #fff;
+}
+
+.b-button-premium--red span {
+    color: #fff;
+    font-size: 1.0625em;
+}
+
+.b-button-premium--red:hover,
+.b-button-premium--red:active {
+    color: #000;
+    background-color: #fff;
+    border-color: #cf5b5b;
+}
+
+.b-button-premium--red:hover span,
+.b-button-premium--red:active span {
+    color: #000;
+}
+
+.b-button-premium--yellow {
+    border: none;
+    background-color: #e7b80c;
+    -webkit-box-shadow: inset 0 -2px rgba(242, 163, 9, 0.75), inset 0 0 5px rgba(255, 255, 255, 0.53);
+    -moz-box-shadow: inset 0 -2px rgba(242, 163, 9, 0.75), inset 0 0 5px rgba(255, 255, 255, 0.53);
+    box-shadow: inset 0 -2px rgba(242, 163, 9, 0.75), inset 0 0 5px rgba(255, 255, 255, 0.53);
+    background-image: -webkit-linear-gradient(0deg, #e0a913, #fbec00);
+    background-image: -moz-linear-gradient(0deg, #e0a913, #fbec00);
+    background-image: -o-linear-gradient(0deg, #e0a913, #fbec00);
+    background-image: -ms-linear-gradient(0deg, #e0a913, #fbec00);
+    background-image: linear-gradient(0deg, #e0a913, #fbec00);
+    color: #cf5b5b;
+}
+
+.b-button-premium--yellow:hover,
+.b-button-premium--yellow:active {
+    background-color: #fff;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+    background-image: -webkit-linear-gradient(0deg, #fff, #fff);
+    background-image: -moz-linear-gradient(0deg, #fff, #fff);
+    background-image: -o-linear-gradient(0deg, #fff, #fff);
+    background-image: -ms-linear-gradient(0deg, #fff, #fff);
+    background-image: linear-gradient(0deg, #fff, #fff);
+    color: #000;
+    border: 3px solid #e7b80c;
+}
+
+.b-button-premium--yellow:hover span,
+.b-button-premium--yellow:active span {
+    color: #000;
+}
+
+.b-button-premium--red-white {
+    font-weight: bold;
+    color: #cf5b5b;
+    background-color: #fff;
+    border: 3px solid #cf5b5b;
+    text-transform: uppercase;
+}
+
+.b-button-premium--red-white:hover,
+.b-button-premium--red-white:focus {
+    background-color: #cf5b5b;
+    color: #fff;
+}
+
+.table-d {
+    width: 100%;
+}
+
+.table-d td {
+    text-align: center;
+    padding-top: 9px;
+    padding-bottom: 9px;
+    font-size: 13px;
+    line-height: 1.2em;
+}
+
+.big-d {
+    font-size: 74px;
+    color: #00457b;
+    line-height: 1em;
+    margin: 8px 0;
+}
+
+.small-d {
+    font-size: 15px;
+    color: #00457b;
+    line-height: 1.1em;
+    margin-bottom: 15px;
+}
+
+/*# sourceMappingURL=premium.css.map */

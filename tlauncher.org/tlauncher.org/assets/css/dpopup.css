@@ -1,0 +1,396 @@
+#dPopup {
+    font-family: "PFBeauSansPro", sans-serif;
+    /* OS Tabs */
+    /* Buttons styles  */
+    /* */
+}
+
+#dPopup .modal-dialog {
+    width: 672px;
+}
+
+#dPopup .close {
+    display: block;
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    top: 20px;
+    right: 24px;
+    cursor: pointer;
+    opacity: 1;
+    z-index: 100000;
+    background: url("../images/dpopup/close.png") no-repeat center;
+}
+
+#dPopup .close:hover {
+    background-image: url("../images/dpopup/close_hover.png");
+}
+
+#dPopup .modal-body {
+    padding: 0 0 0 224px;
+    background: url("../images/dpopup/ill.png") no-repeat 0 0;
+    background-size: contain;
+    min-height: 294px;
+    border-radius: 6px;
+}
+
+#dPopup .modal-body h2 {
+    display: inline-block;
+    position: absolute;
+    top: 14px;
+    left: 248px;
+    font-size: 23px;
+    color: #152A36;
+    font-weight: bold;
+    margin: 0;
+    max-width: 370px;
+}
+
+#dPopup .body-content {
+    padding: 24px;
+    position: relative;
+}
+
+#dPopup .nav-tabs {
+    border-bottom: 1px solid #E7F0F4;
+    margin-top: -16px;
+}
+
+#dPopup .nav-tabs li a {
+    display: block;
+    position: relative;
+    padding-left: 48px;
+    font-size: 16px;
+    color: #7A919F;
+    border: none;
+}
+
+#dPopup .nav-tabs li a:hover {
+    border-bottom: 1px solid #E7F0F4;
+    border-radius: 0;
+}
+
+#dPopup .nav-tabs li a:before {
+    content: "";
+    display: block;
+    position: absolute;
+    top: 50%;
+    left: 24px;
+    margin-top: -8px;
+}
+
+#dPopup .nav-tabs li a[aria-controls=windows]:before {
+    content: url("../images/dpopup/windows_inactive.png");
+}
+
+#dPopup .nav-tabs li a[aria-controls=macos]:before {
+    content: url("../images/dpopup/macos_inactive.png");
+    margin-top: -10px;
+}
+
+#dPopup .nav-tabs li a[aria-controls=linux]:before {
+    content: url("../images/dpopup/linux_inactive.png");
+    margin-top: -9px;
+}
+
+#dPopup .nav-tabs li.active a {
+    border-bottom: 2px solid #00B2FF;
+    font-weight: bold;
+    color: #152A36;
+}
+
+#dPopup .nav-tabs li.active a[aria-controls=windows]:before {
+    content: url("../images/dpopup/windows.png");
+}
+
+#dPopup .nav-tabs li.active a[aria-controls=macos]:before {
+    content: url("../images/dpopup/macos.png");
+    margin-top: -10px;
+}
+
+#dPopup .nav-tabs li.active a[aria-controls=linux]:before {
+    content: url("../images/dpopup/linux.png");
+    margin-top: -9px;
+}
+
+#dPopup .tab-content {
+    width: 400px;
+}
+
+#dPopup .contentWrapper {
+    position: relative;
+    min-height: 229px;
+    margin-top: 16px;
+}
+
+#dPopup .buttons {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+}
+
+#dPopup .btn {
+    border-radius: 2px;
+    border: none;
+    padding: 16px;
+    margin-top: 8px;
+}
+
+#dPopup .btn:focus,
+#dPopup .btn.active:focus {
+    outline: unset;
+}
+
+#dPopup .btn sup {
+    font-size: 16px;
+    font-weight: normal;
+    color: #FF3B6B;
+}
+
+#dPopup .btn-wide {
+    width: 400px;
+}
+
+#dPopup .btn-green {
+    background-image: linear-gradient(266.33deg, #93EB8C -11.55%, #5CBB55 107.5%);
+}
+
+#dPopup .btn-green:hover {
+    background-image: linear-gradient(266.33deg, #97E78F -11.55%, #73C76B 107.5%);
+}
+
+#dPopup .btn-green:active {
+    background-image: linear-gradient(266.33deg, #7DCD77 -11.55%, #59AE52 107.5%);
+}
+
+#dPopup .btn-gray {
+    background-color: #EFF4F6;
+}
+
+#dPopup .btn-gray:hover {
+    background-color: #E3E8EA;
+}
+
+#dPopup .btn-gray:active {
+    background-color: #D7DCDD;
+}
+
+#dPopup .btn-blue {
+    background: linear-gradient(266.33deg, #5AC2EF -11.55%, #28A0C6 107.5%);
+}
+
+#dPopup .btn-blue:hover {
+    background-image: linear-gradient(266.33deg, #64C4EB -11.55%, #43ADD0 107.5%);
+}
+
+#dPopup .btn-blue:active {
+    background-image: linear-gradient(266.33deg, #4BAAD2 -11.55%, #2994B7 107.5%);
+}
+
+#dPopup .btn-text-center {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+#dPopup .btn-text-left {
+    display: flex;
+    flex-direction: row;
+    justify-content: left;
+    align-items: center;
+}
+
+#dPopup .btn-block {
+    display: flex;
+    justify-content: space-between;
+}
+
+#dPopup .btn-download {
+    text-align: left;
+    height: 80px;
+    color: #FFF;
+    margin-top: 12px;
+    display: block;
+    position: relative;
+}
+
+#dPopup .btn-download.recommend {
+    margin-top: 24px;
+}
+
+#dPopup .btn-download.recommend:before {
+    content: attr(data-content);
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    width: 120px;
+    height: 24px;
+    position: absolute;
+    top: -12px;
+    left: 50%;
+    margin-left: -60px;
+    background: linear-gradient(266.33deg, #5AC2EF -11.55%, #28A0C6 107.5%);
+    border-radius: 8px;
+    font-size: 10px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+#dPopup .btn-download .title {
+    display: block;
+    font-size: 24px;
+    font-weight: bold;
+    line-height: 24px;
+}
+
+#dPopup .btn-download .file {
+    display: block;
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 16px;
+    padding-left: 14px;
+    background: url("../images/dpopup/document.png") no-repeat 0 center;
+    margin-top: 8px;
+}
+
+#dPopup .btn-runner,
+#dPopup .btn-help {
+    text-align: left;
+    height: 64px;
+    color: #FFF;
+    margin-top: 8px;
+    display: block;
+    position: relative;
+}
+
+#dPopup .btn-runner .title,
+#dPopup .btn-help .title {
+    display: block;
+    font-size: 20px;
+    font-weight: bold;
+    line-height: 24px;
+}
+
+#dPopup .btn-download .icon,
+#dPopup .btn-runner .icon,
+#dPopup .btn-help .icon {
+    display: block;
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    margin-top: -11px;
+    width: 22px;
+    height: 24px;
+    background: url("../images/dpopup/download.png") no-repeat 0;
+}
+
+#dPopup .btn-help .icon {
+    background: url("../images/dpopup/document_2.png") no-repeat 0;
+}
+
+#dPopup .btn-all-version {
+    color: #152A36;
+    height: 48px;
+    font-weight: 500;
+    font-size: 14px;
+    position: relative;
+}
+
+#dPopup .btn-all-version:before {
+    content: url("../images/dpopup/open_book.png");
+    display: block;
+    position: absolute;
+    top: 50%;
+    right: 16px;
+    margin-top: -8px;
+}
+
+#dPopup .btn-for-two-block {
+    width: 196px;
+    height: 32px;
+    padding: 8px;
+}
+
+#dPopup .btn-for-multi-block {
+    font-weight: bold;
+    font-size: 16px;
+    padding: 24px 30px;
+    margin: 32px 0;
+}
+
+#dPopup .btn-installer {
+    margin-top: 24px;
+    height: 64px;
+    font-weight: bold;
+    color: #FFF;
+    font-size: 20px;
+}
+
+#dPopup .btn-installer .recommend {
+    display: inline-flex;
+    width: 120px;
+    height: 24px;
+    background-color: #FFF;
+    font-weight: bold;
+    font-size: 10px;
+    text-transform: uppercase;
+    color: #152A36;
+    border-radius: 2px;
+}
+
+#dPopup .btn-direct {
+    height: 64px;
+    font-weight: bold;
+    color: #152A36;
+    font-size: 20px;
+}
+
+#dPopup .btn-support {
+    position: relative;
+    font-size: 14px;
+    font-weight: 500;
+    color: #152A36;
+}
+
+#dPopup .btn-support i {
+    display: block;
+    width: 14px;
+    height: 16px;
+    background: url("../images/dpopup/support.png") no-repeat 0;
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    margin-top: -8px;
+}
+
+#dPopup .btn-return {
+    height: 32px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #152A36;
+}
+
+#dPopup .article {
+    font-size: 14px;
+    color: #465B67;
+}
+
+#dPopup .article img.wide {
+    width: 400px;
+    margin-top: 6px;
+}
+
+#dPopup .article p {
+    line-height: 16px;
+    margin: 0;
+}
+
+@media (min-width: 768px) {
+    #dPopup .modal-dialog {
+        margin-top: 240px;
+    }
+}
+
+/*# sourceMappingURL=dpopup.css.map */

@@ -1,0 +1,14 @@
+@media only screen and (min-width: 1023px) and (max-width: 1200px) {
+    .b-site-info {
+        padding-left: 0;
+        background: none;
+    }
+    .b-header-line-1 .pull-right {
+        margin-left: 18px !important;
+    }
+    header .b-header-line-1 .pull-right> :first-child {
+        margin-right: 0;
+    }
+}
+
+/*# sourceMappingURL=int_adapt.css.map */

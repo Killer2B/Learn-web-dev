@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>استخراج النص وترجمته</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>استخراج النص وترجمته</h1>
+        
+        <div class="upload-section">
+            <h2>رفع صورة</h2>
+            <input type="file" id="imageUpload" accept="image/*">
+            <div class="preview-container">
+                <img id="imagePreview" src="#" alt="معاينة الصورة" style="display: none;">
+            </div>
+            <button id="extractBtn">استخراج النص</button>
+        </div>
+        
+        <div class="text-section">
+            <h2>النص المستخرج</h2>
+            <div class="language-selector">
+                <label for="sourceLanguage">لغة النص المصدر:</label>
+                <select id="sourceLanguage"></select>
+            </div>
+            <textarea id="extractedText" placeholder="سيظهر النص المستخرج هنا..." readonly></textarea>
+        </div>
+        
+        <div class="translation-section">
+            <h2>الترجمة</h2>
+            <div class="language-selector">
+                <label for="targetLanguage">ترجمة إلى:</label>
+                <select id="targetLanguage"></select>
+            </div>
+            <button id="translateBtn" disabled>ترجمة النص</button>
+            <textarea id="translatedText" placeholder="ستظهر الترجمة هنا..." readonly></textarea>
+        </div>
+    </div>
+    
+    <footer>
+        <p>تم إنشاؤه بواسطة <span id="currentYear"></span> &copy;</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@4/dist/tesseract.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

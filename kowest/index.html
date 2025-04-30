@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>حالة سيرفر ماين كرافت</title>
+  <link rel="icon" href="assets/images/logo.jpg" type="image/x-icon">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header>
+    <div class="container">
+      <div class="logo-container">
+        <img src="assets/images/logo.jpg" alt="شعار الموقع" class="logo">
+        <h1>مراقب السيرفر</h1>
+      </div>
+      <nav>
+        <ul>
+          <li class="active"><a href="index.html"><i class="fas fa-home"></i> الرئيسية</a></li>
+          <li><a href="history.html"><i class="fas fa-history"></i> السجل</a></li>
+          <li><a href="settings.html"><i class="fas fa-cog"></i> الإعدادات</a></li>
+          <li><a href="about.html"><i class="fas fa-info-circle"></i> عن الموقع</a></li>
+        </ul>
+      </nav>
+      <button class="toggle-mode" onclick="toggleTheme()">
+        <i class="fas fa-moon" id="theme-icon"></i>
+      </button>
+      <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
+        <i class="fas fa-bars"></i>
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <div class="container">
+      <section class="server-status">
+        <div class="card main-card">
+          <h2>حالة سيرفر ماين كرافت</h2>
+          <div class="server-info">
+            <div class="status-indicator" id="statusIndicator"></div>
+            <p class="status" id="status">جاري التحقق...</p>
+          </div>
+          <div class="server-details">
+            <div class="detail-item">
+              <i class="fas fa-users"></i>
+              <span>اللاعبين: </span>
+              <span id="playerCount">-</span>
+            </div>
+            <div class="detail-item">
+              <i class="fas fa-clock"></i>
+              <span>آخر تحقق: </span>
+              <span id="lastCheck">جاري التحميل...</span>
+            </div>
+            <div class="detail-item">
+              <i class="fas fa-signal"></i>
+              <span>الاستجابة: </span>
+              <span id="pingTime">-</span>
+            </div>
+          </div>
+          <div class="actions">
+            <button class="btn primary-btn" onclick="checkServer()">
+              <i class="fas fa-sync-alt"></i> إعادة التحقق
+            </button>
+            <button class="btn secondary-btn" onclick="toggleNotifications()">
+              <i class="fas fa-bell" id="notificationIcon"></i> الإشعارات
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <section class="recent-history">
+        <div class="card">
+          <div class="card-header">
+            <h3>آخر التحققات</h3>
+            <a href="history.html" class="view-all">عرض الكل</a>
+          </div>
+          <table id="recentHistoryTable">
+            <thead>
+              <tr>
+                <th>الوقت</th>
+                <th>الحالة</th>
+                <th>اللاعبين</th>
+                <th>الاستجابة</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="server-stats">
+        <div class="card">
+          <h3>إحصائيات السيرفر</h3>
+          <div class="stats-container">
+            <div class="stat-card">
+              <div class="stat-icon"><i class="fas fa-check-circle"></i></div>
+              <div class="stat-value" id="uptimePercent">-</div>
+              <div class="stat-label">نسبة التشغيل</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon"><i class="fas fa-users"></i></div>
+              <div class="stat-value" id="maxPlayers">-</div>
+              <div class="stat-label">أقصى عدد لاعبين</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon"><i class="fas fa-tachometer-alt"></i></div>
+              <div class="stat-value" id="avgPing">-</div>
+              <div class="stat-label">متوسط الاستجابة</div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>جميع الحقوق محفوظة &copy; <span id="currentYear"></span></p>
+      <p>صنع بواسطة <strong>X</strong></p>
+    </div>
+  </footer>
+
+  <div id="notification" class="notification">
+    <div class="notification-content">
+      <i class="notification-icon"></i>
+      <span id="notificationMessage"></span>
+    </div>
+    <button class="notification-close" onclick="closeNotification()">×</button>
+  </div>
+
+  <script src="js/api.js"></script>
+  <script src="js/main.js"></script>
+  <script>
+    document.getElementById('currentYear').textContent = new Date().getFullYear();
+    loadRecentHistory();
+    checkServer();
+    updateServerStats();
+  </script>
+</body>
+</html>

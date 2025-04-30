@@ -1,0 +1,1095 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>الإعدادات - حالة سيرفر ماين كرافت</title>
+  <link rel="icon" href="assets/images/logo.jpg" type="image/x-icon">
+  <link rel="apple-touch-icon" href="assets/images/logo.jpg">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+  <meta name="description" content="مراقبة حالة سيرفرات ماين كرافت بسهولة وفعالية">
+  <meta name="keywords" content="ماين كرافت, سيرفر, مراقبة, حالة السيرفر, minecraft, server status">
+  <meta name="author" content="X">
+  <meta name="theme-color" content="#00ffd5">
+  <meta property="og:title" content="الإعدادات - حالة سيرفر ماين كرافت">
+  <meta property="og:description" content="مراقبة حالة سيرفرات ماين كرافت بسهولة وفعالية">
+  <meta property="og:image" content="assets/images/logo.jpg">
+  <meta property="og:url" content="https://yourwebsite.com/settings.html">
+  <meta property="og:type" content="website">
+</head>
+<body>
+  <header>
+    <div class="container">
+      <div class="logo-container">
+        <img src="assets/images/logo.jpg" alt="شعار الموقع" class="logo">
+        <h1>مراقب السيرفر</h1>
+      </div>
+      <nav>
+        <ul>
+          <li><a href="index.html"><i class="fas fa-home"></i> الرئيسية</a></li>
+          <li><a href="history.html"><i class="fas fa-history"></i> السجل</a></li>
+          <li class="active"><a href="settings.html"><i class="fas fa-cog"></i> الإعدادات</a></li>
+          <li><a href="about.html"><i class="fas fa-info-circle"></i> عن الموقع</a></li>
+        </ul>
+      </nav>
+      <button class="toggle-mode" onclick="toggleTheme()" aria-label="تبديل السمة">
+        <i class="fas fa-moon" id="theme-icon"></i>
+      </button>
+      <button class="mobile-menu-btn" onclick="toggleMobileMenu()" aria-label="القائمة">
+        <i class="fas fa-bars"></i>
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <div class="container">
+      <section class="settings-section">
+        <div class="card">
+          <h2><i class="fas fa-cog"></i> الإعدادات</h2>
+          
+          <div class="settings-group">
+            <h3><i class="fas fa-palette"></i> المظهر</h3>
+            <div class="setting-item">
+              <label for="themeSelect">السمة:</label>
+              <select id="themeSelect" onchange="changeTheme()">
+                <option value="light">فاتح</option>
+                <option value="dark">داكن</option>
+                <option value="auto">تلقائي (حسب النظام)</option>
+              </select>
+            </div>
+            <div class="setting-item">
+              <label for="accentColor">لون التمييز:</label>
+              <div class="color-options">
+                <button class="color-option" data-color="#00ffd5" style="background-color: #00ffd5;" aria-label="لون فيروزي"></button>
+                <button class="color-option" data-color="#ff5722" style="background-color: #ff5722;" aria-label="لون أحمر"></button>
+                <button class="color-option" data-color="#4caf50" style="background-color: #4caf50;" aria-label="لون أخضر"></button>
+                <button class="color-option" data-color="#2196f3" style="background-color: #2196f3;" aria-label="لون أزرق"></button>
+                <button class="color-option" data-color="#ffeb3b" style="background-color: #ffeb3b;" aria-label="لون أصفر"></button>
+                <button class="color-option" data-color="#9c27b0" style="background-color: #9c27b0;" aria-label="لون بنفسجي"></button>
+              </div>
+            </div>
+            <div class="setting-item">
+              <label for="fontSizeSelect">حجم الخط:</label>
+              <select id="fontSizeSelect" onchange="changeFontSize()">
+                <option value="small">صغير</option>
+                <option value="medium" selected>متوسط</option>
+                <option value="large">كبير</option>
+              </select>
+            </div>
+            <div class="setting-item">
+              <label for="animationsEnabled">تفعيل الرسوم المتحركة:</label>
+              <label class="switch">
+                <input type="checkbox" id="animationsEnabled" onchange="toggleAnimations()" checked>
+                <span class="slider round"></span>
+              </label>
+            </div>
+          </div>
+          
+          <div class="settings-group">
+            <h3><i class="fas fa-bell"></i> الإشعارات</h3>
+            <div class="setting-item">
+              <label for="notificationsEnabled">تفعيل الإشعارات:</label>
+              <label class="switch">
+                <input type="checkbox" id="notificationsEnabled" onchange="updateNotificationSettings()">
+                <span class="slider round"></span>
+              </label>
+            </div>
+            <div class="setting-item notification-dependent">
+              <label for="notifyOnOffline">إشعار عند توقف السيرفر:</label>
+              <label class="switch">
+                <input type="checkbox" id="notifyOnOffline" onchange="updateNotificationSettings()">
+                <span class="slider round"></span>
+              </label>
+            </div>
+            <div class="setting-item notification-dependent">
+              <label for="notifyOnOnline">إشعار عند تشغيل السيرفر:</label>
+              <label class="switch">
+                <input type="checkbox" id="notifyOnOnline" onchange="updateNotificationSettings()">
+                <span class="slider round"></span>
+              </label>
+            </div>
+            <div class="setting-item notification-dependent">
+              <label for="notifyOnPlayerJoin">إشعار عند دخول لاعب:</label>
+              <label class="switch">
+                <input type="checkbox" id="notifyOnPlayerJoin" onchange="updateNotificationSettings()">
+                <span class="slider round"></span>
+              </label>
+            </div>
+            <div class="setting-item notification-dependent">
+              <label for="notifyOnPlayerCount">إشعار عند تغير عدد اللاعبين:</label>
+              <label class="switch">
+                <input type="checkbox" id="notifyOnPlayerCount" onchange="updateNotificationSettings()">
+                <span class="slider round"></span>
+              </label>
+            </div>
+            <div class="setting-item notification-dependent">
+              <label for="notificationSound">صوت الإشعارات:</label>
+              <select id="notificationSound" onchange="updateNotificationSettings()">
+                <option value="default">الصوت الافتراضي</option>
+                <option value="chime">رنين</option>
+                <option value="bell">جرس</option>
+                <option value="minecraft">صوت ماين كرافت</option>
+                <option value="none">بدون صوت</option>
+              </select>
+              <button class="btn icon-btn test-sound-btn" onclick="testNotificationSound()" aria-label="اختبار الصوت" title="اختبار الصوت">
+                <i class="fas fa-volume-up"></i>
+              </button>
+            </div>
+            <div id="notificationPermissionStatus" class="notification-status"></div>
+          </div>
+          
+          <div class="settings-group">
+            <h3><i class="fas fa-sync-alt"></i> التحقق التلقائي</h3>
+            <div class="setting-item">
+              <label for="autoCheckEnabled">تفعيل التحقق التلقائي:</label>
+              <label class="switch">
+                <input type="checkbox" id="autoCheckEnabled" onchange="updateAutoCheckSettings()">
+                <span class="slider round"></span>
+              </label>
+            </div>
+            <div class="setting-item auto-check-dependent">
+              <label for="checkInterval">الفاصل الزمني (بالدقائق):</label>
+              <input type="range" id="checkInterval" min="1" max="60" value="5" oninput="updateIntervalValue()" onchange="updateAutoCheckSettings()">
+              <span id="intervalValue">5</span> دقائق
+            </div>
+            <div class="setting-item auto-check-dependent">
+              <label for="backgroundCheck">التحقق في الخلفية:</label>
+              <label class="switch">
+                <input type="checkbox" id="backgroundCheck" onchange="updateAutoCheckSettings()">
+                <span class="slider round"></span>
+              </label>
+              <p class="setting-description">استمرار التحقق حتى عند إغلاق علامة التبويب</p>
+            </div>
+            <div class="setting-item auto-check-dependent">
+              <label for="checkOnStartup">التحقق عند بدء التشغيل:</label>
+              <label class="switch">
+                <input type="checkbox" id="checkOnStartup" onchange="updateAutoCheckSettings()" checked>
+                <span class="slider round"></span>
+              </label>
+            </div>
+          </div>
+          
+          <div class="settings-group">
+            <h3><i class="fas fa-server"></i> إعدادات السيرفرات</h3>
+            <div id="serversList">
+              <!-- قائمة السيرفرات ستضاف هنا ديناميًا -->
+              <div class="server-item" id="server-1">
+                <div class="server-header">
+                  <h4>السيرفر الرئيسي</h4>
+                  <div class="server-actions">
+                    <button class="btn icon-btn move-server-up-btn" onclick="moveServerUp(1)" aria-label="نقل لأعلى" title="نقل لأعلى">
+                      <i class="fas fa-arrow-up"></i>
+                    </button>
+                    <button class="btn icon-btn move-server-down-btn" onclick="moveServerDown(1)" aria-label="نقل لأسفل" title="نقل لأسفل">
+                      <i class="fas fa-arrow-down"></i>
+                    </button>
+                    <button class="btn icon-btn remove-server-btn" onclick="removeServer(1)" aria-label="حذف السيرفر" title="حذف السيرفر">
+                      <i class="fas fa-trash"></i>
+                    </button>
+                  </div>
+                </div>
+                <div class="setting-item">
+                  <label for="serverName-1">اسم السيرفر:</label>
+                  <input type="text" id="serverName-1" placeholder="أدخل اسم السيرفر" value="السيرفر الرئيسي">
+                </div>
+                <div class="setting-item">
+                  <label for="serverAddress-1">عنوان السيرفر:</label>
+                  <input type="text" id="serverAddress-1" placeholder="أدخل عنوان السيرفر أو IP">
+                </div>
+                <div class="setting-item">
+                  <label for="serverPort-1">المنفذ:</label>
+                  <input type="number" id="serverPort-1" placeholder="25565" min="1" max="65535" value="25565">
+                </div>
+                <div class="setting-item">
+                  <label for="serverEdition-1">إصدار ماين كرافت:</label>
+                  <select id="serverEdition-1">
+                    <option value="java">Java Edition</option>
+                    <option value="bedrock">Bedrock Edition</option>
+                  </select>
+                </div>
+                <div class="setting-item">
+                  <label for="serverIcon-1">أيقونة السيرفر (اختياري):</label>
+                  <div class="server-icon-selector">
+                    <img id="serverIconPreview-1" src="assets/images/default-server-icon.png" alt="أيقونة السيرفر" class="server-icon-preview">
+                    <label for="serverIconUpload-1" class="btn secondary-btn">
+                      <i class="fas fa-upload"></i> تحميل أيقونة
+                      <input type="file" id="serverIconUpload-1" accept="image/*" onchange="previewServerIcon(1)" style="display: none;">
+                    </label>
+                    <button class="btn icon-btn" onclick="resetServerIcon(1)" aria-label="إعادة ضبط الأيقونة" title="إعادة ضبط الأيقونة">
+                      <i class="fas fa-undo"></i>
+                    </button>
+                  </div>
+                </div>
+                <div class="setting-item">
+                  <label for="serverPriority-1">الأولوية:</label>
+                  <select id="serverPriority-1" onchange="updateServerPriority(1)">
+                    <option value="high">عالية</option>
+                    <option value="normal" selected>عادية</option>
+                    <option value="low">منخفضة</option>
+                  </select>
+                </div>
+                <div class="server-status">
+                  <button class="btn secondary-btn test-server-btn" onclick="testServerConnection(1)">
+                    <i class="fas fa-vial"></i> اختبار الاتصال
+                  </button>
+                  <div id="serverTestResult-1" class="server-test-result"></div>
+                </div>
+              </div>
+            </div>
+            
+            <button class="btn primary-btn add-server-btn" onclick="addNewServer()">
+              <i class="fas fa-plus"></i> إضافة سيرفر جديد
+            </button>
+            <button class="btn secondary-btn import-servers-btn" onclick="importServersFromFile()">
+              <i class="fas fa-file-import"></i> استيراد قائمة سيرفرات
+            </button>
+            <button class="btn secondary-btn export-servers-btn" onclick="exportServersToFile()">
+              <i class="fas fa-file-export"></i> تصدير قائمة سيرفرات
+            </button>
+          </div>
+          
+          <div class="settings-group">
+            <h3><i class="fas fa-cloud"></i> إعدادات API</h3>
+            <div class="setting-item">
+              <label for="apiEndpoint">عنوان خدمة API:</label>
+              <input type="text" id="apiEndpoint" placeholder="https://your-railway-app.up.railway.app/api/status">
+              <p class="setting-description">عنوان خدمة Node.js المستضافة على Railway للتحقق من حالة السيرفر</p>
+            </div>
+            <div class="setting-item">
+              <label for="apiKey">مفتاح API (اختياري):</label>
+              <div class="password-input-container">
+                <input type="password" id="apiKey" placeholder="أدخل مفتاح API إذا كان مطلوبًا">
+                <button class="btn icon-btn toggle-password-btn" onclick="togglePasswordVisibility('apiKey')" aria-label="إظهار/إخفاء المفتاح">
+                  <i class="fas fa-eye"></i>
+                </button>
+              </div>
+            </div>
+            <div class="setting-item">
+              <label for="apiTimeout">مهلة الاتصال (بالثواني):</label>
+              <input type="number" id="apiTimeout" min="1" max="60" value="10">
+            </div>
+            <div class="setting-item">
+              <label for="apiRetries">عدد محاولات إعادة الاتصال:</label>
+              <input type="number" id="apiRetries" min="0" max="5" value="2">
+            </div>
+            <div class="api-test-container">
+              <button class="btn secondary-btn" onclick="testApiConnection()">
+                <i class="fas fa-vial"></i> اختبار اتصال API
+              </button>
+              <div id="apiTestResult" class="api-test-result"></div>
+            </div>
+          </div>
+          
+          <div class="settings-group">
+            <h3><i class="fas fa-database"></i> البيانات المحلية</h3>
+            <div class="setting-item">
+              <label for="maxHistoryEntries">الحد الأقصى لسجلات التاريخ:</label>
+              <input type="number" id="maxHistoryEntries" min="10" max="1000" value="100">
+              <p class="setting-description">عدد سجلات التاريخ التي سيتم الاحتفاظ بها محليًا</p>
+            </div>
+            <div class="setting-item">
+              <label for="storageType">نوع التخزين:</label>
+              <select id="storageType" onchange="changeStorageType()">
+                <option value="localStorage">التخزين المحلي (localStorage)</option>
+                <option value="indexedDB">قاعدة بيانات IndexedDB</option>
+              </select>
+              <p class="setting-description">يوفر IndexedDB مساحة تخزين أكبر للسجلات</p>
+            </div>
+            <div class="setting-item">
+              <label for="autoBackup">النسخ الاحتياطي التلقائي:</label>
+              <label class="switch">
+                <input type="checkbox" id="autoBackup" onchange="updateBackupSettings()">
+                <span class="slider round"></span>
+              </label>
+            </div>
+            <div class="setting-item backup-dependent">
+              <label for="backupInterval">فترة النسخ الاحتياطي (بالأيام):</label>
+              <input type="number" id="backupInterval" min="1" max="30" value="7">
+            </div>
+            <div class="data-actions">
+              <button class="btn warning-btn" onclick="clearHistory()">
+                <i class="fas fa-history"></i> مسح سجل التاريخ
+              </button>
+              <button class="btn danger-btn" onclick="clearAllData()">
+                <i class="fas fa-trash-alt"></i> مسح جميع البيانات
+              </button>
+              <button class="btn primary-btn" onclick="exportData()">
+                <i class="fas fa-file-export"></i> تصدير البيانات
+              </button>
+              <label for="importData" class="btn secondary-btn">
+                <i class="fas fa-file-import"></i> استيراد البيانات
+                <input type="file" id="importData" accept=".json" onchange="importData()" style="display: none;">
+              </label>
+              <button class="btn secondary-btn" onclick="createBackup()">
+                <i class="fas fa-save"></i> إنشاء نسخة احتياطية الآن
+              </button>
+            </div>
+            <div class="backup-list-container">
+              <h4>النسخ الاحتياطية المتوفرة</h4>
+              <div id="backupsList" class="backups-list">
+                <!-- قائمة النسخ الاحتياطية ستضاف هنا ديناميًا -->
+                <p class="no-backups-message">لا توجد نسخ احتياطية متوفرة</p>
+              </div>
+            </div>
+          </div>
+          
+          <div class="settings-group">
+            <h3><i class="fas fa-language"></i> اللغة والتوطين</h3>
+            <div class="setting-item">
+              <label for="languageSelect">اللغة:</label>
+              <select id="languageSelect" onchange="changeLanguage()">
+                <option value="ar" selected>العربية</option>
+                <option value="en">English</option>
+                <option value="fr">Français</option>
+                <option value="es">Español</option>
+              </select>
+            </div>
+            <div class="setting-item">
+              <label for="timeFormat">تنسيق الوقت:</label>
+              <select id="timeFormat" onchange="updateTimeFormat()">
+                <option value="12">12 ساعة (صباحًا/مساءً)</option>
+                <option value="24">24 ساعة</option>
+              </select>
+            </div>
+            <div class="setting-item">
+              <label for="dateFormat">تنسيق التاريخ:</label>
+              <select id="dateFormat" onchange="updateDateFormat()">
+                <option value="dmy">يوم/شهر/سنة</option>
+                <option value="mdy">شهر/يوم/سنة</option>
+                <option value="ymd">سنة/شهر/يوم</option>
+              </select>
+            </div>
+          </div>
+          
+          <div class="settings-group">
+            <h3><i class="fas fa-shield-alt"></i> الأمان والخصوصية</h3>
+            <div class="setting-item">
+              <label for="saveLoginInfo">حفظ معلومات تسجيل الدخول:</label>
+              <label class="switch">
+                <input type="checkbox" id="saveLoginInfo" onchange="updateSecuritySettings()">
+                <span class="slider round"></span>
+              </label>
+            </div>
+            <div class="setting-item">
+              <label for="encryptData">تشفير البيانات المحلية:</label>
+              <label class="switch">
+                <input type="checkbox" id="encryptData" onchange="updateSecuritySettings()">
+                <span class="slider round"></span>
+              </label>
+              <p class="setting-description">تشفير البيانات المخزنة محليًا لزيادة الأمان</p>
+            </div>
+            <div class="setting-item">
+              <label for="sessionTimeout">مهلة الجلسة (بالدقائق):</label>
+              <input type="number" id="sessionTimeout" min="5" max="1440" value="30">
+              <p class="setting-description">مدة الخمول قبل تسجيل الخروج تلقائيًا (0 لتعطيل)</p>
+            </div>
+            <button class="btn warning-btn" onclick="clearCookies()">
+              <i class="fas fa-cookie-bite"></i> مسح ملفات تعريف الارتباط
+            </button>
+          </div>
+          
+          <div class="settings-group">
+            <h3><i class="fas fa-universal-access"></i> إمكانية الوصول</h3>
+            <div class="setting-item">
+              <label for="highContrast">وضع التباين العالي:</label>
+              <label class="switch">
+                <input type="checkbox" id="highContrast" onchange="toggleHighContrast()">
+                <span class="slider round"></span>
+              </label>
+            </div>
+            <div class="setting-item">
+              <label for="reducedMotion">تقليل الحركة:</label>
+              <label class="switch">
+                <input type="checkbox" id="reducedMotion" onchange="toggleReducedMotion()">
+                <span class="slider round"></span>
+              </label>
+            </div>
+            <div class="setting-item">
+              <label for="textToSpeech">تحويل النص إلى كلام:</label>
+              <label class="switch">
+                <input type="checkbox" id="textToSpeech" onchange="toggleTextToSpeech()">
+                <span class="slider round"></span>
+              </label>
+            </div>
+          </div>
+          
+          <div class="settings-actions">
+            <button id="saveSettingsBtn" class="btn primary-btn">
+              <i class="fas fa-save"></i> حفظ الإعدادات
+            </button>
+            <button id="resetSettingsBtn" class="btn secondary-btn">
+              <i class="fas fa-undo"></i> إعادة تعيين
+            </button>
+            <button class="btn secondary-btn" onclick="exportSettingsToFile()">
+              <i class="fas fa-file-export"></i> تصدير الإعدادات
+            </button>
+            <label for="importSettings" class="btn secondary-btn">
+              <i class="fas fa-file-import"></i> استيراد الإعدادات
+              <input type="file" id="importSettings" accept=".json" onchange="importSettingsFromFile()" style="display: none;">
+            </label>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-section">
+          <h3>روابط سريعة</h3>
+          <ul>
+            <li><a href="index.html">الرئيسية</a></li>
+            <li><a href="history.html">السجل</a></li>
+            <li><a href="settings.html">الإعدادات</a></li>
+            <li><a href="about.html">عن الموقع</a></li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h3>تواصل معنا</h3>
+          <ul class="social-links">
+            <li><a href="#" target="_blank"><i class="fab fa-twitter"></i> تويتر</a></li>
+            <li><a href="https://github.com/Killer2B" target="_blank"><i class="fab fa-github"></i> جيثب</a></li>
+            <li><a href="https://discord.gg/M4cuFqJVbD" target="_blank"><i class="fab fa-discord"></i> ديسكورد</a></li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h3>معلومات إضافية</h3>
+          <p>أداة مفتوحة المصدر لمراقبة سيرفرات ماين كرافت</p>
+          <p>الإصدار: 1.0.0</p>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>جميع الحقوق محفوظة &copy; <span id="currentYear"></span></p>
+        <p>صنع بواسطة <strong>X</strong></p>
+      </div>
+    </div>
+  </footer>
+
+  <div id="notification" class="notification">
+    <div class="notification-content">
+      <i class="notification-icon"></i>
+      <span id="notificationMessage"></span>
+    </div>
+    <button class="notification-close" onclick="closeNotification()" aria-label="إغلاق">×</button>
+  </div>
+
+  <div id="confirmDialog" class="modal">
+    <div class="modal-content">
+      <h3 id="confirmTitle">تأكيد</h3>
+      <p id="confirmMessage">هل أنت متأكد من أنك تريد المتابعة؟</p>
+      <div class="modal-actions">
+        <button class="btn secondary-btn" id="cancelButton" onclick="closeConfirmDialog()">إلغاء</button>
+        <button class="btn primary-btn" id="confirmButton">تأكيد</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="loadingOverlay" class="loading-overlay">
+    <div class="loading-spinner"></div>
+    <p id="loadingMessage">جاري التحميل...</p>
+  </div>
+
+  <!-- أصوات الإشعارات -->
+  <audio id="notificationSound-default" src="assets/sounds/notification-default.mp3" preload="none"></audio>
+  <audio id="notificationSound-chime" src="assets/sounds/notification-chime.mp3" preload="none"></audio>
+  <audio id="notificationSound-bell" src="assets/sounds/notification-bell.mp3" preload="none"></audio>
+  <audio id="notificationSound-minecraft" src="assets/sounds/notification-minecraft.mp3" preload="none"></audio>
+
+  <script src="js/api.js"></script>
+  <script src="js/settings.js"></script>
+  <script src="js/main.js"></script>
+  <script>
+    document.getElementById('currentYear').textContent = new Date().getFullYear();
+    
+    // تهيئة الإعدادات عند تحميل
+    document.addEventListener('DOMContentLoaded', function() {
+      loadSettings();
+      initializeColorOptions();
+      checkNotificationPermission();
+      
+      // إضافة مستمعي الأحداث للعناصر
+      const colorOptions = document.querySelectorAll('.color-option');
+      colorOptions.forEach(option => {
+        option.addEventListener('click', function() {
+          const color = this.getAttribute('data-color');
+          setAccentColor(color);
+        });
+      });
+    });
+    // إنشاء مربع تأكيد مخصص
+function showConfirmDialog(title, message, icon, confirmCallback, cancelCallback) {
+  // إنشاء عناصر مربع الحوار
+  const dialog = document.createElement('div');
+  dialog.className = 'custom-dialog';
+  
+  dialog.innerHTML = `
+    <div class="dialog-content">
+      <div class="dialog-header">
+        <h3>${title}</h3>
+        <button class="close-btn"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="dialog-body">
+        <i class="fas ${icon} dialog-icon ${icon.replace('fa-', '')}"></i>
+        <p>${message}</p>
+      </div>
+      <div class="dialog-footer">
+        <button class="dialog-btn dialog-btn-secondary cancel-btn">
+          <i class="fas fa-times"></i> إلغاء
+        </button>
+        <button class="dialog-btn dialog-btn-primary confirm-btn">
+          <i class="fas fa-check"></i> تأكيد
+        </button>
+      </div>
+    </div>
+  `;
+  
+  // إضافة مربع الحوار إلى الصفحة
+  document.body.appendChild(dialog);
+  
+  // إظهار مربع الحوار
+  setTimeout(() => {
+    dialog.classList.add('show');
+  }, 10);
+  
+  // إضافة مستمعي الأحداث
+  const closeBtn = dialog.querySelector('.close-btn');
+  const cancelBtn = dialog.querySelector('.cancel-btn');
+  const confirmBtn = dialog.querySelector('.confirm-btn');
+  
+  // دالة إغلاق مربع الحوار
+  const closeDialog = () => {
+    dialog.classList.remove('show');
+    setTimeout(() => {
+      document.body.removeChild(dialog);
+    }, 300);
+  };
+  
+  closeBtn.addEventListener('click', () => {
+    closeDialog();
+    if (cancelCallback) cancelCallback();
+  });
+  
+  cancelBtn.addEventListener('click', () => {
+    closeDialog();
+    if (cancelCallback) cancelCallback();
+  });
+  
+  confirmBtn.addEventListener('click', () => {
+    closeDialog();
+    if (confirmCallback) confirmCallback();
+  });
+}
+
+// إظهار شريط التحميل
+function showLoadingOverlay(message = 'جاري التحميل...', hasProgress = false) {
+  // إنشاء عناصر شريط التحميل
+  const overlay = document.createElement('div');
+  overlay.className = 'loading-overlay';
+  
+  let progressHTML = '';
+  if (hasProgress) {
+    progressHTML = `
+      <div class="loading-progress">
+        <div class="loading-progress-bar" style="width: 0%"></div>
+      </div>
+    `;
+  }
+  
+  overlay.innerHTML = `
+    <div class="loading-spinner-container">
+      <div class="loading-spinner"></div>
+      <p class="loading-text">${message}</p>
+      ${progressHTML}
+    </div>
+  `;
+  
+  // إضافة شريط التحميل إلى الصفحة
+  document.body.appendChild(overlay);
+  
+  // إظهار شريط التحميل
+  setTimeout(() => {
+    overlay.classList.add('show');
+  }, 10);
+  
+  // إرجاع كائن يحتوي على دوال للتحكم في شريط التحميل
+  return {
+    updateMessage: (newMessage) => {
+      overlay.querySelector('.loading-text').textContent = newMessage;
+    },
+    updateProgress: (progress) => {
+      if (hasProgress) {
+        overlay.querySelector('.loading-progress-bar').style.width = `${progress}%`;
+      }
+    },
+    hide: () => {
+      overlay.classList.remove('show');
+      setTimeout(() => {
+        document.body.removeChild(overlay);
+      }, 300);
+    }
+  };
+}
+
+// إظهار تنبيه عند وجود تغييرات غير محفوظة
+function showUnsavedChangesAlert(saveCallback, discardCallback) {
+  // إنشاء عناصر التنبيه
+  const alert = document.createElement('div');
+  alert.className = 'unsaved-changes-alert';
+  
+  alert.innerHTML = `
+    <div class="alert-icon">
+      <i class="fas fa-exclamation-triangle"></i>
+    </div>
+    <div class="alert-content">
+      <p>لديك تغييرات غير محفوظة. هل تريد حفظها؟</p>
+      <div class="alert-actions">
+        <button class="alert-btn alert-btn-primary save-btn">حفظ التغييرات</button>
+        <button class="alert-btn alert-btn-secondary discard-btn">تجاهل</button>
+      </div>
+    </div>
+  `;
+  
+  // إضافة التنبيه إلى الصفحة
+  document.body.appendChild(alert);
+  
+  // إظهار التنبيه
+  setTimeout(() => {
+    alert.classList.add('show');
+  }, 10);
+  
+  // إضافة مستمعي الأحداث
+  const saveBtn = alert.querySelector('.save-btn');
+  const discardBtn = alert.querySelector('.discard-btn');
+  
+  // دالة إغلاق التنبيه
+  const closeAlert = () => {
+    alert.classList.remove('show');
+    setTimeout(() => {
+      document.body.removeChild(alert);
+    }, 300);
+  };
+  
+  saveBtn.addEventListener('click', () => {
+    closeAlert();
+    if (saveCallback) saveCallback();
+  });
+  
+  discardBtn.addEventListener('click', () => {
+    closeAlert();
+    if (discardCallback) discardCallback();
+  });
+  
+  // إرجاع دالة لإغلاق التنبيه
+  return closeAlert;
+}
+
+// مراقبة مغادرة الصفحة
+let hasUnsavedChanges = false;
+
+function setUnsavedChanges(value) {
+  hasUnsavedChanges = value;
+}
+
+// إضافة مستمع حدث قبل مغادرة الصفحة
+window.addEventListener('beforeunload', (e) => {
+  if (hasUnsavedChanges) {
+    // رسالة قياسية ستظهر في المتصفح (لا يمكن تخصيصها في المتصفحات الحديثة)
+    e.preventDefault();
+    e.returnValue = '';
+    
+    // إظهار تنبيه مخصص (سيظهر بعد عودة المستخدم إلى الصفحة)
+    setTimeout(() => {
+      showUnsavedChangesAlert(
+        () => { /* حفظ التغييرات */ },
+        () => { /* تجاهل التغييرات */ }
+      );
+    }, 100);
+    
+    return e.returnValue;
+  }
+});
+
+// مراقبة التغييرات في نماذج الإعدادات
+document.addEventListener('DOMContentLoaded', () => {
+  const settingsForm = document.querySelector('.settings-section form');
+  if (settingsForm) {
+    const formInputs = settingsForm.querySelectorAll('input, select, textarea');
+    
+    formInputs.forEach(input => {
+      input.addEventListener('change', () => {
+        setUnsavedChanges(true);
+        
+        // إظهار تنبيه في أسفل الصفحة
+        showUnsavedChangesAlert(
+          () => {
+            // حفظ التغييرات
+            settingsForm.dispatchEvent(new Event('submit'));
+            setUnsavedChanges(false);
+          },
+          () => {
+            // تجاهل التغييرات
+            setUnsavedChanges(false);
+          }
+        );
+      });
+    });
+    
+    // عند تقديم النموذج، قم بتعيين التغييرات غير المحفوظة إلى false
+    settingsForm.addEventListener('submit', () => {
+      setUnsavedChanges(false);
+    });
+  }
+});
+    
+    // التحقق من إذن الإشعارات
+    function checkNotificationPermission() {
+      const statusElement = document.getElementById('notificationPermissionStatus');
+      
+      if (!('Notification' in window)) {
+        statusElement.innerHTML = '<span class="status-error"><i class="fas fa-times-circle"></i> الإشعارات غير مدعومة في هذا المتصفح</span>';
+        document.getElementById('notificationsEnabled').disabled = true;
+        toggleNotificationDependentSettings(false);
+        return;
+      }
+      
+      if (Notification.permission === 'granted') {
+        statusElement.innerHTML = '<span class="status-success"><i class="fas fa-check-circle"></i> تم منح إذن الإشعارات</span>';
+        toggleNotificationDependentSettings(true);
+      } else if (Notification.permission === 'denied') {
+        statusElement.innerHTML = '<span class="status-error"><i class="fas fa-times-circle"></i> تم رفض إذن الإشعارات. يرجى تغيير الإعدادات في متصفحك</span>';
+        document.getElementById('notificationsEnabled').disabled = true;
+        toggleNotificationDependentSettings(false);
+      } else {
+        statusElement.innerHTML = '<button class="btn secondary-btn request-permission-btn" onclick="requestNotificationPermission()"><i class="fas fa-bell"></i> طلب إذن الإشعارات</button>';
+        toggleNotificationDependentSettings(document.getElementById('notificationsEnabled').checked);
+      }
+    }
+    
+    // طلب إذن الإشعارات
+    function requestNotificationPermission() {
+      Notification.requestPermission().then(function(permission) {
+        checkNotificationPermission();
+      });
+    }
+    
+    // تبديل حالة إعدادات الإشعارات التابعة
+    function toggleNotificationDependentSettings(enabled) {
+      const dependentSettings = document.querySelectorAll('.notification-dependent input');
+      dependentSettings.forEach(setting => {
+        setting.disabled = !enabled;
+      });
+    }
+    
+    // تبديل حالة إعدادات التحقق التلقائي التابعة
+    function toggleAutoCheckDependentSettings(enabled) {
+      const dependentSettings = document.querySelectorAll('.auto-check-dependent input');
+      dependentSettings.forEach(setting => {
+        setting.disabled = !enabled;
+      });
+    }
+    
+    // تحديث قيمة الفاصل الزمني
+    function updateIntervalValue() {
+      document.getElementById('intervalValue').textContent = document.getElementById('checkInterval').value;
+    }
+    
+    // إضافة سيرفر جديد
+    function addNewServer() {
+      const serversList = document.getElementById('serversList');
+      const serverCount = serversList.children.length + 1;
+      
+      const serverItem = document.createElement('div');
+      serverItem.className = 'server-item';
+      serverItem.id = `server-${serverCount}`;
+      
+      serverItem.innerHTML = `
+        <div class="server-header">
+          <h4>سيرفر جديد</h4>
+          <button class="btn icon-btn move-server-up-btn" onclick="moveServerUp(${serverCount})" aria-label="نقل لأعلى" title="نقل لأعلى">
+            <i class="fas fa-arrow-up"></i>
+          </button>
+          <button class="btn icon-btn move-server-down-btn" onclick="moveServerDown(${serverCount})" aria-label="نقل لأسفل" title="نقل لأسفل">
+            <i class="fas fa-arrow-down"></i>
+          </button>
+          <button class="btn icon-btn remove-server-btn" onclick="removeServer(${serverCount})" aria-label="حذف السيرفر" title="حذف السيرفر">
+            <i class="fas fa-trash"></i>
+          </button>
+        </div>
+        <div class="setting-item">
+          <label for="serverName-${serverCount}">اسم السيرفر:</label>
+          <input type="text" id="serverName-${serverCount}" placeholder="أدخل اسم السيرفر" value="سيرفر جديد">
+        </div>
+        <div class="setting-item">
+          <label for="serverAddress-${serverCount}">عنوان السيرفر:</label>
+          <input type="text" id="serverAddress-${serverCount}" placeholder="أدخل عنوان السيرفر أو IP">
+        </div>
+        <div class="setting-item">
+          <label for="serverPort-${serverCount}">المنفذ:</label>
+          <input type="number" id="serverPort-${serverCount}" placeholder="25565" min="1" max="65535" value="25565">
+        </div>
+        <div class="setting-item">
+          <label for="serverEdition-${serverCount}">إصدار ماين كرافت:</label>
+          <select id="serverEdition-${serverCount}">
+            <option value="java">Java Edition</option>
+            <option value="bedrock">Bedrock Edition</option>
+          </select>
+        </div>
+        <div class="server-status">
+          <button class="btn secondary-btn test-server-btn" onclick="testServerConnection(${serverCount})">
+            <i class="fas fa-vial"></i> اختبار الاتصال
+          </button>
+          <div id="serverTestResult-${serverCount}" class="server-test-result"></div>
+        </div>
+      `;
+      
+      serversList.appendChild(serverItem);
+      
+      // تمرير إلى السيرفر الجديد
+      serverItem.scrollIntoView({ behavior: 'smooth' });
+      
+      // إظهار إشعار
+      showNotification('تم إضافة سيرفر جديد', 'success');
+    }
+    
+    // حذف سيرفر
+    function removeServer(serverId) {
+      if (document.getElementById('serversList').children.length <= 1) {
+        showNotification('لا يمكن حذف السيرفر الوحيد', 'error');
+        return;
+      }
+      
+      showConfirmDialog(
+        'حذف السيرفر',
+        'هل أنت متأكد من أنك تريد حذف هذا السيرفر؟',
+        function() {
+          const serverElement = document.getElementById(`server-${serverId}`);
+          serverElement.remove();
+          showNotification('تم حذف السيرفر بنجاح', 'success');
+        }
+      );
+    }
+    
+    // اختبار اتصال السيرفر
+    function testServerConnection(serverId) {
+      const resultElement = document.getElementById(`serverTestResult-${serverId}`);
+      const serverAddress = document.getElementById(`serverAddress-${serverId}`).value;
+      const serverPort = document.getElementById(`serverPort-${serverId}`).value;
+      const serverEdition = document.getElementById(`serverEdition-${serverId}`).value;
+      
+      if (!serverAddress) {
+        resultElement.innerHTML = '<span class="status-error"><i class="fas fa-times-circle"></i> يرجى إدخال عنوان السيرفر</span>';
+        return;
+      }
+      
+      resultElement.innerHTML = '<span class="status-pending"><i class="fas fa-spinner fa-spin"></i> جاري الاختبار...</span>';
+      
+      // استدعاء API للتحقق من حالة السيرفر
+      const apiEndpoint = document.getElementById('apiEndpoint').value || 'https://minecraft-server-status.up.railway.app/api/status';
+      const apiKey = document.getElementById('apiKey').value;
+      
+      fetch(`${apiEndpoint}?address=${encodeURIComponent(serverAddress)}&port=${serverPort}&edition=${serverEdition}`, {
+        headers: apiKey ? { 'Authorization': `Bearer ${apiKey}` } : {}
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`فشل الاتصال: ${response.status} ${response.statusText}`);
+        }
+        return response.json();
+      })
+      .then(data => {
+        if (data.online) {
+          resultElement.innerHTML = `
+            <span class="status-success"><i class="fas fa-check-circle"></i> متصل</span>
+            <div class="server-details">
+              <p><strong>الإصدار:</strong> ${data.version || 'غير معروف'}</p>
+              <p><strong>اللاعبين:</strong> ${data.players?.online || 0}/${data.players?.max || 0}</p>
+              <p><strong>وقت الاستجابة:</strong> ${data.ping || 0}ms</p>
+            </div>
+          `;
+        } else {
+          resultElement.innerHTML = '<span class="status-error"><i class="fas fa-times-circle"></i> السيرفر غير متصل</span>';
+        }
+      })
+      .catch(error => {
+        resultElement.innerHTML = `<span class="status-error"><i class="fas fa-times-circle"></i> ${error.message}</span>`;
+      });
+    }
+    
+    // اختبار اتصال API
+    function testApiConnection() {
+      const resultElement = document.getElementById('apiTestResult');
+      const apiEndpoint = document.getElementById('apiEndpoint').value;
+      
+      if (!apiEndpoint) {
+        resultElement.innerHTML = '<span class="status-error"><i class="fas fa-times-circle"></i> يرجى إدخال عنوان API</span>';
+        return;
+      }
+      
+      resultElement.innerHTML = '<span class="status-pending"><i class="fas fa-spinner fa-spin"></i> جاري الاختبار...</span>';
+      
+      fetch(`${apiEndpoint}/ping`)
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`فشل الاتصال: ${response.status} ${response.statusText}`);
+        }
+        return response.json();
+      })
+      .then(data => {
+        resultElement.innerHTML = '<span class="status-success"><i class="fas fa-check-circle"></i> تم الاتصال بنجاح</span>';
+      })
+      .catch(error => {
+        resultElement.innerHTML = `<span class="status-error"><i class="fas fa-times-circle"></i> ${error.message}</span>`;
+      });
+    }
+    
+    // تبديل رؤية كلمة المرور
+    function togglePasswordVisibility(inputId) {
+      const input = document.getElementById(inputId);
+      const button = input.nextElementSibling;
+      const icon = button.querySelector('i');
+      
+      if (input.type === 'password') {
+        input.type = 'text';
+        icon.className = 'fas fa-eye-slash';
+      } else {
+        input.type = 'password';
+        icon.className = 'fas fa-eye';
+      }
+    }
+    
+    // حفظ جميع الإعدادات
+    function saveAllSettings() {
+      // جمع إعدادات المظهر
+      const themeSettings = {
+        theme: document.getElementById('themeSelect').value,
+        accentColor: document.querySelector('.color-option.active')?.getAttribute('data-color') || '#00ffd5'
+      };
+      
+      // جمع إعدادات الإشعارات
+      const notificationSettings = {
+        enabled: document.getElementById('notificationsEnabled').checked,
+        notifyOnOffline: document.getElementById('notifyOnOffline').checked,
+        notifyOnOnline: document.getElementById('notifyOnOnline').checked,
+        notifyOnPlayerJoin: document.getElementById('notifyOnPlayerJoin').checked,
+        notifyOnPlayerCount: document.getElementById('notifyOnPlayerCount').checked
+      };
+      
+      // جمع إعدادات التحقق التلقائي
+      const autoCheckSettings = {
+        enabled: document.getElementById('autoCheckEnabled').checked,
+        interval: parseInt(document.getElementById('checkInterval').value)
+      };
+      
+      // جمع إعدادات السيرفرات
+      const servers = [];
+      const serverElements = document.querySelectorAll('.server-item');
+      serverElements.forEach(serverElement => {
+        const serverId = serverElement.id.split('-')[1];
+        servers.push({
+          id: serverId,
+          name: document.getElementById(`serverName-${serverId}`).value,
+          address: document.getElementById(`serverAddress-${serverId}`).value,
+          port: parseInt(document.getElementById(`serverPort-${serverId}`).value),
+          edition: document.getElementById(`serverEdition-${serverId}`).value
+        });
+      });
+      
+      // جمع إعدادات API
+      const apiSettings = {
+        endpoint: document.getElementById('apiEndpoint').value,
+        key: document.getElementById('apiKey').value
+      };
+      
+      // جمع إعدادات البيانات
+      const dataSettings = {
+        maxHistoryEntries: parseInt(document.getElementById('maxHistoryEntries').value)
+      };
+      
+      // تجميع جميع الإعدادات
+      const settings = {
+        theme: themeSettings,
+        notifications: notificationSettings,
+        autoCheck: autoCheckSettings,
+        servers: servers,
+        api: apiSettings,
+        data: dataSettings,
+        lastUpdated: new Date().toISOString()
+      };
+      
+      // حفظ الإعدادات في التخزين المحلي
+      localStorage.setItem('minecraftMonitorSettings', JSON.stringify(settings));
+      
+      // إظهار إشعار نجاح
+      showNotification('تم حفظ الإعدادات بنجاح', 'success');
+    }
+    
+    // تحميل الإعدادات
+    function loadSettings() {
+      const settingsJson = localStorage.getItem('minecraftMonitorSettings');
+      if (!settingsJson) {
+        // إعدادات افتراضية إذا لم تكن موجودة
+        initializeDefaultSettings();
+        return;
+      }
+      
+      try {
+        const settings = JSON.parse(settingsJson);
+        
+        // تطبيق إعدادات المظهر
+        if (settings.theme) {
+          document.getElementById('themeSelect').value = settings.theme.theme || 'auto';
+          setAccentColor(settings.theme.accentColor || '#00ffd5');
+        }
+        
+        // تطبيق إعدادات الإشعارات
+        if (settings.notifications) {
+          document.getElementById('notificationsEnabled').checked = settings.notifications.enabled;
+          document.getElementById('notifyOnOffline').checked = settings.notifications.notifyOnOffline;
+          document.getElementById('notifyOnOnline').checked = settings.notifications.notifyOnOnline;
+          document.getElementById('notifyOnPlayerJoin').checked = settings.notifications.notifyOnPlayerJoin;
+          document.getElementById('notifyOnPlayerCount').checked = settings.notifications.notifyOnPlayerCount || false  ;
+        }
+
+        // تطبيق إعدادات التحقق التلقائي     
+        if (settings.autoCheck) {
+          document.getElementById('autoCheckEnabled').checked = settings.autoCheck.enabled;
+          document.getElementById('checkInterval').value = settings.autoCheck.interval || 10;
+          updateIntervalValue();
+        }
+
+        // تطبيق إعدادات السيرفرات    
+        if (settings.servers) {
+          settings.servers.forEach(server => {
+            addNewServer();
+            const serverId = server.id || (document.querySelectorAll('.server-item').length + 1);
+            document.getElementById(`serverName-${serverId}`).value = server.name;
+            document.getElementById(`serverAddress-${serverId}`).value = server.address;
+            document.getElementById(`serverPort-${serverId}`).value = server.port;
+            document.getElementById(`serverEdition-${serverId}`).value = server.edition;
+          })
+        } else {
+          addNewServer();
+        } 
+
+        // تطبيق إعدادات API  
+        if (settings.api) {
+          document.getElementById('apiEndpoint').value = settings.api.endpoint;
+          document.getElementById('apiKey').value = settings.api.key; 
+        } 
+
+        // تطبيق إعدادات البيانات
+        if (settings.data) {
+          document.getElementById('maxHistoryEntries').value = settings.data.maxHistoryEntries || 10;
+        }   
+      } catch (error) {
+        console.error('حدث خطأ أثناء تحميل الإعدادات:', error);
+        initializeDefaultSettings();
+      } 
+    }
+  </script>
+</body>
+</html>

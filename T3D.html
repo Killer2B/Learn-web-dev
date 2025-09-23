@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>صينية تقديم ثلاثية الأبعاد</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body { 
+      font-family: 'Cairo', sans-serif; 
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      margin: 0;
+      min-height: 100vh;
+      padding: 20px;
+    }
+    
+    .container { 
+      max-width: 1000px; 
+      margin: 0 auto; 
+      background: #fff; 
+      border-radius: 20px; 
+      box-shadow: 0 10px 40px rgba(0,0,0,0.1); 
+      padding: 40px;
+      backdrop-filter: blur(10px);
+    }
+    
+    h1 { 
+      color: #7c4d03; 
+      text-align: center;
+      margin-bottom: 30px;
+      font-weight: 700;
+      font-size: 2.5rem;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    .product-info { 
+      display: flex; 
+      gap: 40px; 
+      align-items: center; 
+      flex-wrap: wrap; 
+    }
+    
+    #viewer { 
+      width: 450px; 
+      height: 450px; 
+      background: linear-gradient(145deg, #e6e6e6, #ffffff);
+      border-radius: 20px; 
+      box-shadow: inset 5px 5px 10px #d1d1d1, inset -5px -5px 10px #ffffff;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    #viewer canvas {
+      border-radius: 20px;
+      display: block;
+    }
+    
+    .details { 
+      flex: 1;
+      min-width: 300px;
+    }
+    
+    .details p {
+      font-size: 1.1rem;
+      line-height: 1.8;
+      color: #555;
+      margin-bottom: 20px;
+      text-align: justify;
+    }
+    
+    .price { 
+      font-size: 2.5rem; 
+      color: #d4a017; 
+      margin: 20px 0; 
+      font-weight: 700;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    .buy-btn { 
+      background: linear-gradient(45deg, #d4a017, #f4c542);
+      color: #fff; 
+      border: none; 
+      padding: 18px 36px; 
+      font-size: 1.3rem; 
+      border-radius: 12px; 
+      cursor: pointer; 
+      transition: all 0.3s ease;
+      font-family: 'Cairo', sans-serif;
+      font-weight: 600;
+      box-shadow: 0 4px 15px rgba(212, 160, 23, 0.3);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    
+    .buy-btn:hover { 
+      background: linear-gradient(45deg, #b88c0b, #d4a017);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(212, 160, 23, 0.4);
+    }
+    
+    .buy-btn:active {
+      transform: translateY(0);
+    }
+    
+    .controls-info {
+      margin-top: 20px;
+      padding: 15px;
+      background: #f8f9fa;
+      border-radius: 10px;
+      border-right: 4px solid #d4a017;
+    }
+    
+    .controls-info h3 {
+      color: #7c4d03;
+      margin-bottom: 10px;
+      font-size: 1.1rem;
+    }
+    
+    .controls-info ul {
+      list-style: none;
+      padding: 0;
+    }
+    
+    .controls-info li {
+      color: #666;
+      margin-bottom: 5px;
+      font-size: 0.95rem;
+    }
+    
+    .controls-info li:before {
+      content: "👆 ";
+      margin-left: 5px;
+    }
+    
+    @media (max-width: 768px) {
+      .container {
+        padding: 20px;
+      }
+      
+      .product-info {
+        flex-direction: column;
+        text-align: center;
+      }
+      
+      #viewer {
+        width: 100%;
+        max-width: 400px;
+        height: 400px;
+      }
+      
+      h1 {
+        font-size: 2rem;
+      }
+      
+      .price {
+        font-size: 2rem;
+      }
+    }
+    
+    .loading {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: #7c4d03;
+      font-size: 1.2rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>صينية تقديم خشبية فاخرة</h1>
+    <div class="product-info">
+      <div id="viewer">
+        <div class="loading">جاري التحميل...</div>
+      </div>
+      <div class="details">
+        <p>
+          صينية تقديم أنيقة مصنوعة من أجود أنواع الخشب الطبيعي، مثالية لتقديم القهوة والشاي والحلويات. 
+          تصميم عصري وأنيق يناسب جميع المناسبات، مع جودة عالية ومتانة استثنائية تدوم لسنوات طويلة.
+        </p>
+        <div class="price">السعر: 350 جنيه</div>
+        <button class="buy-btn" onclick="handlePurchase()">اشتري الآن</button>
+        
+        <div class="controls-info">
+          <h3>كيفية التحكم في العرض ثلاثي الأبعاد:</h3>
+          <ul>
+            <li>اسحب بالماوس لتدوير الصينية</li>
+            <li>استخدم عجلة الماوس للتكبير والتصغير</li>
+            <li>انقر واسحب بالزر الأيمن للتحريك</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Three.js CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  
+  <script>
+    // متغيرات عامة
+    let scene, camera, renderer, controls;
+    let tray, handle1, handle2;
+    
+    // إعداد المشهد الثلاثي الأبعاد
+    function initThreeJS() {
+      // إنشاء المشهد
+      scene = new THREE.Scene();
+      scene.background = new THREE.Color(0xf5f5f5);
+      
+      // إعداد الكاميرا
+      const viewerElement = document.getElementById('viewer');
+      const width = viewerElement.clientWidth;
+      const height = viewerElement.clientHeight;
+      
+      camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000);
+      camera.position.set(8, 8, 15);
+      
+      // إعداد المرسم
+      renderer = new THREE.WebGLRenderer({ 
+        antialias: true,
+        alpha: true
+      });
+      renderer.setSize(width, height);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      renderer.shadowMap.enabled = true;
+      renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+      renderer.outputEncoding = THREE.sRGBEncoding;
+      
+      // إخفاء رسالة التحميل وإضافة المرسم
+      viewerElement.querySelector('.loading').style.display = 'none';
+      viewerElement.appendChild(renderer.domElement);
+      
+      // إضافة الإضاءة
+      setupLighting();
+      
+      // إنشاء الصينية
+      createTray();
+      
+      // إعداد التحكم
+      setupControls();
+      
+      // بدء الرسم
+      animate();
+    }
+    
+    // إعداد الإضاءة
+    function setupLighting() {
+      // إضاءة محيطة
+      const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+      scene.add(ambientLight);
+      
+      // إضاءة اتجاهية
+      const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+      directionalLight.position.set(10, 20, 10);
+      directionalLight.castShadow = true;
+      directionalLight.shadow.mapSize.width = 2048;
+      directionalLight.shadow.mapSize.height = 2048;
+      scene.add(directionalLight);
+      
+      // إضاءة نقطية
+      const pointLight = new THREE.PointLight(0xffd700, 0.5, 100);
+      pointLight.position.set(-10, 10, -10);
+      scene.add(pointLight);
+    }
+    
+    // إنشاء الصينية
+    function createTray() {
+      // جسم الصينية الرئيسي
+      const trayGeometry = new THREE.CylinderGeometry(6, 6, 0.8, 64);
+      const trayMaterial = new THREE.MeshStandardMaterial({ 
+        color: 0xc2a060,
+        roughness: 0.3,
+        metalness: 0.1,
+        map: createWoodTexture()
+      });
+      
+      tray = new THREE.Mesh(trayGeometry, trayMaterial);
+      tray.castShadow = true;
+      tray.receiveShadow = true;
+      scene.add(tray);
+      
+      // إنشاء المقابض
+      createHandles();
+      
+      // إضافة أرضية
+      createGround();
+    }
+    
+    // إنشاء نسيج خشبي بسيط
+    function createWoodTexture() {
+      const canvas = document.createElement('canvas');
+      canvas.width = 512;
+      canvas.height = 512;
+      const context = canvas.getContext('2d');
+      
+      // لون خشبي أساسي
+      context.fillStyle = '#c2a060';
+      context.fillRect(0, 0, 512, 512);
+      
+      // خطوط الخشب
+      context.strokeStyle = '#8d6e36';
+      context.lineWidth = 2;
+      for (let i = 0; i < 20; i++) {
+        context.beginPath();
+        context.moveTo(0, i * 25);
+        context.lineTo(512, i * 25 + Math.sin(i) * 10);
+        context.stroke();
+      }
+      
+      const texture = new THREE.CanvasTexture(canvas);
+      texture.wrapS = THREE.RepeatWrapping;
+      texture.wrapT = THREE.RepeatWrapping;
+      texture.repeat.set(2, 2);
+      
+      return texture;
+    }
+    
+    // إنشاء المقابض
+    function createHandles() {
+      const handleGeometry = new THREE.TorusGeometry(1.2, 0.25, 16, 100, Math.PI);
+      const handleMaterial = new THREE.MeshStandardMaterial({ 
+        color: 0x8d6e36,
+        roughness: 0.4,
+        metalness: 0.2
+      });
+      
+      // المقبض الأول
+      handle1 = new THREE.Mesh(handleGeometry, handleMaterial);
+      handle1.position.set(0, 0.6, 6.3);
+      handle1.rotation.x = Math.PI / 2;
+      handle1.castShadow = true;
+      scene.add(handle1);
+      
+      // المقبض الثاني
+      handle2 = handle1.clone();
+      handle2.position.set(0, 0.6, -6.3);
+      scene.add(handle2);
+    }
+    
+    // إنشاء الأرضية
+    function createGround() {
+      const groundGeometry = new THREE.PlaneGeometry(50, 50);
+      const groundMaterial = new THREE.MeshStandardMaterial({ 
+        color: 0xf5f5f5,
+        transparent: true,
+        opacity: 0.5
+      });
+      
+      const ground = new THREE.Mesh(groundGeometry, groundMaterial);
+      ground.rotation.x = -Math.PI / 2;
+      ground.position.y = -2;
+      ground.receiveShadow = true;
+      scene.add(ground);
+    }
+    
+    // إعداد التحكم
+    function setupControls() {
+      // استخدام مكتبة التحكم المدمجة
+      const OrbitControls = function(camera, domElement) {
+        this.camera = camera;
+        this.domElement = domElement;
+        this.enableDamping = true;
+        this.dampingFactor = 0.05;
+        this.enableZoom = true;
+        this.autoRotate = false;
+        this.autoRotateSpeed = 1;
+        
+        let isMouseDown = false;
+        let mouseX = 0;
+        let mouseY = 0;
+        let targetRotationX = 0;
+        let targetRotationY = 0;
+        let currentRotationX = 0;
+        let currentRotationY = 0;
+        
+        this.domElement.addEventListener('mousedown', onMouseDown, false);
+        this.domElement.addEventListener('mousemove', onMouseMove, false);
+        this.domElement.addEventListener('mouseup', onMouseUp, false);
+        this.domElement.addEventListener('wheel', onMouseWheel, false);
+        
+        function onMouseDown(event) {
+          isMouseDown = true;
+          mouseX = event.clientX;
+          mouseY = event.clientY;
+        }
+        
+        function onMouseMove(event) {
+          if (!isMouseDown) return;
+          
+          const deltaX = event.clientX - mouseX;
+          const deltaY = event.clientY - mouseY;
+          
+          targetRotationX += deltaY * 0.01;
+          targetRotationY += deltaX * 0.01;
+          
+          mouseX = event.clientX;
+          mouseY = event.clientY;
+        }
+        
+        function onMouseUp() {
+          isMouseDown = false;
+        }
+        
+        function onMouseWheel(event) {
+          const delta = event.deltaY;
+          camera.position.z += delta * 0.01;
+          camera.position.z = Math.max(5, Math.min(25, camera.position.z));
+        }
+        
+        this.update = function() {
+          currentRotationX += (targetRotationX - currentRotationX) * 0.05;
+          currentRotationY += (targetRotationY - currentRotationY) * 0.05;
+          
+          const radius = camera.position.length();
+          camera.position.x = radius * Math.sin(currentRotationY) * Math.cos(currentRotationX);
+          camera.position.y = radius * Math.sin(currentRotationX);
+          camera.position.z = radius * Math.cos(currentRotationY) * Math.cos(currentRotationX);
+          
+          camera.lookAt(scene.position);
+        };
+      };
+      
+      controls = new OrbitControls(camera, renderer.domElement);
+    }
+    
+    // حلقة الرسم
+    function animate() {
+      requestAnimationFrame(animate);
+      
+      if (controls) {
+        controls.update();
+      }
+      
+      // تحريك بسيط للصينية
+      if (tray) {
+        tray.rotation.y += 0.005;
+      }
+      
+      renderer.render(scene, camera);
+    }
+    
+    // معالجة تغيير حجم النافذة
+    function handleResize() {
+      const viewerElement = document.getElementById('viewer');
+      const width = viewerElement.clientWidth;
+      const height = viewerElement.clientHeight;
+      
+      camera.aspect = width / height;
+      camera.updateProjectionMatrix();
+      renderer.setSize(width, height);
+    }
+    
+    // معالجة عملية الشراء
+    function handlePurchase() {
+      alert('شكراً لاهتمامك! سيتم توجيهك لصفحة الدفع قريباً.');
+    }
+    
+    // بدء التطبيق عند تحميل الصفحة
+    window.addEventListener('load', initThreeJS);
+    window.addEventListener('resize', handleResize);
+  </script>
+</body>
+</html>

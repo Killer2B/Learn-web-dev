@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <title>Slider with Volume Icon</title>
   <style>
-    /* From Uiverse.io by seyed-mohsen-mousavi */
+  
     .slider {
       /* slider */
       --slider-width: 100%;

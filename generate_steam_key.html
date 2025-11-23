@@ -112,5 +112,45 @@
     </div>
 
 
+    <script>
+        // Secure key generator using crypto API
+        function generateSecureKey(length) {
+            const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+[]{}|;:,.<>?";
+            const randomValues = new Uint32Array(length);
+            crypto.getRandomValues(randomValues);
+
+            let key = "";
+            for (let i = 0; i < length; i++) {
+                key += characters[randomValues[i] % characters.length];
+            }
+            return key;
+        }
+
+        // Form handler
+        document.getElementById("keyForm").addEventListener("submit", function(e) {
+            e.preventDefault();
+
+            const length = Number(document.getElementById("keyLength").value);
+
+            if (length < 1) {
+                alert("Enter a length greater than 0.");
+                return;
+            }
+
+            const key = generateSecureKey(length);
+
+            const resultBox = document.getElementById("resultBox");
+            resultBox.style.display = "block";
+            resultBox.innerText = "Generated Key: " + key;
+
+            const copyBtn = document.getElementById("copyBtn");
+            copyBtn.style.display = "block";
+            copyBtn.onclick = () => {
+                navigator.clipboard.writeText(key);
+                copyBtn.innerText = "Copied!";
+                setTimeout(() => copyBtn.innerText = "Copy Key", 1500);
+            };
+        });
+    </script>
 </body>
 </html>

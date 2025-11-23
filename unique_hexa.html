@@ -466,3 +466,139 @@ function wireUI(){
     };
     input.click();
   });
+
+  /* presets: local store */
+  $('savePreset').addEventListener('click', ()=>{
+    const name = prompt('اسم القالب الجديد:','preset-'+Date.now());
+    if(!name) return;
+    const presets = loadPresets();
+    const preset = {
+      name,
+      ts: Date.now(),
+      state: {
+        cellSize: state.cellSize, amplitude: state.amplitude, decay: state.decay,
+        cells: state.cells.map(c=>({c:c.c,r:c.r,q:c.q}))
+      }
+    };
+    presets.unshift(preset);
+    localStorage.setItem(PRESETS_KEY, JSON.stringify(presets));
+    renderPresets();
+  });
+
+  renderPresets();
+}
+
+/* presets UI rendering */
+function loadPresets(){
+  try{
+    const raw = localStorage.getItem(PRESETS_KEY);
+    if(!raw) return [];
+    return JSON.parse(raw);
+  }catch(e){ return [];}
+}
+function renderPresets(){
+  const container = $('presets');
+  container.innerHTML = '';
+  const presets = loadPresets();
+  for(const p of presets){
+    const el = document.createElement('div');
+    el.className='preset-item';
+    el.innerHTML = `<div style="flex:1">${p.name} <div class="muted small">${new Date(p.ts).toLocaleString()}</div></div>`;
+    const actions = document.createElement('div');
+    actions.style.display='flex'; actions.style.gap='6px';
+    const loadBtn = document.createElement('button'); loadBtn.className='btn small'; loadBtn.textContent='تحميل';
+    const delBtn = document.createElement('button'); delBtn.className='btn small'; delBtn.textContent='حذف';
+    loadBtn.onclick = ()=>{
+      // apply
+      const s = p.state;
+      if(s.cellSize) state.cellSize = Number(s.cellSize);
+      if(s.amplitude) state.amplitude = Number(s.amplitude);
+      if(s.decay) state.decay = Number(s.decay);
+      if(Array.isArray(s.cells)){
+        for(const c of s.cells){
+          const match = state.cells.find(x=>x.c===c.c && x.r===c.r);
+          if(match) match.q = Number(c.q||0);
+        }
+      }
+      $('cellSize').value = state.cellSize; $('sizeLabel').innerText = state.cellSize;
+      $('amplitude').value = state.amplitude; $('ampLabel').innerText = state.amplitude.toFixed(1);
+      $('decay').value = state.decay; $('decayLabel').innerText = state.decay.toFixed(2);
+      saveState();
+    };
+    delBtn.onclick = ()=>{
+      if(!confirm('حذف القالب نهائيًا؟')) return;
+      const arr = loadPresets().filter(x=>x!==p);
+      localStorage.setItem(PRESETS_KEY, JSON.stringify(arr));
+      renderPresets();
+    };
+    actions.appendChild(loadBtn); actions.appendChild(delBtn);
+    el.appendChild(actions);
+    container.appendChild(el);
+  }
+}
+
+/* Save/load state to localStorage */
+function saveState(){
+  const payload = {
+    cellSize: state.cellSize,
+    amplitude: state.amplitude,
+    decay: state.decay,
+    cells: state.cells.map(c=>({c:c.c,r:c.r,q:c.q}))
+  };
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
+}
+let saveTimeout = null;
+function saveStateDebounced(){
+  if(saveTimeout) clearTimeout(saveTimeout);
+  saveTimeout = setTimeout(()=>{ saveState(); saveTimeout=null; }, 500);
+}
+
+function loadState(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(!raw) return;
+    const j = JSON.parse(raw);
+    if(j.cellSize) state.cellSize = Number(j.cellSize);
+    if(j.amplitude) state.amplitude = Number(j.amplitude);
+    if(j.decay) state.decay = Number(j.decay);
+    if(Array.isArray(j.cells) && state.cells.length){
+      for(const c of j.cells){
+        const match = state.cells.find(x=>x.c===c.c && x.r===c.r);
+        if(match) match.q = Number(c.q||0);
+      }
+    }
+    // update UI if wired later
+    if($('cellSize')){ $('cellSize').value = state.cellSize; $('sizeLabel').innerText = state.cellSize; }
+    if($('amplitude')){ $('amplitude').value = state.amplitude; $('ampLabel').innerText = state.amplitude.toFixed(1); }
+    if($('decay')){ $('decay').value = state.decay; $('decayLabel').innerText = state.decay.toFixed(2); }
+  }catch(e){}
+}
+
+/* init */
+function init(){
+  // make canvas full in view
+  const view = $('view');
+  canvas.width = Math.floor(view.clientWidth * DPR);
+  canvas.height = Math.floor(view.clientHeight * DPR);
+  canvas.style.width = view.clientWidth + 'px';
+  canvas.style.height = view.clientHeight + 'px';
+  resizeCanvas();
+  loadState();
+  wireUI();
+  lastTime = performance.now();
+  requestAnimationFrame(loop);
+}
+
+/* handle resize */
+let rr;
+window.addEventListener('resize', ()=>{ clearTimeout(rr); rr = setTimeout(()=>{ DPR = Math.max(1, window.devicePixelRatio||1); resizeCanvas(); }, 120); });
+
+/* init after DOM */
+document.addEventListener('DOMContentLoaded', init);
+
+/* periodically autosave state */
+setInterval(saveStateDebounced, 2000);
+
+</script>
+</body>
+</html>

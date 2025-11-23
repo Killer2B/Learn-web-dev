@@ -1,1 +1,468 @@
 
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Hexa-Flow — تفاعل سداسي مع حفظ الحالة</title>
+<style>
+  :root{
+    --bg:#0b1020;
+    --panel:#0f1724;
+    --accent:#7ee787;
+    --muted:#9aa4b2;
+    --cell-size:64px;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%;margin:0;font-family:Inter, system-ui, "Segoe UI", Roboto, "Helvetica Neue", Arial}
+  body{background:linear-gradient(180deg,var(--bg),#06101a);color:#e6eef6;display:flex;align-items:center;justify-content:center;padding:28px;}
+
+  .app {
+    width:100%;
+    max-width:1100px;
+    background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+    border-radius:12px;
+    padding:18px;
+    box-shadow: 0 10px 30px rgba(2,6,23,0.6);
+    display:grid;
+    grid-template-columns: 360px 1fr;
+    gap:18px;
+    min-height:540px;
+  }
+
+  /* left panel (controls) */
+  .panel {
+    background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.02));
+    border-radius:10px;padding:14px;display:flex;flex-direction:column;gap:12px;
+  }
+  h1{font-size:18px;margin:0;color:var(--accent)}
+  .muted{color:var(--muted);font-size:13px;margin-top:6px}
+
+  .controls{display:flex;flex-direction:column;gap:10px}
+  label{font-size:13px;color:var(--muted);display:flex;justify-content:space-between;align-items:center}
+  input[type="range"]{width:100%}
+  .row{display:flex;gap:8px}
+  .btn{background:transparent;border:1px solid rgba(255,255,255,0.06);padding:8px 10px;border-radius:8px;color:inherit;cursor:pointer}
+  .btn.primary{background:linear-gradient(90deg,#1464ff33,#00e0b833);border:1px solid rgba(255,255,255,0.06)}
+  .small{font-size:13px;padding:6px 8px;border-radius:6px}
+
+  /* presets list */
+  .presets{display:flex;flex-direction:column;gap:6px;max-height:180px;overflow:auto;padding-right:6px}
+  .preset-item{display:flex;justify-content:space-between;align-items:center;padding:8px;border-radius:8px;border:1px dashed rgba(255,255,255,0.02)}
+  .muted.small{font-size:12px}
+
+  /* right side: canvas area + overlay */
+  .stage {
+    position:relative;border-radius:10px;overflow:hidden;background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.015));display:flex;flex-direction:column;
+  }
+  .stage-header{display:flex;justify-content:space-between;align-items:center;padding:12px;border-bottom:1px solid rgba(255,255,255,0.02)}
+  .stage .view{flex:1;display:flex;align-items:center;justify-content:center;padding:12px;position:relative}
+  canvas{display:block;max-width:100%;height:auto}
+
+  /* footer controls on canvas */
+  .toolbar{position:absolute;left:12px;bottom:12px;background:rgba(3,6,12,0.45);backdrop-filter:blur(6px);padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);display:flex;gap:8px}
+  .info{position:absolute;right:12px;bottom:12px;background:rgba(255,255,255,0.02);padding:8px;border-radius:8px;font-size:13px;color:var(--muted)}
+
+  /* responsive */
+  @media (max-width:980px){
+    .app{grid-template-columns:1fr;min-height:680px}
+  }
+
+  /* focus outline for accessibility */
+  button:focus, input:focus{outline:2px solid rgba(126,231,135,0.14);outline-offset:2px}
+
+</style>
+</head>
+<body>
+  <div class="app" role="application" aria-label="Hexa-Flow interactive grid">
+    <div class="panel" aria-hidden="false">
+      <div>
+        <h1>Hexa-Flow</h1>
+        <div class="muted">شبكة سداسية تفاعلية — تفعيل نقطة يولد موجة لونية حسابية ويحفظ الحالة محليًا</div>
+      </div>
+
+      <div class="controls" id="controls">
+        <label>حجم الخلية <span id="sizeLabel">64</span>px
+          <input id="cellSize" type="range" min="32" max="120" value="64">
+        </label>
+
+        <label>شدة الموجة <span id="ampLabel">1.0</span>
+          <input id="amplitude" type="range" min="0" max="3" step="0.1" value="1">
+        </label>
+
+        <label>سرعة التلاشي <span id="decayLabel">0.9</span>
+          <input id="decay" type="range" min="0.6" max="0.99" step="0.01" value="0.9">
+        </label>
+
+        <div class="row">
+          <button class="btn primary" id="clearBtn" title="مسح الشبكة">مسح</button>
+          <button class="btn" id="randomizeBtn" title="توليد عشوائي">عشوائي</button>
+        </div>
+
+        <div style="display:flex;gap:8px">
+          <button class="btn small" id="exportBtn">تصدير JSON</button>
+          <button class="btn small" id="importBtn">استيراد JSON</button>
+        </div>
+
+        <hr style="border:0;border-top:1px solid rgba(255,255,255,0.02)">
+
+        <div>
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <div class="muted small">قوالب محفوظة</div>
+            <button class="btn small" id="savePreset">حفظ قالب</button>
+          </div>
+          <div class="presets" id="presets"></div>
+        </div>
+
+        <hr style="border:0;border-top:1px solid rgba(255,255,255,0.02)">
+
+        <div class="muted small">ملاحظات: النقر على خلية يولد تشكيل موجي؛ استخدم التصدير لمشاركة الحالة.</div>
+      </div>
+    </div>
+
+    <div class="stage" role="region" aria-label="Stage">
+      <div class="stage-header">
+        <div>عرض الشبكة</div>
+        <div class="muted">حالة محفوظة محليًا</div>
+      </div>
+      <div class="view" id="view">
+        <canvas id="c"></canvas>
+
+        <div class="toolbar" id="toolbar" aria-hidden="false">
+          <button class="btn small" id="pauseBtn">إيقاف</button>
+          <button class="btn small" id="stepBtn">خطوة</button>
+          <button class="btn small" id="centerBtn">مركز</button>
+        </div>
+
+        <div class="info" id="info">Cells: 0 — FPS: 0</div>
+      </div>
+    </div>
+  </div>
+
+<script>
+/*
+  Hexa-Flow
+  - grid of hex cells simulated on canvas
+  - clicking a cell injects energy and produces ripple via amplitude + decay
+  - deterministic color mapping using seeded hash of cell coords + time
+  - localStorage save/load + export/import JSON
+  - accessible labels and keyboard focus for basic controls
+*/
+
+/* Utilities */
+const $ = id => document.getElementById(id);
+const rand = (min,max)=> Math.random()*(max-min)+min;
+const clamp = (v,a,b)=> Math.max(a,Math.min(b,v));
+
+/* Seeded pseudo-random for reproducible color per cell */
+function xorshift(seed){
+  let x = seed || 123456789;
+  return ()=> {
+    x ^= x<<13; x ^= x>>>17; x ^= x<<5;
+    return (x >>> 0) / 4294967296;
+  };
+}
+
+/* Color utility: HSL -> RGB string */
+function hsl(h,s,l){ return `hsl(${h.toFixed(1)} ${s}% ${l}%)`; }
+
+/* Grid config and state */
+const canvas = $('c');
+const ctx = canvas.getContext('2d', { alpha:true });
+let DPR = Math.max(1, window.devicePixelRatio||1);
+
+let state = {
+  cellSize: 64,
+  amplitude: 1.0,
+  decay: 0.9,
+  cols: 0, rows:0,
+  cells: [], // each cell: {x,y,q:energy, id}
+  running: true
+};
+
+/* Persistence keys */
+const STORAGE_KEY = 'hexa-flow-v1';
+const PRESETS_KEY = 'hexa-flow-presets-v1';
+
+/* Build grid based on container size */
+function buildGrid(){
+  const pad = 10;
+  const width = canvas.width / DPR - pad*2;
+  const height = canvas.height / DPR - pad*2;
+  const s = state.cellSize;
+  const h = Math.sqrt(3)/2 * s; // vertical distance between centers
+  const cols = Math.max(3, Math.floor(width / (s*0.75)));
+  const rows = Math.max(3, Math.floor(height / h));
+  state.cols = cols; state.rows = rows;
+  state.cells = [];
+  let id=1;
+  for(let r=0;r<rows;r++){
+    for(let c=0;c<cols;c++){
+      const cx = pad + c * (s * 0.75) + (r%2 ? (s*0.375) : 0) + s/2;
+      const cy = pad + r * h + s*0.35;
+      state.cells.push({id: id++, c, r, x:cx, y:cy, q:0});
+    }
+  }
+}
+
+/* Resize canvas to element */
+function resizeCanvas(){
+  const rect = canvas.getBoundingClientRect();
+  canvas.width = Math.floor(rect.width * DPR);
+  canvas.height = Math.floor(rect.height * DPR);
+  canvas.style.width = rect.width + 'px';
+  canvas.style.height = rect.height + 'px';
+  buildGrid();
+}
+
+/* Neighbor lookup (axial via offset coords) */
+function neighbors(cell){
+  const dirs = [
+    [+1,0], [-1,0], [0,+1], [0,-1], [+1,-1], [-1,+1]
+  ];
+  const arr=[];
+  for(const [dc,dr] of dirs){
+    const nc = cell.c+dc, nr = cell.r+dr;
+    const found = state.cells.find(s => s.c===nc && s.r===nr);
+    if(found) arr.push(found);
+  }
+  return arr;
+}
+
+/* Inject energy to cell and spread */
+function tapCell(id, energy=1.6){
+  const cell = state.cells.find(s=>s.id===id);
+  if(!cell) return;
+  cell.q += energy * state.amplitude;
+}
+
+/* Deterministic hue for each cell based on coords */
+function cellHue(cell){
+  // combine coordinates into seed
+  const seed = (cell.c*73856093) ^ (cell.r*19349663) ^ 0x9e3779b9;
+  const rnd = xorshift(seed)();
+  // shift by fractional seconds for subtle motion
+  const t = performance.now() / 6000;
+  return (Math.floor(rnd*360) + (t*40)) % 360;
+}
+
+/* Simulation and draw */
+let lastTime = performance.now();
+let fpsLast = performance.now(), frames=0, currentFps=0;
+function step(dt){
+  // simple energy spread: each cell gives fraction to neighbors
+  const newQs = new Float32Array(state.cells.length);
+  for(let i=0;i<state.cells.length;i++){
+    newQs[i] = state.cells[i].q;
+  }
+  for(let i=0;i<state.cells.length;i++){
+    const cell = state.cells[i];
+    const nbs = neighbors(cell);
+    const share = (cell.q * 0.18) / (nbs.length || 1);
+    for(const nb of nbs){
+      const idx = state.cells.indexOf(nb);
+      newQs[idx] += share;
+      newQs[i] -= share;
+    }
+  }
+  // write back with decay
+  for(let i=0;i<state.cells.length;i++){
+    state.cells[i].q = newQs[i] * state.decay;
+    // clamp tiny
+    if(Math.abs(state.cells[i].q) < 0.00001) state.cells[i].q = 0;
+  }
+}
+
+function draw(){
+  const cw = canvas.width, ch = canvas.height;
+  ctx.clearRect(0,0,cw,ch);
+  ctx.save();
+  ctx.scale(DPR, DPR);
+  // draw each hex cell
+  for(const cell of state.cells){
+    const s = state.cellSize;
+    drawHex(cell.x, cell.y, s*0.48, cell);
+  }
+  ctx.restore();
+  // fps calc
+  frames++;
+  const now = performance.now();
+  if(now - fpsLast > 500){
+    currentFps = Math.round((frames*1000) / (now - fpsLast));
+    frames=0; fpsLast = now;
+    $('info').innerText = `Cells: ${state.cells.length} — FPS: ${currentFps}`;
+  }
+}
+
+/* draw single hex with color based on q and deterministic hue */
+function drawHex(cx, cy, radius, cell){
+  const q = clamp(cell.q, 0, 4);
+  const hue = cellHue(cell);
+  // color mapping: base + energy-dependent overlay
+  const base = `hsl(${hue} 32% 9%)`;
+  const overlayLight = `hsl(${hue} ${28 + q*18}% ${14 + q*20}%)`;
+  // border glint
+  ctx.beginPath();
+  for(let k=0;k<6;k++){
+    const a = Math.PI/180 * (60*k - 30);
+    const x = cx + Math.cos(a) * radius;
+    const y = cy + Math.sin(a) * radius;
+    if(k===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+  }
+  ctx.closePath();
+  // fill base
+  ctx.fillStyle = base;
+  ctx.fill();
+  // overlay with additive effect
+  ctx.globalCompositeOperation = 'lighter';
+  ctx.fillStyle = overlayLight;
+  ctx.globalAlpha = clamp(0.06 + q*0.16, 0, 0.9);
+  ctx.fill();
+  ctx.globalAlpha = 1;
+  ctx.globalCompositeOperation = 'source-over';
+  // stroke
+  ctx.lineWidth = Math.max(1, radius*0.06);
+  ctx.strokeStyle = `rgba(255,255,255,${0.02 + q*0.06})`;
+  ctx.stroke();
+  // center dot to indicate energy
+  if(q > 0.02){
+    ctx.beginPath();
+    ctx.arc(cx,cy, Math.max(1, radius*0.16*q), 0, Math.PI*2);
+    ctx.fillStyle = `rgba(255,255,255,${0.06 + q*0.18})`;
+    ctx.fill();
+  }
+}
+
+/* Animation loop */
+function loop(now){
+  const dt = (now - lastTime) / 1000;
+  lastTime = now;
+  if(state.running){
+    step(dt);
+    draw();
+  }
+  requestAnimationFrame(loop);
+}
+
+/* Interaction: map pointer to nearest cell */
+function findNearestCell(px, py){
+  // convert to canvas coord scale (device pixels => CSS px)
+  const rect = canvas.getBoundingClientRect();
+  const x = (px - rect.left);
+  const y = (py - rect.top);
+  // nearest center by simple distance
+  let best = null, bestD = Infinity;
+  for(const cell of state.cells){
+    const dx = cell.x - x;
+    const dy = cell.y - y;
+    const d = dx*dx + dy*dy;
+    if(d < bestD){ bestD = d; best = cell; }
+  }
+  return best;
+}
+
+/* UI wiring */
+function wireUI(){
+  const cellSizeInput = $('cellSize');
+  const ampInput = $('amplitude');
+  const decayInput = $('decay');
+
+  cellSizeInput.addEventListener('input', e=>{
+    state.cellSize = Number(e.target.value);
+    $('sizeLabel').innerText = e.target.value;
+    resizeCanvas();
+  });
+  ampInput.addEventListener('input', e=>{
+    state.amplitude = Number(e.target.value);
+    $('ampLabel').innerText = state.amplitude.toFixed(1);
+  });
+  decayInput.addEventListener('input', e=>{
+    state.decay = Number(e.target.value);
+    $('decayLabel').innerText = state.decay.toFixed(2);
+  });
+
+  $('clearBtn').addEventListener('click', ()=>{
+    for(const c of state.cells) c.q = 0;
+    saveState();
+  });
+
+  $('randomizeBtn').addEventListener('click', ()=>{
+    for(const c of state.cells) c.q = Math.random()*1.6;
+    saveState();
+  });
+
+  $('pauseBtn').addEventListener('click', ()=>{
+    state.running = !state.running;
+    $('pauseBtn').innerText = state.running ? 'إيقاف' : 'تشغيل';
+  });
+
+  $('stepBtn').addEventListener('click', ()=>{
+    step(1/60); draw(); // single step
+  });
+
+  $('centerBtn').addEventListener('click', ()=>{
+    // inject center pulse
+    const center = state.cells[Math.floor(state.cells.length/2)];
+    if(center) tapCell(center.id, 3.2);
+  });
+
+  /* canvas pointer */
+  let down=false;
+  canvas.addEventListener('pointerdown', (ev)=>{
+    down=true;
+    const cell = findNearestCell(ev.clientX, ev.clientY);
+    if(cell) tapCell(cell.id, 2.2);
+    saveStateDebounced();
+  });
+  canvas.addEventListener('pointermove', (ev)=>{
+    if(!down) return;
+    const cell = findNearestCell(ev.clientX, ev.clientY);
+    if(cell) tapCell(cell.id, 0.8);
+  });
+  window.addEventListener('pointerup', ()=>{down=false});
+
+  /* export/import */
+  $('exportBtn').addEventListener('click', ()=>{
+    const data = JSON.stringify({
+      cellSize: state.cellSize,
+      amplitude: state.amplitude,
+      decay: state.decay,
+      cells: state.cells.map(c=>({id:c.id,c:c.c,r:c.r,q:c.q}))
+    }, null, 2);
+    const blob = new Blob([data], {type:'application/json'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = 'hexa-flow.json';
+    a.click();
+    URL.revokeObjectURL(url);
+  });
+
+  $('importBtn').addEventListener('click', ()=>{
+    const input = document.createElement('input');
+    input.type='file'; input.accept='application/json';
+    input.onchange = async e=>{
+      const file = e.target.files[0];
+      if(!file) return;
+      const txt = await file.text();
+      try{
+        const j = JSON.parse(txt);
+        if(j.cellSize) state.cellSize = Number(j.cellSize);
+        if(j.amplitude) state.amplitude = Number(j.amplitude);
+        if(j.decay) state.decay = Number(j.decay);
+        if(Array.isArray(j.cells)){
+          for(const c of j.cells){
+            const match = state.cells.find(x=>x.c===c.c && x.r===c.r);
+            if(match) match.q = Number(c.q||0);
+          }
+        }
+        // update UI
+        $('cellSize').value = state.cellSize; $('sizeLabel').innerText = state.cellSize;
+        $('amplitude').value = state.amplitude; $('ampLabel').innerText = state.amplitude.toFixed(1);
+        $('decay').value = state.decay; $('decayLabel').innerText = state.decay.toFixed(2);
+        saveState();
+      }catch(err){
+        alert('ملف غير صالح');
+      }
+    };
+    input.click();
+  });

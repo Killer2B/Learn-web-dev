@@ -1,160 +1,342 @@
-
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Hexa-Flow — تفاعل سداسي مع حفظ الحالة</title>
+<title>Hexa-Flow — تفاعل سداسي متطور</title>
 <style>
   :root{
-    --bg:#0b1020;
-    --panel:#0f1724;
-    --accent:#7ee787;
-    --muted:#9aa4b2;
+    --bg:#0a0e1a;
+    --panel:#0d1117;
+    --accent:#58d5c9;
+    --accent-2:#7ee787;
+    --muted:#8b949e;
     --cell-size:64px;
+    --glow:#4493f8;
   }
   *{box-sizing:border-box}
-  html,body{height:100%;margin:0;font-family:Inter, system-ui, "Segoe UI", Roboto, "Helvetica Neue", Arial}
-  body{background:linear-gradient(180deg,var(--bg),#06101a);color:#e6eef6;display:flex;align-items:center;justify-content:center;padding:28px;}
+  html,body{height:100%;margin:0;font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif}
+  body{
+    background:radial-gradient(ellipse at top, #1a1f35 0%, var(--bg) 100%);
+    color:#e6eef6;display:flex;align-items:center;justify-content:center;
+    padding:20px;overflow:hidden;
+  }
 
   .app {
-    width:100%;
-    max-width:1100px;
-    background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-    border-radius:12px;
-    padding:18px;
-    box-shadow: 0 10px 30px rgba(2,6,23,0.6);
-    display:grid;
-    grid-template-columns: 360px 1fr;
-    gap:18px;
-    min-height:540px;
+    width:100%;max-width:1200px;
+    background:linear-gradient(135deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+    border-radius:16px;padding:20px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.05);
+    display:grid;grid-template-columns: 380px 1fr;gap:20px;
+    min-height:600px;backdrop-filter:blur(10px);
   }
 
-  /* left panel (controls) */
+  /* Left Panel */
   .panel {
-    background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.02));
-    border-radius:10px;padding:14px;display:flex;flex-direction:column;gap:12px;
+    background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+    border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:14px;
+    border:1px solid rgba(255,255,255,0.05);overflow-y:auto;max-height:calc(100vh - 100px);
   }
-  h1{font-size:18px;margin:0;color:var(--accent)}
-  .muted{color:var(--muted);font-size:13px;margin-top:6px}
+  h1{
+    font-size:22px;margin:0;
+    background:linear-gradient(135deg, var(--accent) 0%, var(--accent-2) 100%);
+    -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+    background-clip:text;font-weight:600;letter-spacing:-0.5px;
+  }
+  .muted{color:var(--muted);font-size:13px;margin-top:4px;line-height:1.5}
 
-  .controls{display:flex;flex-direction:column;gap:10px}
-  label{font-size:13px;color:var(--muted);display:flex;justify-content:space-between;align-items:center}
-  input[type="range"]{width:100%}
-  .row{display:flex;gap:8px}
-  .btn{background:transparent;border:1px solid rgba(255,255,255,0.06);padding:8px 10px;border-radius:8px;color:inherit;cursor:pointer}
-  .btn.primary{background:linear-gradient(90deg,#1464ff33,#00e0b833);border:1px solid rgba(255,255,255,0.06)}
-  .small{font-size:13px;padding:6px 8px;border-radius:6px}
+  .controls{display:flex;flex-direction:column;gap:12px}
+  .control-group{
+    background:rgba(255,255,255,0.02);padding:12px;border-radius:8px;
+    border:1px solid rgba(255,255,255,0.03);
+  }
+  .control-title{font-size:12px;color:var(--accent);margin-bottom:8px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px}
+  
+  label{
+    font-size:13px;color:var(--muted);display:flex;
+    justify-content:space-between;align-items:center;margin-bottom:6px;
+  }
+  label span{color:#fff;font-weight:500;font-size:14px}
+  
+  input[type="range"]{
+    width:100%;height:6px;border-radius:3px;
+    background:rgba(255,255,255,0.05);outline:none;
+    -webkit-appearance:none;appearance:none;cursor:pointer;
+  }
+  input[type="range"]::-webkit-slider-thumb{
+    -webkit-appearance:none;appearance:none;
+    width:16px;height:16px;border-radius:50%;
+    background:linear-gradient(135deg, var(--accent), var(--accent-2));
+    cursor:pointer;box-shadow:0 2px 8px rgba(88,213,201,0.4);
+    transition:transform 0.2s;
+  }
+  input[type="range"]::-webkit-slider-thumb:hover{transform:scale(1.2)}
+  input[type="range"]::-moz-range-thumb{
+    width:16px;height:16px;border-radius:50%;border:none;
+    background:linear-gradient(135deg, var(--accent), var(--accent-2));
+    cursor:pointer;box-shadow:0 2px 8px rgba(88,213,201,0.4);
+  }
 
-  /* presets list */
-  .presets{display:flex;flex-direction:column;gap:6px;max-height:180px;overflow:auto;padding-right:6px}
-  .preset-item{display:flex;justify-content:space-between;align-items:center;padding:8px;border-radius:8px;border:1px dashed rgba(255,255,255,0.02)}
-  .muted.small{font-size:12px}
+  .row{display:flex;gap:10px;flex-wrap:wrap}
+  .btn{
+    background:rgba(255,255,255,0.03);
+    border:1px solid rgba(255,255,255,0.08);
+    padding:10px 16px;border-radius:8px;color:#fff;
+    cursor:pointer;font-size:13px;font-weight:500;
+    transition:all 0.3s;position:relative;overflow:hidden;
+  }
+  .btn::before{
+    content:'';position:absolute;top:50%;left:50%;
+    width:0;height:0;border-radius:50%;
+    background:rgba(255,255,255,0.1);
+    transform:translate(-50%,-50%);
+    transition:width 0.6s, height 0.6s;
+  }
+  .btn:hover::before{width:300px;height:300px}
+  .btn:hover{
+    border-color:rgba(88,213,201,0.3);
+    box-shadow:0 4px 12px rgba(88,213,201,0.15);
+    transform:translateY(-1px);
+  }
+  .btn.primary{
+    background:linear-gradient(135deg,rgba(88,213,201,0.2),rgba(126,231,135,0.2));
+    border:1px solid rgba(88,213,201,0.3);
+  }
+  .btn.danger{
+    background:rgba(248,81,73,0.1);
+    border:1px solid rgba(248,81,73,0.2);
+  }
+  .btn.danger:hover{border-color:rgba(248,81,73,0.4)}
+  .small{font-size:12px;padding:8px 12px;border-radius:6px}
 
-  /* right side: canvas area + overlay */
+  /* Presets */
+  .presets{
+    display:flex;flex-direction:column;gap:8px;
+    max-height:200px;overflow-y:auto;padding-right:4px;
+  }
+  .presets::-webkit-scrollbar{width:6px}
+  .presets::-webkit-scrollbar-track{background:rgba(255,255,255,0.02);border-radius:3px}
+  .presets::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.1);border-radius:3px}
+  
+  .preset-item{
+    display:flex;justify-content:space-between;align-items:center;
+    padding:10px;border-radius:8px;
+    background:rgba(255,255,255,0.02);
+    border:1px solid rgba(255,255,255,0.04);
+    transition:all 0.3s;
+  }
+  .preset-item:hover{
+    background:rgba(255,255,255,0.04);
+    border-color:rgba(88,213,201,0.2);
+  }
+  .preset-name{font-size:13px;font-weight:500}
+  .preset-date{font-size:11px;color:var(--muted);margin-top:2px}
+
+  /* Right Stage */
   .stage {
-    position:relative;border-radius:10px;overflow:hidden;background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.015));display:flex;flex-direction:column;
+    position:relative;border-radius:12px;overflow:hidden;
+    background:linear-gradient(135deg, rgba(255,255,255,0.01), rgba(255,255,255,0.02));
+    display:flex;flex-direction:column;
+    border:1px solid rgba(255,255,255,0.05);
   }
-  .stage-header{display:flex;justify-content:space-between;align-items:center;padding:12px;border-bottom:1px solid rgba(255,255,255,0.02)}
-  .stage .view{flex:1;display:flex;align-items:center;justify-content:center;padding:12px;position:relative}
-  canvas{display:block;max-width:100%;height:auto}
+  .stage-header{
+    display:flex;justify-content:space-between;align-items:center;
+    padding:14px 16px;border-bottom:1px solid rgba(255,255,255,0.05);
+    background:rgba(255,255,255,0.01);
+  }
+  .stage-title{font-size:14px;font-weight:600;color:var(--accent-2)}
+  .stage .view{
+    flex:1;display:flex;align-items:center;justify-content:center;
+    padding:16px;position:relative;min-height:400px;
+  }
+  canvas{display:block;max-width:100%;height:auto;border-radius:8px}
 
-  /* footer controls on canvas */
-  .toolbar{position:absolute;left:12px;bottom:12px;background:rgba(3,6,12,0.45);backdrop-filter:blur(6px);padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);display:flex;gap:8px}
-  .info{position:absolute;right:12px;bottom:12px;background:rgba(255,255,255,0.02);padding:8px;border-radius:8px;font-size:13px;color:var(--muted)}
-
-  /* responsive */
-  @media (max-width:980px){
-    .app{grid-template-columns:1fr;min-height:680px}
+  /* Toolbar */
+  .toolbar{
+    position:absolute;left:16px;bottom:16px;
+    background:rgba(10,14,26,0.8);backdrop-filter:blur(12px);
+    padding:10px;border-radius:10px;
+    border:1px solid rgba(255,255,255,0.08);
+    display:flex;gap:8px;
+    box-shadow:0 8px 24px rgba(0,0,0,0.3);
+  }
+  .info{
+    position:absolute;right:16px;bottom:16px;
+    background:rgba(10,14,26,0.8);backdrop-filter:blur(12px);
+    padding:10px 14px;border-radius:10px;font-size:12px;
+    color:var(--muted);border:1px solid rgba(255,255,255,0.08);
+    box-shadow:0 8px 24px rgba(0,0,0,0.3);font-family:monospace;
   }
 
-  /* focus outline for accessibility */
-  button:focus, input:focus{outline:2px solid rgba(126,231,135,0.14);outline-offset:2px}
+  /* Mode selector */
+  .mode-selector{
+    display:flex;gap:6px;background:rgba(255,255,255,0.02);
+    padding:4px;border-radius:8px;
+  }
+  .mode-btn{
+    flex:1;padding:8px;background:transparent;
+    border:none;color:var(--muted);cursor:pointer;
+    border-radius:6px;font-size:12px;transition:all 0.3s;
+  }
+  .mode-btn.active{
+    background:linear-gradient(135deg,rgba(88,213,201,0.2),rgba(126,231,135,0.2));
+    color:#fff;
+  }
 
+  /* Divider */
+  hr{border:0;border-top:1px solid rgba(255,255,255,0.05);margin:8px 0}
+
+  /* Responsive */
+  @media (max-width:1024px){
+    .app{grid-template-columns:1fr;min-height:auto}
+    .panel{max-height:none}
+  }
+
+  /* Accessibility */
+  button:focus, input:focus{
+    outline:2px solid rgba(88,213,201,0.3);
+    outline-offset:2px;
+  }
+
+  /* Loading animation */
+  @keyframes pulse{
+    0%, 100%{opacity:0.4}
+    50%{opacity:1}
+  }
+  .loading{animation:pulse 2s ease-in-out infinite}
+
+  /* Toast notification */
+  .toast{
+    position:fixed;top:20px;right:20px;
+    background:rgba(10,14,26,0.95);backdrop-filter:blur(12px);
+    padding:12px 20px;border-radius:8px;
+    border:1px solid rgba(88,213,201,0.3);
+    box-shadow:0 8px 24px rgba(0,0,0,0.4);
+    transform:translateX(400px);
+    transition:transform 0.3s;z-index:1000;
+  }
+  .toast.show{transform:translateX(0)}
 </style>
 </head>
 <body>
+  <div class="toast" id="toast"></div>
+  
   <div class="app" role="application" aria-label="Hexa-Flow interactive grid">
-    <div class="panel" aria-hidden="false">
+    <div class="panel">
       <div>
-        <h1>Hexa-Flow</h1>
-        <div class="muted">شبكة سداسية تفاعلية — تفعيل نقطة يولد موجة لونية حسابية ويحفظ الحالة محليًا</div>
+        <h1>⬡ Hexa-Flow</h1>
+        <div class="muted">شبكة سداسية تفاعلية متطورة مع تأثيرات موجية ديناميكية وحفظ تلقائي للحالة</div>
+      </div>
+
+      <div class="control-group">
+        <div class="control-title">🎨 وضع الرسم</div>
+        <div class="mode-selector">
+          <button class="mode-btn active" data-mode="pulse">نبض</button>
+          <button class="mode-btn" data-mode="wave">موجة</button>
+          <button class="mode-btn" data-mode="draw">رسم</button>
+        </div>
       </div>
 
       <div class="controls" id="controls">
-        <label>حجم الخلية <span id="sizeLabel">64</span>px
-          <input id="cellSize" type="range" min="32" max="120" value="64">
-        </label>
+        <div class="control-group">
+          <div class="control-title">⚙️ إعدادات الشبكة</div>
+          
+          <label>حجم الخلية <span id="sizeLabel">64</span>px
+            <input id="cellSize" type="range" min="32" max="120" value="64">
+          </label>
 
-        <label>شدة الموجة <span id="ampLabel">1.0</span>
-          <input id="amplitude" type="range" min="0" max="3" step="0.1" value="1">
-        </label>
+          <label>شدة الطاقة <span id="ampLabel">1.0</span>
+            <input id="amplitude" type="range" min="0" max="5" step="0.1" value="1">
+          </label>
 
-        <label>سرعة التلاشي <span id="decayLabel">0.9</span>
-          <input id="decay" type="range" min="0.6" max="0.99" step="0.01" value="0.9">
-        </label>
+          <label>سرعة التلاشي <span id="decayLabel">0.90</span>
+            <input id="decay" type="range" min="0.5" max="0.99" step="0.01" value="0.9">
+          </label>
+
+          <label>سرعة الانتشار <span id="spreadLabel">0.18</span>
+            <input id="spread" type="range" min="0.05" max="0.4" step="0.01" value="0.18">
+          </label>
+        </div>
+
+        <div class="control-group">
+          <div class="control-title">🎭 التأثيرات البصرية</div>
+          
+          <label>سطوع اللون <span id="brightnessLabel">1.0</span>
+            <input id="brightness" type="range" min="0.3" max="2" step="0.1" value="1">
+          </label>
+
+          <label>تشبع اللون <span id="saturationLabel">1.0</span>
+            <input id="saturation" type="range" min="0" max="2" step="0.1" value="1">
+          </label>
+
+          <label>
+            <span>توهج الخلايا</span>
+            <input type="checkbox" id="glowEffect" checked>
+          </label>
+        </div>
 
         <div class="row">
-          <button class="btn primary" id="clearBtn" title="مسح الشبكة">مسح</button>
-          <button class="btn" id="randomizeBtn" title="توليد عشوائي">عشوائي</button>
+          <button class="btn primary" id="clearBtn" title="مسح الشبكة">🗑️ مسح</button>
+          <button class="btn" id="randomizeBtn" title="توليد عشوائي">🎲 عشوائي</button>
+          <button class="btn" id="patternBtn" title="نمط">✨ نمط</button>
         </div>
 
-        <div style="display:flex;gap:8px">
-          <button class="btn small" id="exportBtn">تصدير JSON</button>
-          <button class="btn small" id="importBtn">استيراد JSON</button>
+        <div class="row">
+          <button class="btn small" id="exportBtn">💾 تصدير</button>
+          <button class="btn small" id="importBtn">📁 استيراد</button>
+          <button class="btn small danger" id="resetBtn">🔄 إعادة ضبط</button>
         </div>
+      </div>
 
-        <hr style="border:0;border-top:1px solid rgba(255,255,255,0.02)">
+      <hr>
 
-        <div>
-          <div style="display:flex;justify-content:space-between;align-items:center">
-            <div class="muted small">قوالب محفوظة</div>
-            <button class="btn small" id="savePreset">حفظ قالب</button>
-          </div>
-          <div class="presets" id="presets"></div>
+      <div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+          <div class="control-title">📚 القوالب المحفوظة</div>
+          <button class="btn small primary" id="savePreset">+ حفظ</button>
         </div>
+        <div class="presets" id="presets"></div>
+      </div>
 
-        <hr style="border:0;border-top:1px solid rgba(255,255,255,0.02)">
+      <hr>
 
-        <div class="muted small">ملاحظات: النقر على خلية يولد تشكيل موجي؛ استخدم التصدير لمشاركة الحالة.</div>
+      <div class="muted small">
+        💡 النقر: نبض قوي • السحب: رسم مستمر<br>
+        ⌨️ Space: إيقاف/تشغيل • R: عشوائي • C: مسح
       </div>
     </div>
 
-    <div class="stage" role="region" aria-label="Stage">
+    <div class="stage">
       <div class="stage-header">
-        <div>عرض الشبكة</div>
-        <div class="muted">حالة محفوظة محليًا</div>
+        <div class="stage-title">🎯 عرض الشبكة التفاعلية</div>
+        <div class="muted">حالة محفوظة تلقائياً</div>
       </div>
       <div class="view" id="view">
         <canvas id="c"></canvas>
 
-        <div class="toolbar" id="toolbar" aria-hidden="false">
-          <button class="btn small" id="pauseBtn">إيقاف</button>
-          <button class="btn small" id="stepBtn">خطوة</button>
-          <button class="btn small" id="centerBtn">مركز</button>
+        <div class="toolbar" id="toolbar">
+          <button class="btn small" id="pauseBtn">⏸️ إيقاف</button>
+          <button class="btn small" id="stepBtn">⏭️ خطوة</button>
+          <button class="btn small" id="centerBtn">🎯 مركز</button>
         </div>
 
-        <div class="info" id="info">Cells: 0 — FPS: 0</div>
+        <div class="info" id="info">Cells: 0 | FPS: 0 | Energy: 0</div>
       </div>
     </div>
   </div>
 
 <script>
-/*
-  Hexa-Flow
-  - grid of hex cells simulated on canvas
-  - clicking a cell injects energy and produces ripple via amplitude + decay
-  - deterministic color mapping using seeded hash of cell coords + time
-  - localStorage save/load + export/import JSON
-  - accessible labels and keyboard focus for basic controls
-*/
-
-/* Utilities */
 const $ = id => document.getElementById(id);
 const rand = (min,max)=> Math.random()*(max-min)+min;
 const clamp = (v,a,b)=> Math.max(a,Math.min(b,v));
 
-/* Seeded pseudo-random for reproducible color per cell */
+function showToast(msg){
+  const toast = $('toast');
+  toast.textContent = msg;
+  toast.classList.add('show');
+  setTimeout(()=>toast.classList.remove('show'), 2000);
+}
+
 function xorshift(seed){
   let x = seed || 123456789;
   return ()=> {
@@ -163,49 +345,51 @@ function xorshift(seed){
   };
 }
 
-/* Color utility: HSL -> RGB string */
-function hsl(h,s,l){ return `hsl(${h.toFixed(1)} ${s}% ${l}%)`; }
-
-/* Grid config and state */
 const canvas = $('c');
-const ctx = canvas.getContext('2d', { alpha:true });
+const ctx = canvas.getContext('2d', { alpha:false, desynchronized:true });
 let DPR = Math.max(1, window.devicePixelRatio||1);
 
 let state = {
   cellSize: 64,
   amplitude: 1.0,
   decay: 0.9,
+  spread: 0.18,
+  brightness: 1.0,
+  saturation: 1.0,
+  glowEffect: true,
+  drawMode: 'pulse',
   cols: 0, rows:0,
-  cells: [], // each cell: {x,y,q:energy, id}
+  cells: [],
   running: true
 };
 
-/* Persistence keys */
-const STORAGE_KEY = 'hexa-flow-v1';
-const PRESETS_KEY = 'hexa-flow-presets-v1';
+const STORAGE_KEY = 'hexa-flow-v2';
+const PRESETS_KEY = 'hexa-flow-presets-v2';
 
-/* Build grid based on container size */
 function buildGrid(){
   const pad = 10;
   const width = canvas.width / DPR - pad*2;
   const height = canvas.height / DPR - pad*2;
   const s = state.cellSize;
-  const h = Math.sqrt(3)/2 * s; // vertical distance between centers
+  const h = Math.sqrt(3)/2 * s;
   const cols = Math.max(3, Math.floor(width / (s*0.75)));
   const rows = Math.max(3, Math.floor(height / h));
   state.cols = cols; state.rows = rows;
+  
+  const oldCells = new Map(state.cells.map(c => [`${c.c},${c.r}`, c.q]));
   state.cells = [];
   let id=1;
   for(let r=0;r<rows;r++){
     for(let c=0;c<cols;c++){
       const cx = pad + c * (s * 0.75) + (r%2 ? (s*0.375) : 0) + s/2;
       const cy = pad + r * h + s*0.35;
-      state.cells.push({id: id++, c, r, x:cx, y:cy, q:0});
+      const key = `${c},${r}`;
+      const q = oldCells.get(key) || 0;
+      state.cells.push({id: id++, c, r, x:cx, y:cy, q, vx:0, vy:0});
     }
   }
 }
 
-/* Resize canvas to element */
 function resizeCanvas(){
   const rect = canvas.getBoundingClientRect();
   canvas.width = Math.floor(rect.width * DPR);
@@ -215,11 +399,8 @@ function resizeCanvas(){
   buildGrid();
 }
 
-/* Neighbor lookup (axial via offset coords) */
 function neighbors(cell){
-  const dirs = [
-    [+1,0], [-1,0], [0,+1], [0,-1], [+1,-1], [-1,+1]
-  ];
+  const dirs = [[+1,0], [-1,0], [0,+1], [0,-1], [+1,-1], [-1,+1]];
   const arr=[];
   for(const [dc,dr] of dirs){
     const nc = cell.c+dc, nr = cell.r+dr;
@@ -229,79 +410,88 @@ function neighbors(cell){
   return arr;
 }
 
-/* Inject energy to cell and spread */
 function tapCell(id, energy=1.6){
   const cell = state.cells.find(s=>s.id===id);
   if(!cell) return;
-  cell.q += energy * state.amplitude;
+  
+  if(state.drawMode === 'pulse'){
+    cell.q += energy * state.amplitude;
+  } else if(state.drawMode === 'wave'){
+    cell.q = energy * state.amplitude;
+    cell.vx = rand(-0.5, 0.5);
+    cell.vy = rand(-0.5, 0.5);
+  } else {
+    cell.q = Math.min(cell.q + energy * state.amplitude * 0.5, 8);
+  }
 }
 
-/* Deterministic hue for each cell based on coords */
 function cellHue(cell){
-  // combine coordinates into seed
   const seed = (cell.c*73856093) ^ (cell.r*19349663) ^ 0x9e3779b9;
   const rnd = xorshift(seed)();
-  // shift by fractional seconds for subtle motion
-  const t = performance.now() / 6000;
-  return (Math.floor(rnd*360) + (t*40)) % 360;
+  const t = performance.now() / 8000;
+  return (Math.floor(rnd*360) + (t*30)) % 360;
 }
 
-/* Simulation and draw */
 let lastTime = performance.now();
 let fpsLast = performance.now(), frames=0, currentFps=0;
+
 function step(dt){
-  // simple energy spread: each cell gives fraction to neighbors
   const newQs = new Float32Array(state.cells.length);
   for(let i=0;i<state.cells.length;i++){
     newQs[i] = state.cells[i].q;
   }
+  
   for(let i=0;i<state.cells.length;i++){
     const cell = state.cells[i];
     const nbs = neighbors(cell);
-    const share = (cell.q * 0.18) / (nbs.length || 1);
+    const share = (cell.q * state.spread) / (nbs.length || 1);
     for(const nb of nbs){
       const idx = state.cells.indexOf(nb);
       newQs[idx] += share;
       newQs[i] -= share;
     }
   }
-  // write back with decay
+  
   for(let i=0;i<state.cells.length;i++){
     state.cells[i].q = newQs[i] * state.decay;
-    // clamp tiny
     if(Math.abs(state.cells[i].q) < 0.00001) state.cells[i].q = 0;
   }
 }
 
 function draw(){
   const cw = canvas.width, ch = canvas.height;
-  ctx.clearRect(0,0,cw,ch);
+  ctx.fillStyle = '#0a0e1a';
+  ctx.fillRect(0,0,cw,ch);
+  
   ctx.save();
   ctx.scale(DPR, DPR);
-  // draw each hex cell
+  
   for(const cell of state.cells){
     const s = state.cellSize;
     drawHex(cell.x, cell.y, s*0.48, cell);
   }
+  
   ctx.restore();
-  // fps calc
+  
   frames++;
   const now = performance.now();
   if(now - fpsLast > 500){
     currentFps = Math.round((frames*1000) / (now - fpsLast));
     frames=0; fpsLast = now;
-    $('info').innerText = `Cells: ${state.cells.length} — FPS: ${currentFps}`;
+    const totalEnergy = state.cells.reduce((sum,c)=>sum+c.q,0).toFixed(1);
+    $('info').innerText = `Cells: ${state.cells.length} | FPS: ${currentFps} | Energy: ${totalEnergy}`;
   }
 }
 
-/* draw single hex with color based on q and deterministic hue */
 function drawHex(cx, cy, radius, cell){
-  const q = clamp(cell.q, 0, 4);
+  const q = clamp(cell.q, 0, 8);
   const hue = cellHue(cell);
-  // color mapping: base + energy-dependent overlay
-  const base = `hsl(${hue} 32% 9%)`;
-  const overlayLight = `hsl(${hue} ${28 + q*18}% ${14 + q*20}%)`;
-  // border glint
+  
+  const baseSat = 25 * state.saturation;
+  const baseLum = 8 * state.brightness;
+  const energySat = Math.min(baseSat + q*15, 90);
+  const energyLum = Math.min(baseLum + q*12, 65);
+  
   ctx.beginPath();
   for(let k=0;k<6;k++){
     const a = Math.PI/180 * (60*k - 30);
@@ -310,30 +500,32 @@ function drawHex(cx, cy, radius, cell){
     if(k===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
   }
   ctx.closePath();
-  // fill base
-  ctx.fillStyle = base;
+  
+  const gradient = ctx.createRadialGradient(cx,cy,0,cx,cy,radius);
+  gradient.addColorStop(0, `hsl(${hue} ${energySat}% ${energyLum}%)`);
+  gradient.addColorStop(1, `hsl(${hue} ${baseSat}% ${baseLum}%)`);
+  ctx.fillStyle = gradient;
   ctx.fill();
-  // overlay with additive effect
-  ctx.globalCompositeOperation = 'lighter';
-  ctx.fillStyle = overlayLight;
-  ctx.globalAlpha = clamp(0.06 + q*0.16, 0, 0.9);
-  ctx.fill();
-  ctx.globalAlpha = 1;
-  ctx.globalCompositeOperation = 'source-over';
-  // stroke
-  ctx.lineWidth = Math.max(1, radius*0.06);
-  ctx.strokeStyle = `rgba(255,255,255,${0.02 + q*0.06})`;
+  
+  if(state.glowEffect && q > 0.1){
+    ctx.shadowColor = `hsl(${hue} 80% 60%)`;
+    ctx.shadowBlur = 10 + q*5;
+    ctx.fill();
+    ctx.shadowBlur = 0;
+  }
+  
+  ctx.lineWidth = Math.max(0.5, radius*0.04);
+  ctx.strokeStyle = `rgba(255,255,255,${0.05 + q*0.08})`;
   ctx.stroke();
-  // center dot to indicate energy
-  if(q > 0.02){
+  
+  if(q > 0.1){
     ctx.beginPath();
-    ctx.arc(cx,cy, Math.max(1, radius*0.16*q), 0, Math.PI*2);
-    ctx.fillStyle = `rgba(255,255,255,${0.06 + q*0.18})`;
+    ctx.arc(cx,cy, Math.max(2, radius*0.15*Math.min(q,2)), 0, Math.PI*2);
+    ctx.fillStyle = `rgba(255,255,255,${0.1 + q*0.15})`;
     ctx.fill();
   }
 }
 
-/* Animation loop */
 function loop(now){
   const dt = (now - lastTime) / 1000;
   lastTime = now;
@@ -344,13 +536,10 @@ function loop(now){
   requestAnimationFrame(loop);
 }
 
-/* Interaction: map pointer to nearest cell */
 function findNearestCell(px, py){
-  // convert to canvas coord scale (device pixels => CSS px)
   const rect = canvas.getBoundingClientRect();
   const x = (px - rect.left);
   const y = (py - rect.top);
-  // nearest center by simple distance
   let best = null, bestD = Infinity;
   for(const cell of state.cells){
     const dx = cell.x - x;
@@ -361,85 +550,135 @@ function findNearestCell(px, py){
   return best;
 }
 
-/* UI wiring */
 function wireUI(){
-  const cellSizeInput = $('cellSize');
-  const ampInput = $('amplitude');
-  const decayInput = $('decay');
+  const inputs = {
+    cellSize: ['cellSize', 'sizeLabel', v=>state.cellSize=v, ()=>resizeCanvas()],
+    amplitude: ['amplitude', 'ampLabel', v=>state.amplitude=v],
+    decay: ['decay', 'decayLabel', v=>state.decay=v],
+    spread: ['spread', 'spreadLabel', v=>state.spread=v],
+    brightness: ['brightness', 'brightnessLabel', v=>state.brightness=v],
+    saturation: ['saturation', 'saturationLabel', v=>state.saturation=v]
+  };
 
-  cellSizeInput.addEventListener('input', e=>{
-    state.cellSize = Number(e.target.value);
-    $('sizeLabel').innerText = e.target.value;
-    resizeCanvas();
+  for(const [key, [id, labelId, setter, callback]] of Object.entries(inputs)){
+    const input = $(id);
+    input.addEventListener('input', e=>{
+      const val = Number(e.target.value);
+      setter(val);
+      $(labelId).innerText = val.toFixed(key==='cellSize'?0:2);
+      if(callback) callback();
+    });
+  }
+
+  $('glowEffect').addEventListener('change', e=>{
+    state.glowEffect = e.target.checked;
   });
-  ampInput.addEventListener('input', e=>{
-    state.amplitude = Number(e.target.value);
-    $('ampLabel').innerText = state.amplitude.toFixed(1);
-  });
-  decayInput.addEventListener('input', e=>{
-    state.decay = Number(e.target.value);
-    $('decayLabel').innerText = state.decay.toFixed(2);
+
+  document.querySelectorAll('.mode-btn').forEach(btn=>{
+    btn.addEventListener('click', e=>{
+      document.querySelectorAll('.mode-btn').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      state.drawMode = btn.dataset.mode;
+      showToast(`وضع: ${btn.textContent}`);
+    });
   });
 
   $('clearBtn').addEventListener('click', ()=>{
     for(const c of state.cells) c.q = 0;
     saveState();
+    showToast('تم المسح ✓');
   });
 
   $('randomizeBtn').addEventListener('click', ()=>{
-    for(const c of state.cells) c.q = Math.random()*1.6;
+    for(const c of state.cells) c.q = Math.random()*2.5;
     saveState();
+    showToast('تم التوليد العشوائي ✓');
+  });
+
+  $('patternBtn').addEventListener('click', ()=>{
+    const patterns = [
+      c => Math.sin(c.c*0.5)*Math.cos(c.r*0.5)*3,
+      c => ((c.c+c.r)%3===0 ? 2.5 : 0),
+      c => (Math.abs(c.c-state.cols/2)<3 && Math.abs(c.r-state.rows/2)<3 ? 3 : 0)
+    ];
+    const pattern = patterns[Math.floor(Math.random()*patterns.length)];
+    for(const c of state.cells) c.q = pattern(c);
+    saveState();
+    showToast('تم تطبيق النمط ✓');
+  });
+
+  $('resetBtn').addEventListener('click', ()=>{
+    if(!confirm('هل تريد إعادة ضبط كل الإعدادات؟')) return;
+    localStorage.removeItem(STORAGE_KEY);
+    location.reload();
   });
 
   $('pauseBtn').addEventListener('click', ()=>{
     state.running = !state.running;
-    $('pauseBtn').innerText = state.running ? 'إيقاف' : 'تشغيل';
+    $('pauseBtn').innerHTML = state.running ? '⏸️ إيقاف' : '▶️ تشغيل';
   });
 
   $('stepBtn').addEventListener('click', ()=>{
-    step(1/60); draw(); // single step
+    step(1/60); draw();
   });
 
   $('centerBtn').addEventListener('click', ()=>{
-    // inject center pulse
     const center = state.cells[Math.floor(state.cells.length/2)];
-    if(center) tapCell(center.id, 3.2);
+    if(center) tapCell(center.id, 4);
   });
 
-  /* canvas pointer */
-  let down=false;
+  let down=false, lastCell=null;
   canvas.addEventListener('pointerdown', (ev)=>{
     down=true;
     const cell = findNearestCell(ev.clientX, ev.clientY);
-    if(cell) tapCell(cell.id, 2.2);
+    if(cell){
+      tapCell(cell.id, 2.5);
+      lastCell = cell;
+    }
     saveStateDebounced();
   });
+  
   canvas.addEventListener('pointermove', (ev)=>{
     if(!down) return;
     const cell = findNearestCell(ev.clientX, ev.clientY);
-    if(cell) tapCell(cell.id, 0.8);
+    if(cell && cell !== lastCell){
+      tapCell(cell.id, state.drawMode==='draw' ? 1.5 : 0.8);
+      lastCell = cell;
+    }
   });
-  window.addEventListener('pointerup', ()=>{down=false});
+  
+  window.addEventListener('pointerup', ()=>{
+    down=false;
+    lastCell=null;
+  });
 
-  /* export/import */
   $('exportBtn').addEventListener('click', ()=>{
     const data = JSON.stringify({
+      version: 2,
       cellSize: state.cellSize,
       amplitude: state.amplitude,
       decay: state.decay,
-      cells: state.cells.map(c=>({id:c.id,c:c.c,r:c.r,q:c.q}))
+      spread: state.spread,
+      brightness: state.brightness,
+      saturation: state.saturation,
+      glowEffect: state.glowEffect,
+      drawMode: state.drawMode,
+      cells: state.cells.map(c=>({c:c.c,r:c.r,q:c.q}))
     }, null, 2);
     const blob = new Blob([data], {type:'application/json'});
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
-    a.href = url; a.download = 'hexa-flow.json';
+    a.href = url;
+    a.download = `hexa-flow-${Date.now()}.json`;
     a.click();
     URL.revokeObjectURL(url);
+    showToast('تم التصدير ✓');
   });
 
   $('importBtn').addEventListener('click', ()=>{
     const input = document.createElement('input');
-    input.type='file'; input.accept='application/json';
+    input.type='file';
+    input.accept='application/json';
     input.onchange = async e=>{
       const file = e.target.files[0];
       if(!file) return;
@@ -449,46 +688,88 @@ function wireUI(){
         if(j.cellSize) state.cellSize = Number(j.cellSize);
         if(j.amplitude) state.amplitude = Number(j.amplitude);
         if(j.decay) state.decay = Number(j.decay);
+        if(j.spread) state.spread = Number(j.spread);
+        if(j.brightness) state.brightness = Number(j.brightness);
+        if(j.saturation) state.saturation = Number(j.saturation);
+        if(j.glowEffect !== undefined) state.glowEffect = Boolean(j.glowEffect);
+        if(j.drawMode) state.drawMode = j.drawMode;
+        
         if(Array.isArray(j.cells)){
           for(const c of j.cells){
             const match = state.cells.find(x=>x.c===c.c && x.r===c.r);
             if(match) match.q = Number(c.q||0);
           }
         }
-        // update UI
-        $('cellSize').value = state.cellSize; $('sizeLabel').innerText = state.cellSize;
-        $('amplitude').value = state.amplitude; $('ampLabel').innerText = state.amplitude.toFixed(1);
-        $('decay').value = state.decay; $('decayLabel').innerText = state.decay.toFixed(2);
+        updateUIFromState();
         saveState();
+        showToast('تم الاستيراد ✓');
       }catch(err){
-        alert('ملف غير صالح');
+        showToast('⚠️ ملف غير صالح');
       }
     };
     input.click();
   });
 
-  /* presets: local store */
   $('savePreset').addEventListener('click', ()=>{
-    const name = prompt('اسم القالب الجديد:','preset-'+Date.now());
+    const name = prompt('اسم القالب الجديد:', `نمط-${Date.now()}`);
     if(!name) return;
     const presets = loadPresets();
     const preset = {
       name,
       ts: Date.now(),
       state: {
-        cellSize: state.cellSize, amplitude: state.amplitude, decay: state.decay,
+        cellSize: state.cellSize,
+        amplitude: state.amplitude,
+        decay: state.decay,
+        spread: state.spread,
+        brightness: state.brightness,
+        saturation: state.saturation,
+        glowEffect: state.glowEffect,
+        drawMode: state.drawMode,
         cells: state.cells.map(c=>({c:c.c,r:c.r,q:c.q}))
       }
     };
     presets.unshift(preset);
+    if(presets.length > 10) presets.pop();
     localStorage.setItem(PRESETS_KEY, JSON.stringify(presets));
     renderPresets();
+    showToast('تم حفظ القالب ✓');
+  });
+
+  document.addEventListener('keydown', e=>{
+    if(e.code === 'Space'){
+      e.preventDefault();
+      $('pauseBtn').click();
+    } else if(e.code === 'KeyR'){
+      $('randomizeBtn').click();
+    } else if(e.code === 'KeyC'){
+      $('clearBtn').click();
+    }
   });
 
   renderPresets();
 }
 
-/* presets UI rendering */
+function updateUIFromState(){
+  $('cellSize').value = state.cellSize;
+  $('sizeLabel').innerText = state.cellSize;
+  $('amplitude').value = state.amplitude;
+  $('ampLabel').innerText = state.amplitude.toFixed(1);
+  $('decay').value = state.decay;
+  $('decayLabel').innerText = state.decay.toFixed(2);
+  $('spread').value = state.spread;
+  $('spreadLabel').innerText = state.spread.toFixed(2);
+  $('brightness').value = state.brightness;
+  $('brightnessLabel').innerText = state.brightness.toFixed(1);
+  $('saturation').value = state.saturation;
+  $('saturationLabel').innerText = state.saturation.toFixed(1);
+  $('glowEffect').checked = state.glowEffect;
+  
+  document.querySelectorAll('.mode-btn').forEach(btn=>{
+    btn.classList.toggle('active', btn.dataset.mode === state.drawMode);
+  });
+}
+
 function loadPresets(){
   try{
     const raw = localStorage.getItem(PRESETS_KEY);
@@ -496,61 +777,105 @@ function loadPresets(){
     return JSON.parse(raw);
   }catch(e){ return [];}
 }
+
 function renderPresets(){
   const container = $('presets');
   container.innerHTML = '';
   const presets = loadPresets();
+  
+  if(presets.length === 0){
+    container.innerHTML = '<div class="muted small" style="padding:12px;text-align:center">لا توجد قوالب محفوظة</div>';
+    return;
+  }
+  
   for(const p of presets){
     const el = document.createElement('div');
     el.className='preset-item';
-    el.innerHTML = `<div style="flex:1">${p.name} <div class="muted small">${new Date(p.ts).toLocaleString()}</div></div>`;
+    
+    const info = document.createElement('div');
+    info.style.flex='1';
+    info.innerHTML = `
+      <div class="preset-name">${p.name}</div>
+      <div class="preset-date">${new Date(p.ts).toLocaleDateString('ar-EG', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+      })}</div>
+    `;
+    
     const actions = document.createElement('div');
-    actions.style.display='flex'; actions.style.gap='6px';
-    const loadBtn = document.createElement('button'); loadBtn.className='btn small'; loadBtn.textContent='تحميل';
-    const delBtn = document.createElement('button'); delBtn.className='btn small'; delBtn.textContent='حذف';
+    actions.style.display='flex';
+    actions.style.gap='6px';
+    
+    const loadBtn = document.createElement('button');
+    loadBtn.className='btn small';
+    loadBtn.innerHTML='📂 تحميل';
     loadBtn.onclick = ()=>{
-      // apply
       const s = p.state;
       if(s.cellSize) state.cellSize = Number(s.cellSize);
       if(s.amplitude) state.amplitude = Number(s.amplitude);
       if(s.decay) state.decay = Number(s.decay);
+      if(s.spread) state.spread = Number(s.spread);
+      if(s.brightness) state.brightness = Number(s.brightness);
+      if(s.saturation) state.saturation = Number(s.saturation);
+      if(s.glowEffect !== undefined) state.glowEffect = Boolean(s.glowEffect);
+      if(s.drawMode) state.drawMode = s.drawMode;
+      
       if(Array.isArray(s.cells)){
         for(const c of s.cells){
           const match = state.cells.find(x=>x.c===c.c && x.r===c.r);
           if(match) match.q = Number(c.q||0);
         }
       }
-      $('cellSize').value = state.cellSize; $('sizeLabel').innerText = state.cellSize;
-      $('amplitude').value = state.amplitude; $('ampLabel').innerText = state.amplitude.toFixed(1);
-      $('decay').value = state.decay; $('decayLabel').innerText = state.decay.toFixed(2);
+      updateUIFromState();
       saveState();
+      showToast(`تم تحميل: ${p.name}`);
     };
+    
+    const delBtn = document.createElement('button');
+    delBtn.className='btn small danger';
+    delBtn.innerHTML='🗑️';
     delBtn.onclick = ()=>{
-      if(!confirm('حذف القالب نهائيًا؟')) return;
-      const arr = loadPresets().filter(x=>x!==p);
+      if(!confirm(`حذف "${p.name}" نهائياً؟`)) return;
+      const arr = loadPresets().filter(x=>x.ts!==p.ts);
       localStorage.setItem(PRESETS_KEY, JSON.stringify(arr));
       renderPresets();
+      showToast('تم الحذف ✓');
     };
-    actions.appendChild(loadBtn); actions.appendChild(delBtn);
+    
+    actions.appendChild(loadBtn);
+    actions.appendChild(delBtn);
+    el.appendChild(info);
     el.appendChild(actions);
     container.appendChild(el);
   }
 }
 
-/* Save/load state to localStorage */
 function saveState(){
   const payload = {
+    version: 2,
     cellSize: state.cellSize,
     amplitude: state.amplitude,
     decay: state.decay,
+    spread: state.spread,
+    brightness: state.brightness,
+    saturation: state.saturation,
+    glowEffect: state.glowEffect,
+    drawMode: state.drawMode,
     cells: state.cells.map(c=>({c:c.c,r:c.r,q:c.q}))
   };
   localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
 }
+
 let saveTimeout = null;
 function saveStateDebounced(){
   if(saveTimeout) clearTimeout(saveTimeout);
-  saveTimeout = setTimeout(()=>{ saveState(); saveTimeout=null; }, 500);
+  saveTimeout = setTimeout(()=>{
+    saveState();
+    saveTimeout=null;
+  }, 500);
 }
 
 function loadState(){
@@ -558,47 +883,58 @@ function loadState(){
     const raw = localStorage.getItem(STORAGE_KEY);
     if(!raw) return;
     const j = JSON.parse(raw);
+    
     if(j.cellSize) state.cellSize = Number(j.cellSize);
     if(j.amplitude) state.amplitude = Number(j.amplitude);
     if(j.decay) state.decay = Number(j.decay);
+    if(j.spread !== undefined) state.spread = Number(j.spread);
+    if(j.brightness !== undefined) state.brightness = Number(j.brightness);
+    if(j.saturation !== undefined) state.saturation = Number(j.saturation);
+    if(j.glowEffect !== undefined) state.glowEffect = Boolean(j.glowEffect);
+    if(j.drawMode) state.drawMode = j.drawMode;
+    
     if(Array.isArray(j.cells) && state.cells.length){
       for(const c of j.cells){
         const match = state.cells.find(x=>x.c===c.c && x.r===c.r);
         if(match) match.q = Number(c.q||0);
       }
     }
-    // update UI if wired later
-    if($('cellSize')){ $('cellSize').value = state.cellSize; $('sizeLabel').innerText = state.cellSize; }
-    if($('amplitude')){ $('amplitude').value = state.amplitude; $('ampLabel').innerText = state.amplitude.toFixed(1); }
-    if($('decay')){ $('decay').value = state.decay; $('decayLabel').innerText = state.decay.toFixed(2); }
-  }catch(e){}
+    
+    updateUIFromState();
+  }catch(e){
+    console.warn('Failed to load state:', e);
+  }
 }
 
-/* init */
 function init(){
-  // make canvas full in view
   const view = $('view');
   canvas.width = Math.floor(view.clientWidth * DPR);
   canvas.height = Math.floor(view.clientHeight * DPR);
   canvas.style.width = view.clientWidth + 'px';
   canvas.style.height = view.clientHeight + 'px';
+  
   resizeCanvas();
   loadState();
   wireUI();
+  
   lastTime = performance.now();
   requestAnimationFrame(loop);
+  
+  showToast('مرحباً بك في Hexa-Flow! 🎨');
 }
 
-/* handle resize */
-let rr;
-window.addEventListener('resize', ()=>{ clearTimeout(rr); rr = setTimeout(()=>{ DPR = Math.max(1, window.devicePixelRatio||1); resizeCanvas(); }, 120); });
+let resizeTimeout;
+window.addEventListener('resize', ()=>{
+  clearTimeout(resizeTimeout);
+  resizeTimeout = setTimeout(()=>{
+    DPR = Math.max(1, window.devicePixelRatio||1);
+    resizeCanvas();
+  }, 150);
+});
 
-/* init after DOM */
 document.addEventListener('DOMContentLoaded', init);
 
-/* periodically autosave state */
-setInterval(saveStateDebounced, 2000);
-
+setInterval(saveStateDebounced, 3000);
 </script>
 </body>
 </html>

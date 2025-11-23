@@ -4,78 +4,113 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Secure Key Generation</title>
+    
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
+            background-color: #e9e9e9;
             margin: 0;
-            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
         }
+
         .container {
-            max-width: 600px;
-            margin: 50px auto;
-            padding: 20px;
-            background-color: #fff;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 500px;
+            background: #fff;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
         }
+
+        h2 {
+            margin-top: 0;
+            text-align: center;
+            color: #333;
+        }
+
         .form-group {
-            margin-bottom: 15px;
+            margin-bottom: 18px;
         }
+
         .form-group label {
+            font-size: 15px;
+            margin-bottom: 6px;
             display: block;
-            margin-bottom: 5px;
+            color: #444;
         }
+
         .form-group input {
             width: 100%;
-            padding: 8px;
-            box-sizing: border-box;
+            padding: 10px;
+            font-size: 15px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            outline: none;
         }
-        .form-group button {
-            padding: 10px 15px;
-            background-color: #007BFF;
-            color: #fff;
+
+        .btn {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
             border: none;
+            background: #007bff;
+            color: #fff;
+            border-radius: 6px;
             cursor: pointer;
+            transition: 0.2s;
         }
-        .form-group button:hover {
-            background-color: #0056b3;
+
+        .btn:hover {
+            background: #0056b3;
+        }
+
+        #resultBox {
+            margin-top: 20px;
+            padding: 12px;
+            background: #f7f7f7;
+            border-radius: 6px;
+            word-break: break-all;
+            display: none;
+        }
+
+        #copyBtn {
+            margin-top: 12px;
+            width: 100%;
+            padding: 10px;
+            background: #28a745;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            display: none;
+        }
+
+        #copyBtn:hover {
+            background: #1d7c34;
         }
     </style>
 </head>
 <body>
+
     <div class="container">
         <h2>Generate Secure Key</h2>
+
         <form id="keyForm">
             <div class="form-group">
                 <label for="keyLength">Key Length:</label>
-                <input type="number" id="keyLength" name="keyLength" required>
+                <input type="number" id="keyLength" name="keyLength" min="1" required>
             </div>
-            <div class="form-group">
-                <button type="submit">Generate Key</button>
-            </div>
+
+            <button type="submit" class="btn">Generate Key</button>
         </form>
-        <div id="result"></div>
+
+        <div id="resultBox"></div>
+        <button id="copyBtn">Copy Key</button>
     </div>
 
-    <script>
-        document.getElementById('keyForm').addEventListener('submit', function(event) {
-            event.preventDefault();
-            const keyLength = document.getElementById('keyLength').value;
 
-            // Function to generate a secure key
-            function generateSecureKey(length) {
-                const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+[]{}|;:,.<>?';
-                let key = '';
-                for (let i = 0; i < length; i++) {
-                    const randomIndex = Math.floor(Math.random() * characters.length);
-                    key += characters[randomIndex];
-                }
-                return key;
-            }
-
-            const secureKey = generateSecureKey(keyLength);
-            document.getElementById('result').innerText = `Generated Key: ${secureKey}`;
-        });
-    </script>
 </body>
 </html>
